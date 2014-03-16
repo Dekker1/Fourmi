@@ -5,7 +5,9 @@
 
 from scrapy.item import Item, Field
 
-class FourmiItem(Item):
-    # define the fields for your item here like:
-    # name = Field()
-    pass
+class Result(Item):
+    attribute = Field()
+    value = Field()
+    source = Field()
+    reliability = Field()
+    conditions = Field()

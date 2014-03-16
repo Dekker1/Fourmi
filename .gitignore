@@ -1,6 +1,9 @@
 #EDITOR AND IDE SPECIFIC SETTINGFILES
 .idea
 
+#Python Specific ignores
+*.pyc
+
 #THINGS WE WOULD NEVER EVER WANT!
 #ignore thumbnails created by windows
 Thumbs.db
