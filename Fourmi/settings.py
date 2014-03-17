@@ -8,10 +8,10 @@
 
 BOT_NAME = 'Fourmi'
 
-SPIDER_MODULES = ['Scrapy.spiders']
-NEWSPIDER_MODULE = 'Scrapy.spiders'
+SPIDER_MODULES = ['Fourmi.spiders']
+NEWSPIDER_MODULE = 'Fourmi.spiders'
 ITEM_PIPELINES = {
-    'Scrapy.pipelines.FourmiPipeline': 100
+    'Fourmi.pipelines.FourmiPipeline': 100
 }
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
