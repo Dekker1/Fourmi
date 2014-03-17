@@ -10,6 +10,9 @@ BOT_NAME = 'Fourmi'
 
 SPIDER_MODULES = ['Scrapy.spiders']
 NEWSPIDER_MODULE = 'Scrapy.spiders'
+ITEM_PIPELINES = {
+    'Scrapy.pipelines.FourmiPipeline': 100
+}
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = 'Fourmi (+http://www.yourdomain.com)'
