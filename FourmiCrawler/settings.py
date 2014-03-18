@@ -6,13 +6,13 @@
 #     http://doc.scrapy.org/en/latest/topics/settings.html
 #
 
-BOT_NAME = 'Fourmi'
+BOT_NAME = 'FourmiCrawler'
 
-SPIDER_MODULES = ['Fourmi.spiders']
-NEWSPIDER_MODULE = 'Fourmi.spiders'
+SPIDER_MODULES = ['FourmiCrawler.spiders']
+NEWSPIDER_MODULE = 'FourmiCrawler.spiders'
 ITEM_PIPELINES = {
-    'Fourmi.pipelines.FourmiPipeline': 100
+    'FourmiCrawler.pipelines.FourmiPipeline': 100
 }
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
-#USER_AGENT = 'Fourmi (+http://www.yourdomain.com)'
+#USER_AGENT = 'FourmiCrawler (+http://www.yourdomain.com)'
