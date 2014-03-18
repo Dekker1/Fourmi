@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 """
 Fourmi - An internet webcrawler searching for information on chemical compounds.
 [todo] - Add some more useful text here.
