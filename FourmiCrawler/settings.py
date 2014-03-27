@@ -8,8 +8,8 @@
 
 BOT_NAME = 'FourmiCrawler'
 
-SPIDER_MODULES = ['FourmiCrawler.spiders']
-NEWSPIDER_MODULE = 'FourmiCrawler.spiders'
+SPIDER_MODULES = ['FourmiCrawler']
+NEWSPIDER_MODULE = 'FourmiCrawler'
 ITEM_PIPELINES = {
     'FourmiCrawler.pipelines.FourmiPipeline': 100
 }
