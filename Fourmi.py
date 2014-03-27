@@ -10,8 +10,8 @@ from scrapy import log, signals
 from FourmiCrawler.spiders.Fourmispider import FourmiSpider
 from scrapy.utils.project import get_project_settings
 
-def setup_crawler(compound):
-  spider = FourmiSpider(domain=domain) # [todo] - Do something smart to get the different spiders to work here.
+def setup_crawler(searchable):
+  spider = FourmiSpider(compound=searchable) # [todo] - Do something smart to get the different spiders to work here.
   settings = get_project_settings()
   crawler = Crawler(settings)
   crawler.configure()
@@ -19,7 +19,7 @@ def setup_crawler(compound):
   crawler.start()
 
 def start():
-  setup_crawler(compound)
+  setup_crawler("Methane")
   log.start()
   reactor.run()
 
