@@ -14,5 +14,7 @@ ITEM_PIPELINES = {
     'FourmiCrawler.pipelines.FourmiPipeline': 100
 }
 
-# Crawl responsibly by identifying yourself (and your website) on the user-agent
-#USER_AGENT = 'FourmiCrawler (+http://www.yourdomain.com)'
+# Crawl responsibly by identifying yourself (and your website) on the
+# user-agent
+
+# USER_AGENT = 'FourmiCrawler (+http://www.yourdomain.com)'

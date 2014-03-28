@@ -5,6 +5,7 @@
 
 from scrapy.item import Item, Field
 
+
 class Result(Item):
     attribute = Field()
     value = Field()
