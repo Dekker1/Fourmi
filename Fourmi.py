@@ -15,6 +15,7 @@ def setup_crawler(searchable):
     spider = FourmiSpider(compound=searchable)
     settings = get_project_settings()
     crawler = Crawler(settings)
+    crawler.signals.connect(reactor.stop, signal=signals.spider_closed)
     crawler.configure()
     crawler.crawl(spider)
     crawler.start()
