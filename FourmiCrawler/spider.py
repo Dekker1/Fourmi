@@ -5,7 +5,6 @@ import re
 
 class FourmiSpider(Spider):
 	name = "FourmiSpider"
-	start_urls = ["http://localhost/"]
 	parsers = []
 
 	def __init__(self, compound=None, *args, **kwargs):
@@ -22,3 +21,6 @@ class FourmiSpider(Spider):
 
 	def add_parser(self, parser):
 		self.parsers.append(parser)
+
+	def add_parsers(self, parsers):
+		self.parsers.extend(parsers)
