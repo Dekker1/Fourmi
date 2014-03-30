@@ -7,7 +7,7 @@ compounds. [todo] - Add some more useful text here.
 from twisted.internet import reactor
 from scrapy.crawler import Crawler
 from scrapy import log, signals
-from FourmiCrawler.spiders.Fourmispider import FourmiSpider
+from FourmiCrawler.spider import FourmiSpider
 from scrapy.utils.project import get_project_settings
 
 
