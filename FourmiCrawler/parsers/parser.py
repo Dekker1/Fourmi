@@ -1,9 +1,10 @@
 from scrapy import log
+from scrapy.http import Request
 
 
 class Parser:
 	'''
-	website should be an regular expression of websites you want to parse.
+	website should be an regular expression of the urls of request the parser is able to parse.
 	'''
 	website = "http://something/*"
 	__spider = None
@@ -12,8 +13,8 @@ class Parser:
 		log.msg("The parse function of the empty parser was used.", level=log.WARNING)
 		pass
 
-	def generate_search_url(self, compound):
-	 	# return website[:-1] + compound
+	def new_compound_request(self, compound):
+		# return Request(url=self.website[:-1] + compound, callable=self.parse)
 		pass
 
 	def set_spider(self, spider):
