@@ -1,19 +1,43 @@
 from scrapy.spider import Spider
+from scrapy import log
+import re
 
 
 class FourmiSpider(Spider):
 	name = "FourmiSpider"
+	__parsers = []
+	synonyms = []
 
-	def __init__(self, compound=None, *args, **kwargs):
+	def __init__(self, compounds=None, *args, **kwargs):
 		super(FourmiSpider, self).__init__(*args, **kwargs)
-		self.synonyms = [compound]
+		if isinstance(compounds, list):
+			self.synonyms.extend(compounds)
+		else:
+			self.synonyms.append(compounds)
 
+	def parse(self, reponse):
+		for parser in self.__parsers:
+			if re.match(parser.website, reponse.url):
+				log.msg("Url: " + reponse.url + " -> Parser: " + parser.website, level=log.DEBUG)
+				return parser.parse(reponse)
+		return None
 
-def parse(self, reponse):
-	# [TODO] - This function should delegate it's functionality to other
-	# parsers.
-	pass
+	def get_synonym_requests(self, compound):
+		requests = []
+		for parser in self.__parsers:
+			requests.append(parser.new_compound_request(compound))
+		return requests
 
+	def start_requests(self):
+		requests = []
+		for synonym in self.synonyms:
+			requests.extend(self.get_synonym_requests(synonym))
+		return requests
 
-def add_parser(self, parser):
-	self.parsers.add(parser)
+	def add_parsers(self, parsers):
+		for parser in parsers:
+			self.add_parser(parser)
+
+	def add_parser(self, parser):
+		self.__parsers.append(parser)
+		parser.set_spider(self)
