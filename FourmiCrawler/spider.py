@@ -16,11 +16,12 @@ class FourmiSpider(Spider):
 			if re.match(parser.website, reponse.url):
 				log.msg("Url: " + reponse.url + " -> Parser: " + parser.website, level=log.DEBUG)
 				return parser.parse(reponse)
-		return none
-
-
-	def add_parser(self, parser):
-		self.parsers.append(parser)
+		return None
 
 	def add_parsers(self, parsers):
-		self.parsers.extend(parsers)
+		for parser in parsers:
+			self.add_parser(parser)
+
+	def add_parser(self, parser):
+		self.parsers.add(parser)
+		parser.set_spider(self)
