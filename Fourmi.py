@@ -2,6 +2,7 @@
 """
 Fourmi - An internet webcrawler searching for information on chemical
 compounds. [todo] - Add some more useful text here.
+Version: v0.0.1 - Empty Application that could do something but all logic of websites isn't there yet!
 """
 
 from twisted.internet import reactor
