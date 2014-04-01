@@ -17,7 +17,7 @@ def load_parsers(rel_dir="FourmiCrawler/parsers"):
 	parsers = []
 
 	for py in [f[:-3] for f in os.listdir(path) if f.endswith('.py') and f != '__init__.py']:
-		mod = __import__('.'.join(["FourmiCrawler.parsers", py]), fromlist=[py]) # [todo] - This module name should be derived from the rel_dir variable
+		mod = __import__('.'.join([rel_dir.replace("/", "."), py]), fromlist=[py])
 		classes = [getattr(mod, x) for x in dir(mod) if inspect.isclass(getattr(mod, x))]
 		for cls in classes:
 			if re.match(path + "/*", inspect.getfile(cls)):
