@@ -9,7 +9,7 @@ from scrapy.crawler import Crawler
 from scrapy import log, signals
 from FourmiCrawler.spider import FourmiSpider
 from scrapy.utils.project import get_project_settings
-import os, inspect
+import os, inspect, re
 
 def load_parsers(rel_dir="FourmiCrawler/parsers"):
 	path = os.path.dirname(os.path.abspath(__file__))
@@ -18,9 +18,10 @@ def load_parsers(rel_dir="FourmiCrawler/parsers"):
 
 	for py in [f[:-3] for f in os.listdir(path) if f.endswith('.py') and f != '__init__.py']:
 		mod = __import__('.'.join(["FourmiCrawler.parsers", py]), fromlist=[py]) # [todo] - This module name should be derived from the rel_dir variable
-		classes = [getattr(mod, x) for x in dir(mod) if inspect.isclass(getattr(mod, x))] # [fix] - This also finds classes that are imported.
+		classes = [getattr(mod, x) for x in dir(mod) if inspect.isclass(getattr(mod, x))]
 		for cls in classes:
-			parsers.append(cls()) # [review] - Would we ever need arguments for the parsers?
+			if re.match(path + "/*", inspect.getfile(cls)):
+				parsers.append(cls()) # [review] - Would we ever need arguments for the parsers?
 	return parsers
 
 def setup_crawler(searchable):
