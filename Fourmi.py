@@ -24,8 +24,8 @@ def load_parsers(rel_dir="FourmiCrawler/parsers"):
 				parsers.append(cls()) # [review] - Would we ever need arguments for the parsers?
 	return parsers
 
-def setup_crawler(searchable):
-	spider = FourmiSpider(compound=searchable)
+def setup_crawler(searchables):
+	spider = FourmiSpider(compounds=searchables)
 	spider.add_parsers(load_parsers())
 	settings = get_project_settings()
 	crawler = Crawler(settings)
@@ -36,7 +36,7 @@ def setup_crawler(searchable):
 
 
 def start():
-	setup_crawler("Methane")
+	setup_crawler(["Methane"])
 	log.start()
 	reactor.run()
 

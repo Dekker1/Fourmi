@@ -14,7 +14,7 @@ class Parser:
 		pass
 
 	def new_compound_request(self, compound):
-		# return Request(url=self.website[:-1] + compound, callable=self.parse)
+		# return Request(url=self.website[:-1] + compound, callback=self.parse)
 		pass
 
 	def set_spider(self, spider):
