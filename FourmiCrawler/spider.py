@@ -30,5 +30,5 @@ class FourmiSpider(Spider):
 			self.add_parser(parser)
 
 	def add_parser(self, parser):
-		self.__parsers.add(parser)
+		self.__parsers.append(parser)
 		parser.set_spider(self)

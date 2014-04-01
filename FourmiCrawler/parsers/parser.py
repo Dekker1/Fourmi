@@ -1,5 +1,5 @@
 from scrapy import log
-from scrapy.http import Request
+# from scrapy.http import Request
 
 
 class Parser:

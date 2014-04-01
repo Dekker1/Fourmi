@@ -18,7 +18,7 @@ def load_parsers(rel_dir="FourmiCrawler/parsers"):
 
 	for py in [f[:-3] for f in os.listdir(path) if f.endswith('.py') and f != '__init__.py']:
 		mod = __import__('.'.join(["FourmiCrawler.parsers", py]), fromlist=[py]) # [todo] - This module name should be derived from the rel_dir variable
-		classes = [getattr(mod, x) for x in dir(mod) if inspect.isclass(getattr(mod, x))]
+		classes = [getattr(mod, x) for x in dir(mod) if inspect.isclass(getattr(mod, x))] # [fix] - This also finds classes that are imported.
 		for cls in classes:
 			parsers.append(cls()) # [review] - Would we ever need arguments for the parsers?
 	return parsers
