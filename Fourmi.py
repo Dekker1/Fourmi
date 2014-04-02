@@ -13,33 +13,33 @@ from scrapy.utils.project import get_project_settings
 import os, inspect, re
 
 def load_parsers(rel_dir="FourmiCrawler/parsers"):
-	path = os.path.dirname(os.path.abspath(__file__))
-	path += "/" + rel_dir
-	parsers = []
+    path = os.path.dirname(os.path.abspath(__file__))
+    path += "/" + rel_dir
+    parsers = []
 
-	for py in [f[:-3] for f in os.listdir(path) if f.endswith('.py') and f != '__init__.py']:
-		mod = __import__('.'.join([rel_dir.replace("/", "."), py]), fromlist=[py])
-		classes = [getattr(mod, x) for x in dir(mod) if inspect.isclass(getattr(mod, x))]
-		for cls in classes:
-			if re.match(path + "/*", inspect.getfile(cls)):
-				parsers.append(cls()) # [review] - Would we ever need arguments for the parsers?
-	return parsers
+    for py in [f[:-3] for f in os.listdir(path) if f.endswith('.py') and f != '__init__.py']:
+        mod = __import__('.'.join([rel_dir.replace("/", "."), py]), fromlist=[py])
+        classes = [getattr(mod, x) for x in dir(mod) if inspect.isclass(getattr(mod, x))]
+        for cls in classes:
+            if re.match(path + "/*", inspect.getfile(cls)):
+                parsers.append(cls()) # [review] - Would we ever need arguments for the parsers?
+    return parsers
 
 def setup_crawler(searchables):
-	spider = FourmiSpider(compounds=searchables)
-	spider.add_parsers(load_parsers())
-	settings = get_project_settings()
-	crawler = Crawler(settings)
-	crawler.signals.connect(reactor.stop, signal=signals.spider_closed)
-	crawler.configure()
-	crawler.crawl(spider)
-	crawler.start()
+    spider = FourmiSpider(compounds=searchables)
+    spider.add_parsers(load_parsers())
+    settings = get_project_settings()
+    crawler = Crawler(settings)
+    crawler.signals.connect(reactor.stop, signal=signals.spider_closed)
+    crawler.configure()
+    crawler.crawl(spider)
+    crawler.start()
 
 
 def start():
-	setup_crawler(["Methane"])
-	log.start()
-	reactor.run()
+    setup_crawler(["Methane"])
+    log.start()
+    reactor.run()
 
 
 start()
