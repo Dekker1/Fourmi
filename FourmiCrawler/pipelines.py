@@ -19,7 +19,7 @@ class FourmiPipeline(object):
         """
         value = item['attribute'], item['value']
         if value in self.known_values:
-            raise DropItem("Duplicate item found: %s" % item)
+            raise DropItem("Duplicate item found: %s" % item) # #[todo] append sources of first item.
         else:
             self.known_values.add(value)
             return item
