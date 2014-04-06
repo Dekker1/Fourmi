@@ -7,13 +7,14 @@ class WikipediaParser:
     website = "http://en.wikipedia.org/wiki/Methane"
     __spider = "WikipediaParser"
 
-
+    print "test1"
     #def __init__(self, csid):
     #    self.website = "http://en.wikipedia.org/wiki/{id}".format(id=csid)
 
-    #def parse(self, response):
+    def parse(self, response):
+        print "test1"
         #self.log('A response from %s just arrived!' % response.url)
-    def parse():
+    #def parse():
         sel = Selector("http://en.wikipedia.org/wiki/Methane")
         items = []
         item = Result()
@@ -26,5 +27,3 @@ class WikipediaParser:
         print item['source']
         print "test"
         return items
-
-    parse()
