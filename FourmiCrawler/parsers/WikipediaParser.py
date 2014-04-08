@@ -1,11 +1,12 @@
-import parser
+from scrapy.http import Request
+from parser import Parser
 from scrapy.selector import Selector
 from FourmiCrawler.items import Result
 
-class WikipediaParser:
+class WikipediaParser(Parser):
 
-    website = "http://en.wikipedia.org/wiki/Methane"
-    __spider = "WikipediaParser"
+    website = "http://en.wikipedia.org/wiki/*"
+    __spider = None
 
     print "test1"
     #def __init__(self, csid):
@@ -27,3 +28,6 @@ class WikipediaParser:
         print item['source']
         print "test"
         return items
+
+    def new_compound_request(self, compound):
+        return Request(url=self.website[:-1] + compound, callback=self.parse)
