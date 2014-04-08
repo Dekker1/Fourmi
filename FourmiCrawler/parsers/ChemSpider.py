@@ -3,7 +3,6 @@ from scrapy import log
 from scrapy.http import Request
 from scrapy.selector import Selector
 from FourmiCrawler.items import Result
-from ChemSpider_token import TOKEN #TODO: move the token elsewhere
 
 """
 This parser will manage searching for chemicals through the ChemsSpider API,
@@ -15,7 +14,7 @@ class ChemSpider(Parser):
     website = "http://www.chemspider.com/*"
     __spider = 'ChemSpider'
 
-    search = "Search.asmx/SimpleSearch?query=%s&token=%s"
+    search = "Search.asmx/SimpleSearch?query=%s&token=052bfd06-5ce4-43d6-bf12-89eabefd2338"
 
     print "ChemSpider start"
     log.msg('chemspider start', level=log.DEBUG)
@@ -27,7 +26,7 @@ class ChemSpider(Parser):
         pass
     
     def new_compound_request(self,compound):
-        searchurl = self.website[:-1] + self.search % (compound, TOKEN)
+        searchurl = self.website[:-1] + self.search % compound
         log.msg('chemspider compound', level=log.DEBUG)
         print "ChemSpider compound"
         return Request(url=searchurl, callback=self.parse)
