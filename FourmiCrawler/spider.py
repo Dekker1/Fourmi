@@ -25,7 +25,9 @@ class FourmiSpider(Spider):
     def get_synonym_requests(self, compound):
         requests = []
         for parser in self.__parsers:
-            requests.append(parser.new_compound_request(compound))
+            parser_requests = parser.new_compound_request(compound)
+            if parser_requests is not None:
+                requests.append(parser_requests)
         return requests
 
     def start_requests(self):
