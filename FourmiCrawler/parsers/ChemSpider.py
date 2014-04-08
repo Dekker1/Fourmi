@@ -1,3 +1,4 @@
+from parser import Parser
 from scrapy import log
 from scrapy.http import Request
 from scrapy.selector import Selector
@@ -9,7 +10,7 @@ This parser will manage searching for chemicals through the ChemsSpider API,
 and parsing the resulting ChemSpider page. 
 The token required for the API should be in a configuration file somewhere.
 """
-class ChemSpider:
+class ChemSpider(Parser):
     
     website = "http://www.chemspider.com/*"
     __spider = 'ChemSpider'
@@ -26,7 +27,7 @@ class ChemSpider:
         pass
     
     def new_compound_request(self,compound):
-        searchurl = website[:-1] + search % (compound, TOKEN)
+        searchurl = self.website[:-1] + self.search % (compound, TOKEN)
         log.msg('chemspider compound', level=log.DEBUG)
         print "ChemSpider compound"
         return Request(url=searchurl, callback=self.parse)
