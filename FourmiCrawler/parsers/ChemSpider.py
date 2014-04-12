@@ -19,7 +19,26 @@ class ChemSpider(Parser):
 
     def parse(self, response):
         sel = Selector(response)
-        log.msg('chemspider parse', level=log.WARNING)
+        synonyms = []
+        for syn in sel.xpath('//p[@class="syn"]/strong/text()').extract():
+            synonyms.append( self.new_synonym( syn, 'high' ) )
+        for syn in sel.xpath('//p[@class="syn"]/span[@class="synonym_confirmed"]/text()').extract():
+            synonyms.append( self.new_synonym( syn, 'medium' ) )
+        for syn in sel.xpath('//p[@class="syn"]/span[@class=""]/text()').extract():
+            synonyms.append( self.new_synonym( syn, 'low' ) )
+
+        return synonyms
+
+    def new_synonym(self, name, reliability):
+        log.msg('CS synonym: %s (%s)' % (name, reliability), level=log.WARNING)
+        synonym = Result()
+        synonym['attribute'] = 'synonym'
+        synonym['value'] = name
+        synonym['source'] = self.__spider
+        synonym['reliability'] = reliability
+        synonym['conditions'] = None
+        return synonym
+
 
     def parse_searchrequest(self, response):
         sel = Selector(response)
