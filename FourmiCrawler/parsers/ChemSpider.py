@@ -16,17 +16,11 @@ class ChemSpider(Parser):
 
     search = "Search.asmx/SimpleSearch?query=%s&token=052bfd06-5ce4-43d6-bf12-89eabefd2338"
 
-    print "ChemSpider start"
-    log.msg('chemspider start', level=log.DEBUG)
-
     def parse(self, response):
         sel = Selector(response)
-        log.msg('chemspider parse', level=log.DEBUG)
-        print "ChemSpider parse"
-        pass
+        log.msg('chemspider parse', level=log.WARNING)
     
     def new_compound_request(self,compound):
         searchurl = self.website[:-1] + self.search % compound
-        log.msg('chemspider compound', level=log.DEBUG)
-        print "ChemSpider compound"
+        log.msg('chemspider compound', level=log.WARNING)
         return Request(url=searchurl, callback=self.parse)
