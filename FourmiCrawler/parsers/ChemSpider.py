@@ -12,7 +12,6 @@ The token required for the API should be in a configuration file somewhere.
 class ChemSpider(Parser):
     
     website = "http://www.chemspider.com/*"
-    __spider = 'ChemSpider'
 
     search = "Search.asmx/SimpleSearch?query=%s&token=052bfd06-5ce4-43d6-bf12-89eabefd2338"
     structure = "Chemical-Structure.%s.html"
@@ -44,7 +43,7 @@ class ChemSpider(Parser):
         synonym = Result()
         synonym['attribute'] = 'synonym'
         synonym['value'] = name
-        synonym['source'] = self.__spider
+        synonym['source'] = 'ChemSpider'
         synonym['reliability'] = reliability
         synonym['conditions'] = None
         return synonym
