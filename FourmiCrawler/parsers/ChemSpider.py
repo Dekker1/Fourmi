@@ -22,6 +22,9 @@ class ChemSpider(Parser):
         requests = []
         requests_synonyms = self.parse_synonyms(sel)
         requests.extend(requests_synonyms)
+        for wiki_url in sel.xpath('.//a[@title="Wiki"]/@href').extract():
+            requests.append( Request(url=wiki_url) )
+
         return requests
 
     def parse_synonyms(self, sel):
