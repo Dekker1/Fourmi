@@ -38,6 +38,10 @@ class ChemSpider(Parser):
         for syn in sel.xpath('//p[@class="syn"]/span[@class=""]/text()').extract():
             synonyms.append( self.new_synonym( syn, 'low' ) )
 
+        for synonym in synonyms:
+            if synonym['reliability'] == 'high':
+                self._Parser__spider.get_synonym_requests(synonym['value'])
+
         return requests
 
     def new_synonym(self, name, reliability):
