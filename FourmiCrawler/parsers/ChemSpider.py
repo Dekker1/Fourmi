@@ -16,6 +16,8 @@ class ChemSpider(Parser):
     search = "Search.asmx/SimpleSearch?query=%s&token=052bfd06-5ce4-43d6-bf12-89eabefd2338"
     structure = "Chemical-Structure.%s.html"
 
+    ignore_list = []
+
     def parse(self, response):
         sel = Selector(response)
         requests = []
@@ -35,6 +37,8 @@ class ChemSpider(Parser):
             synonyms.append( self.new_synonym( syn, 'medium' ) )
         for syn in sel.xpath('//p[@class="syn"]/span[@class=""]/text()').extract():
             synonyms.append( self.new_synonym( syn, 'low' ) )
+
+        self.ignore_list.extend(synonyms)
 
         return requests
 
@@ -60,6 +64,8 @@ class ChemSpider(Parser):
         return Request(structure_url, callback=self.parse)
     
     def new_compound_request(self,compound):
+        if compound in self.ignore_list: #TODO: add regular expression
+            return None
         searchurl = self.website[:-1] + self.search % compound
         log.msg('chemspider compound', level=log.WARNING)
         return Request(url=searchurl, callback=self.parse_searchrequest)
