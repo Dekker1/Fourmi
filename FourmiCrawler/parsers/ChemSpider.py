@@ -38,12 +38,11 @@ class ChemSpider(Parser):
         for syn in sel.xpath('//p[@class="syn"]/span[@class=""]/text()').extract():
             synonyms.append( self.new_synonym( syn, 'low' ) )
 
-        self.ignore_list.extend(synonyms)
-
         return requests
 
     def new_synonym(self, name, reliability):
         log.msg('CS synonym: %s (%s)' % (name, reliability), level=log.WARNING)
+        self.ignore_list.append(name)
         synonym = Result()
         synonym['attribute'] = 'synonym'
         synonym['value'] = name
