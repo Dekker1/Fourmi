@@ -23,10 +23,35 @@ class ChemSpider(Parser):
         requests = []
         requests_synonyms = self.parse_synonyms(sel)
         requests.extend(requests_synonyms)
+        requests_properties = self.parse_properties(sel)
+        requests.extend(requests_properties)
         for wiki_url in sel.xpath('.//a[@title="Wiki"]/@href').extract():
             requests.append( Request(url=wiki_url) )
 
         return requests
+
+    def parse_properties(self, sel):
+        requests = []
+        properties = []
+        scraped_list = sel.xpath('.//li[span="Experimental Physico-chemical Properties"]//li/table/tr/td')
+        if not scraped_list:
+            return None
+        property_name = scraped_list.pop(0).xpath('span/text()').extract()[0].rstrip()
+        for line in scraped_list:
+            if line.xpath('span/text()'):
+                property_name = line.xpath('span/text()').extract()[0].rstrip()
+            else:
+                new_prop = Result()
+                new_prop['attribute'] = property_name
+                new_prop['value'] = line.xpath('text()').extract()[0].rstrip()
+                new_prop['source'] = line.xpath('strong/text()').extract()[0].rstrip()
+                new_prop['reliability'] = None
+                new_prop['conditions'] = None
+                properties.append(new_prop)
+                log.msg('CS prop: |%s| |%s| |%s|' \
+                % (new_prop['attribute'],new_prop['value'], new_prop['source']),
+                level=log.WARNING)
+        return properties
 
     def parse_synonyms(self, sel):
         requests = []
