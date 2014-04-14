@@ -11,7 +11,9 @@ from scrapy import log, signals
 from FourmiCrawler.parsers.parser import Parser
 from FourmiCrawler.spider import FourmiSpider
 from scrapy.utils.project import get_project_settings
-import os, inspect, re
+import os, inspect
+import docopt
+
 
 def load_parsers(rel_dir="FourmiCrawler/parsers"):
     path = os.path.dirname(os.path.abspath(__file__))
