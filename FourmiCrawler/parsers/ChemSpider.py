@@ -33,6 +33,22 @@ class ChemSpider(Parser):
     def parse_properties(self, sel):
         requests = []
         properties = []
+
+        td_list = sel.xpath('.//table[@id="acdlabs-table"]//td').xpath('normalize-space(string())')
+        prop_names = td_list[::2]
+        prop_values = td_list[1::2]
+        for i, prop_name in enumerate(prop_names):
+            new_prop = Result()
+            new_prop['attribute'] = prop_name.extract().encode('utf-8')
+            new_prop['value'] = prop_values[i].extract().encode('utf-8')
+            new_prop['source'] = 'ChemSpider Predicted - ACD/Labs Tab'
+            new_prop['reliability'] = None
+            new_prop['conditions'] = None
+            properties.append(new_prop)
+            log.msg('CS prop: |%s| |%s| |%s|' \
+            % (new_prop['attribute'],new_prop['value'], new_prop['source']),
+            level=log.WARNING)
+
         scraped_list = sel.xpath('.//li[span="Experimental Physico-chemical Properties"]//li/table/tr/td')
         if not scraped_list:
             return None
@@ -51,6 +67,7 @@ class ChemSpider(Parser):
                 log.msg('CS prop: |%s| |%s| |%s|' \
                 % (new_prop['attribute'],new_prop['value'], new_prop['source']),
                 level=log.WARNING)
+
         return properties
 
     def parse_synonyms(self, sel):
