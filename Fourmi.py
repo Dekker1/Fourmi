@@ -3,8 +3,8 @@
 Fourmi, an webscraper build to search specific information for a given compound.
 
 Usage:
-    fourmi search <compound>
-    fourmi [options] search <compound>
+    fourmi search <compound>...
+    fourmi [options] search <compound>...
     fourmi -h | --help
     fourmi --version
 
@@ -15,14 +15,17 @@ Options:
     --log=<file>    Save log to an file.
 """
 
+import os
+import inspect
+
 from twisted.internet import reactor
 from scrapy.crawler import Crawler
 from scrapy import log, signals
+from scrapy.utils.project import get_project_settings
+import docopt
+
 from FourmiCrawler.parsers.parser import Parser
 from FourmiCrawler.spider import FourmiSpider
-from scrapy.utils.project import get_project_settings
-import os, inspect
-import docopt
 
 
 def load_parsers(rel_dir="FourmiCrawler/parsers"):
@@ -40,6 +43,7 @@ def load_parsers(rel_dir="FourmiCrawler/parsers"):
                 known_parser.add(cls)
     return parsers
 
+
 def setup_crawler(searchables):
     spider = FourmiSpider(compounds=searchables)
     spider.add_parsers(load_parsers())
@@ -51,10 +55,22 @@ def setup_crawler(searchables):
     crawler.start()
 
 
-def start():
-    setup_crawler(["Methane"])
-    log.start()
+def start_log(arguments):
+    if arguments["--log"] is not None:
+        if arguments["--verbose"]:
+            log.start(logfile=arguments["--log"], logstdout=False, loglevel=log.DEBUG)
+        else:
+            log.start(logfile=arguments["--log"], logstdout=True, loglevel=log.WARNING)
+    else:
+        if arguments["--verbose"]:
+            log.start(logstdout=False, loglevel=log.DEBUG)
+        else:
+            log.start(logstdout=True, loglevel=log.WARNING)
+
+
+if __name__ == '__main__':
+    arguments = docopt.docopt(__doc__, version='Fourmi - V0.0.1a')
+    start_log(arguments)
+    setup_crawler([arguments["<compound>"]])
     reactor.run()
 
-
-start()
