@@ -5,6 +5,10 @@ from FourmiCrawler.items import Result
 
 class WikipediaParser(Parser):
 
+# General notes:
+# Redirects seem to not matter as Wikipedia returns the page the redirect forwards to
+# although this might lead to scraping both the original and the redirect with the same data.
+
     website = "http://en.wikipedia.org/wiki/*"
     __spider = None
 
@@ -16,15 +20,15 @@ class WikipediaParser(Parser):
         #self.log('A response from %s just arrived!' % response.url)
         sel = Selector(response)
         items = []
-        item = Result()
-        item['attribute']="Melting point"
-        item['value']= sel.xpath('//tr/td/a[@title="Melting point"]/../../td[2]/text()').extract() # ('//tr[contains(@href, "/wiki/Melting_point")]/text()').extract()
-        item['source']= "Wikipedia"
-        items.append(item)
-        print item['attribute']
-        print item['value']
-        print item['source']
+        meltingpoint = self.getmeltingpoint(sel)
+        items.append(meltingpoint)
+        boilingpoint = self.getboilingpoint(sel)
+        print boilingpoint
+        items.append(boilingpoint)
         return items
+
+    def new_compound_request(self, compound):
+        return Request(url=self.website[:-1] + compound, callback=self.parse)
 
     def getmeltingpoint(self, sel):
         item=Result()
@@ -33,5 +37,9 @@ class WikipediaParser(Parser):
         item['source']= "Wikipedia"
         return item
 
-    def new_compound_request(self, compound):
-        return Request(url=self.website[:-1] + compound, callback=self.parse)
+    def getboilingpoint(self, sel):
+        item=Result()
+        item['attribute']="Boiling point"
+        item['value']= sel.xpath('//tr/td/a[@title="Boiling point"]/../../td[2]/text()').extract() # ('//tr[contains(@href, "/wiki/Melting_point")]/text()').extract()
+        item['source']= "Wikipedia"
+        return item
