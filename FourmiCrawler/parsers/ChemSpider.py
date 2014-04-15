@@ -51,7 +51,7 @@ class ChemSpider(Parser):
 
         scraped_list = sel.xpath('.//li[span="Experimental Physico-chemical Properties"]//li/table/tr/td')
         if not scraped_list:
-            return None
+            return properties
         property_name = scraped_list.pop(0).xpath('span/text()').extract()[0].rstrip()
         for line in scraped_list:
             if line.xpath('span/text()'):
