@@ -3,8 +3,8 @@
 Fourmi, an webscraper build to search specific information for a given compound.
 
 Usage:
-    fourmi search <compound>...
-    fourmi [options] search <compound>...
+    fourmi search <compound>
+    fourmi [options] search <compound>
     fourmi -h | --help
     fourmi --version
 
@@ -44,8 +44,8 @@ def load_parsers(rel_dir="FourmiCrawler/parsers"):
     return parsers
 
 
-def setup_crawler(searchables):
-    spider = FourmiSpider(compounds=searchables)
+def setup_crawler(searchable):
+    spider = FourmiSpider(compound=searchable)
     spider.add_parsers(load_parsers())
     settings = get_project_settings()
     crawler = Crawler(settings)
