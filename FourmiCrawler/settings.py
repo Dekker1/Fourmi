@@ -13,6 +13,9 @@ NEWSPIDER_MODULE = 'FourmiCrawler'
 ITEM_PIPELINES = {
     'FourmiCrawler.pipelines.FourmiPipeline': 100
 }
+FEED_URI = 'results.json'
+FEED_FORMAT = 'jsonlines'
+
 
 # Crawl responsibly by identifying yourself (and your website) on the
 # user-agent
