@@ -9,10 +9,12 @@ Usage:
     fourmi --version
 
 Options:
-    -h --help       Show this screen.
-    --version       Show version.
-    --verbose       Verbose logging output.
-    --log=<file>    Save log to an file.
+    -h --help                       Show this screen.
+    --version                       Show version.
+    --verbose                       Verbose logging output.
+    --log=<file>                    Save log to an file.
+    -o <file> --output=<file>       Output file [default: result.*format*]
+    -f <format> --format=<format>   Output formats [default: jsonlines | supported: csv, json, jsonlines, xml]
 """
 
 import os
