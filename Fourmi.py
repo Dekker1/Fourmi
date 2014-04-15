@@ -41,7 +41,7 @@ def setup_crawler(searchables):
 
 def start():
     setup_crawler(["Methane"])
-    log.start()
+    log.start(logstdout=False)
     reactor.run()
 
 
