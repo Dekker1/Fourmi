@@ -18,14 +18,20 @@ class WikipediaParser(Parser):
         items = []
         item = Result()
         item['attribute']="Melting point"
-        item['value']="value1" # sel.xpath('//tr[contains(@href, "/wiki/Melting_point")]/text()').extract()
+        item['value']= sel.xpath('//tr/td/a[@title="Melting point"]/../../td[2]/text()').extract() # ('//tr[contains(@href, "/wiki/Melting_point")]/text()').extract()
         item['source']= "Wikipedia"
         items.append(item)
         print item['attribute']
         print item['value']
         print item['source']
-        print "test"
         return items
+
+    def getmeltingpoint(self, sel):
+        item=Result()
+        item['attribute']="Melting point"
+        item['value']= sel.xpath('//tr/td/a[@title="Melting point"]/../../td[2]/text()').extract() # ('//tr[contains(@href, "/wiki/Melting_point")]/text()').extract()
+        item['source']= "Wikipedia"
+        return item
 
     def new_compound_request(self, compound):
         return Request(url=self.website[:-1] + compound, callback=self.parse)
