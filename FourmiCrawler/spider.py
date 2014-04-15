@@ -8,12 +8,9 @@ class FourmiSpider(Spider):
     __parsers = []
     synonyms = []
 
-    def __init__(self, compounds=None, *args, **kwargs):
+    def __init__(self, compound=None, *args, **kwargs):
         super(FourmiSpider, self).__init__(*args, **kwargs)
-        if isinstance(compounds, list):
-            self.synonyms.extend(compounds)
-        else:
-            self.synonyms.append(compounds)
+        self.synonyms.append(compound)
 
     def parse(self, reponse):
         for parser in self.__parsers:
