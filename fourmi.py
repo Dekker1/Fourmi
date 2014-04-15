@@ -14,7 +14,7 @@ Options:
     --verbose                       Verbose logging output.
     --log=<file>                    Save log to an file.
     -o <file> --output=<file>       Output file [default: result.*format*]
-    -f <format> --format=<format>   Output formats [default: jsonlines | supported: csv, json, jsonlines, xml]
+    -f <format> --format=<format>   Output formats (supported: csv, json, jsonlines, xml) [default: jsonlines]
 """
 
 import os
@@ -41,20 +41,35 @@ def load_parsers(rel_dir="FourmiCrawler/parsers"):
         classes = [getattr(mod, x) for x in dir(mod) if inspect.isclass(getattr(mod, x))]
         for cls in classes:
             if issubclass(cls, Parser) and cls not in known_parser:
-                parsers.append(cls()) # [review] - Would we ever need arguments for the parsers?
+                parsers.append(cls())  # [review] - Would we ever need arguments for the parsers?
                 known_parser.add(cls)
     return parsers
 
 
-def setup_crawler(searchable):
+def setup_crawler(searchable, settings):
     spider = FourmiSpider(compound=searchable)
     spider.add_parsers(load_parsers())
-    settings = get_project_settings()
     crawler = Crawler(settings)
     crawler.signals.connect(reactor.stop, signal=signals.spider_closed)
     crawler.configure()
     crawler.crawl(spider)
     crawler.start()
+
+
+def scrapy_settings_manipulation(arguments):
+    settings = get_project_settings()
+
+    if arguments["--output"] != 'result.*format*':
+        settings.overrides["FEED_URI"] = arguments["--output"]
+    elif arguments["--format"] == "jsonlines":
+        settings.overrides["FEED_URI"] = "results.json"
+    elif arguments["--format"] is not None:
+        settings.overrides["FEED_URI"] = "results." + arguments["--format"]
+
+    if arguments["--format"] is not None:
+        settings.overrides["FEED_FORMAT"] = arguments["--format"]
+
+    return settings
 
 
 def start_log(arguments):
@@ -73,6 +88,8 @@ def start_log(arguments):
 if __name__ == '__main__':
     arguments = docopt.docopt(__doc__, version='Fourmi - V0.0.1a')
     start_log(arguments)
-    setup_crawler([arguments["<compound>"]])
+    print arguments
+    settings = scrapy_settings_manipulation(arguments)
+    setup_crawler([arguments["<compound>"]], settings)
     reactor.run()
 
