@@ -86,7 +86,7 @@ def start_log(arguments):
 
 
 if __name__ == '__main__':
-    arguments = docopt.docopt(__doc__, version='Fourmi - V0.0.1a')
+    arguments = docopt.docopt(__doc__, version='Fourmi - V0.1.0')
     start_log(arguments)
     print arguments
     settings = scrapy_settings_manipulation(arguments)
