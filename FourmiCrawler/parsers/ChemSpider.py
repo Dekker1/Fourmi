@@ -15,6 +15,7 @@ class ChemSpider(Parser):
 
     search = "Search.asmx/SimpleSearch?query=%s&token=052bfd06-5ce4-43d6-bf12-89eabefd2338"
     structure = "Chemical-Structure.%s.html"
+    extendedinfo = "MassSpecAPI.asmx/GetExtendedCompoundInfo?query=%s&token=052bfd06-5ce4-43d6-bf12-89eabefd2338"
 
     ignore_list = []
 
@@ -99,6 +100,8 @@ class ChemSpider(Parser):
         synonym['conditions'] = ''
         return synonym
 
+    def parse_extendedinfo(self, response):
+        pass
 
     def parse_searchrequest(self, response):
         sel = Selector(response)
@@ -107,8 +110,10 @@ class ChemSpider(Parser):
         csid = sel.xpath('.//cs:int/text()').extract()[0]
         #TODO: handle multiple csids in case of vague search term
         structure_url = self.website[:-1] + self.structure % csid
+        extendedinfo_url = self.website[:-1] + self.extendedinfo % csid
         log.msg('chemspider URL: %s' % structure_url, level=log.DEBUG)
-        return Request(structure_url, callback=self.parse)
+        return [Request(url=structure_url, callback=self.parse),
+                Request(url=extendedinfo_url, callback=self.parse_extendedinfo)]
     
     def new_compound_request(self,compound):
         if compound in self.ignore_list: #TODO: add regular expression
