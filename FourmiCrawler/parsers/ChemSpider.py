@@ -42,8 +42,8 @@ class ChemSpider(Parser):
             new_prop['attribute'] = prop_name.extract().encode('utf-8')
             new_prop['value'] = prop_values[i].extract().encode('utf-8')
             new_prop['source'] = 'ChemSpider Predicted - ACD/Labs Tab'
-            new_prop['reliability'] = None
-            new_prop['conditions'] = None
+            new_prop['reliability'] = ''
+            new_prop['conditions'] = ''
             properties.append(new_prop)
             log.msg('CS prop: |%s| |%s| |%s|' \
             % (new_prop['attribute'],new_prop['value'], new_prop['source']),
@@ -61,8 +61,8 @@ class ChemSpider(Parser):
                 new_prop['attribute'] = property_name
                 new_prop['value'] = line.xpath('text()').extract()[0].rstrip()
                 new_prop['source'] = line.xpath('strong/text()').extract()[0].rstrip()
-                new_prop['reliability'] = None
-                new_prop['conditions'] = None
+                new_prop['reliability'] = ''
+                new_prop['conditions'] = ''
                 properties.append(new_prop)
                 log.msg('CS prop: |%s| |%s| |%s|' \
                 % (new_prop['attribute'],new_prop['value'], new_prop['source']),
@@ -94,7 +94,7 @@ class ChemSpider(Parser):
         synonym['value'] = name
         synonym['source'] = 'ChemSpider'
         synonym['reliability'] = reliability
-        synonym['conditions'] = None
+        synonym['conditions'] = ''
         return synonym
 
 
