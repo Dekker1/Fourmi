@@ -47,7 +47,7 @@ class ChemSpider(Parser):
             properties.append(new_prop)
             log.msg('CS prop: |%s| |%s| |%s|' \
             % (new_prop['attribute'],new_prop['value'], new_prop['source']),
-            level=log.WARNING)
+            level=log.DEBUG)
 
         scraped_list = sel.xpath('.//li[span="Experimental Physico-chemical Properties"]//li/table/tr/td')
         if not scraped_list:
@@ -66,7 +66,7 @@ class ChemSpider(Parser):
                 properties.append(new_prop)
                 log.msg('CS prop: |%s| |%s| |%s|' \
                 % (new_prop['attribute'],new_prop['value'], new_prop['source']),
-                level=log.WARNING)
+                level=log.DEBUG)
 
         return properties
 
@@ -87,7 +87,7 @@ class ChemSpider(Parser):
         return requests
 
     def new_synonym(self, name, reliability):
-        log.msg('CS synonym: %s (%s)' % (name, reliability), level=log.WARNING)
+        log.msg('CS synonym: %s (%s)' % (name, reliability), level=log.DEBUG)
         self.ignore_list.append(name)
         synonym = Result()
         synonym['attribute'] = 'synonym'
@@ -100,17 +100,17 @@ class ChemSpider(Parser):
 
     def parse_searchrequest(self, response):
         sel = Selector(response)
-        log.msg('chemspider parse_searchrequest', level=log.WARNING)
+        log.msg('chemspider parse_searchrequest', level=log.DEBUG)
         sel.register_namespace('cs', 'http://www.chemspider.com/')
         csid = sel.xpath('.//cs:int/text()').extract()[0]
         #TODO: handle multiple csids in case of vague search term
         structure_url = self.website[:-1] + self.structure % csid
-        log.msg('chemspider URL: %s' % structure_url, level=log.WARNING)
+        log.msg('chemspider URL: %s' % structure_url, level=log.DEBUG)
         return Request(structure_url, callback=self.parse)
     
     def new_compound_request(self,compound):
         if compound in self.ignore_list: #TODO: add regular expression
             return None
         searchurl = self.website[:-1] + self.search % compound
-        log.msg('chemspider compound', level=log.WARNING)
+        log.msg('chemspider compound', level=log.DEBUG)
         return Request(url=searchurl, callback=self.parse_searchrequest)
