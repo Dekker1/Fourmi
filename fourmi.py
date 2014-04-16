@@ -16,6 +16,8 @@ Options:
     --log=<file>                    Save log to an file.
     -o <file> --output=<file>       Output file [default: result.*format*]
     -f <format> --format=<format>   Output formats (supported: csv, json, jsonlines, xml) [default: jsonlines]
+    --include=<sourcenames>         Include only sources that match the regular these expressions split by a comma.
+    --exclude=<sourcenames>         Exclude the sources that match the regular these expressions split by a comma.
 """
 
 from twisted.internet import reactor
