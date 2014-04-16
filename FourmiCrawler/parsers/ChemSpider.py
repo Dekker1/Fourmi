@@ -101,7 +101,20 @@ class ChemSpider(Parser):
         return synonym
 
     def parse_extendedinfo(self, response):
-        pass
+        sel = Selector(response)
+        properties = []
+        names = sel.xpath('*').xpath('name()').extract()
+        values = sel.xpath('*').xpath('text()').extract()
+        for (name, value) in zip(names,values):
+            result = Result({
+                    'attribute': name,
+                    'value': value,
+                    'source': 'ChemSpider',
+                    'reliability': '',
+                    'conditions': ''
+                    })
+            properties.append(result)
+        return properties
 
     def parse_searchrequest(self, response):
         sel = Selector(response)
