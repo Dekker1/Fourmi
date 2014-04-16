@@ -19,18 +19,22 @@ class WikipediaParser(Parser):
         print response.url
         #self.log('A response from %s just arrived!' % response.url)
         sel = Selector(response)
-        items = []
-        density = self.getdensity(sel)
-        items.append(density)
-        meltingpoint = self.getmeltingpoint(sel)
-        items.append(meltingpoint)
-        boilingpoint = self.getboilingpoint(sel)
-        chemlink = self.getchemspider(sel)
-        items.append(boilingpoint)
-        heatcapacity = self.getheatcapacity(sel)
-        items.append(heatcapacity)
-        molarentropy = self.getmolarentropy(sel)
-        items.append(molarentropy)
+        items = self.parse_infobox(sel)
+        return items
+
+    def parse_infobox(self, sel):
+        items=[]
+        tr_list = sel.xpath('.//table[@class="infobox bordered"]//td[not(@colspan)]').xpath('normalize-space(string())')
+        prop_names = tr_list[::2]
+        prop_values = tr_list[1::2]
+        for i, prop_name in enumerate(prop_names):
+            item = Result()
+            item['attribute'] = prop_name.extract().encode('utf-8')
+            item['value'] = prop_values[i].extract().encode('utf-8')
+            item['source'] = "Wikipedia"
+            items.append(item)
+            print "new: " + item['attribute']
+            print item['value']
         return items
 
     def new_compound_request(self, compound):
