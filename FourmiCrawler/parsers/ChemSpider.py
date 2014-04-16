@@ -15,6 +15,7 @@ class ChemSpider(Parser):
 
     search = "Search.asmx/SimpleSearch?query=%s&token=052bfd06-5ce4-43d6-bf12-89eabefd2338"
     structure = "Chemical-Structure.%s.html"
+    extendedinfo = "MassSpecAPI.asmx/GetExtendedCompoundInfo?csid=%s&token=052bfd06-5ce4-43d6-bf12-89eabefd2338"
 
     ignore_list = []
 
@@ -25,7 +26,7 @@ class ChemSpider(Parser):
         requests.extend(requests_synonyms)
         requests_properties = self.parse_properties(sel)
         requests.extend(requests_properties)
-        for wiki_url in sel.xpath('.//a[@title="Wiki"]/@href').extract():
+        for wiki_url in sel.xpath('.//p[@class="syn"][strong]/a[@title="Wiki"]/@href').extract():
             requests.append( Request(url=wiki_url) )
 
         return requests
@@ -38,16 +39,17 @@ class ChemSpider(Parser):
         prop_names = td_list[::2]
         prop_values = td_list[1::2]
         for i, prop_name in enumerate(prop_names):
-            new_prop = Result()
-            new_prop['attribute'] = prop_name.extract().encode('utf-8')
-            new_prop['value'] = prop_values[i].extract().encode('utf-8')
-            new_prop['source'] = 'ChemSpider Predicted - ACD/Labs Tab'
-            new_prop['reliability'] = None
-            new_prop['conditions'] = None
+            new_prop = Result({
+                'attribute': prop_name.extract().encode('utf-8'),
+                'value': prop_values[i].extract().encode('utf-8'),
+                'source': 'ChemSpider Predicted - ACD/Labs Tab',
+                'reliability': '',
+                'conditions': ''
+                       })
             properties.append(new_prop)
             log.msg('CS prop: |%s| |%s| |%s|' \
             % (new_prop['attribute'],new_prop['value'], new_prop['source']),
-            level=log.WARNING)
+            level=log.DEBUG)
 
         scraped_list = sel.xpath('.//li[span="Experimental Physico-chemical Properties"]//li/table/tr/td')
         if not scraped_list:
@@ -57,16 +59,17 @@ class ChemSpider(Parser):
             if line.xpath('span/text()'):
                 property_name = line.xpath('span/text()').extract()[0].rstrip()
             else:
-                new_prop = Result()
-                new_prop['attribute'] = property_name
-                new_prop['value'] = line.xpath('text()').extract()[0].rstrip()
-                new_prop['source'] = line.xpath('strong/text()').extract()[0].rstrip()
-                new_prop['reliability'] = None
-                new_prop['conditions'] = None
+                new_prop = Result({
+                    'attribute': property_name,
+                    'value': line.xpath('text()').extract()[0].rstrip(),
+                    'source': line.xpath('strong/text()').extract()[0].rstrip(),
+                    'reliability': '',
+                    'conditions': ''
+                           })
                 properties.append(new_prop)
                 log.msg('CS prop: |%s| |%s| |%s|' \
                 % (new_prop['attribute'],new_prop['value'], new_prop['source']),
-                level=log.WARNING)
+                level=log.DEBUG)
 
         return properties
 
@@ -87,30 +90,47 @@ class ChemSpider(Parser):
         return requests
 
     def new_synonym(self, name, reliability):
-        log.msg('CS synonym: %s (%s)' % (name, reliability), level=log.WARNING)
+        log.msg('CS synonym: %s (%s)' % (name, reliability), level=log.DEBUG)
         self.ignore_list.append(name)
         synonym = Result()
         synonym['attribute'] = 'synonym'
         synonym['value'] = name
         synonym['source'] = 'ChemSpider'
         synonym['reliability'] = reliability
-        synonym['conditions'] = None
+        synonym['conditions'] = ''
         return synonym
 
+    def parse_extendedinfo(self, response):
+        sel = Selector(response)
+        properties = []
+        names = sel.xpath('*').xpath('name()').extract()
+        values = sel.xpath('*').xpath('text()').extract()
+        for (name, value) in zip(names,values):
+            result = Result({
+                    'attribute': name,
+                    'value': value,
+                    'source': 'ChemSpider',
+                    'reliability': '',
+                    'conditions': ''
+                    })
+            properties.append(result)
+        return properties
 
     def parse_searchrequest(self, response):
         sel = Selector(response)
-        log.msg('chemspider parse_searchrequest', level=log.WARNING)
+        log.msg('chemspider parse_searchrequest', level=log.DEBUG)
         sel.register_namespace('cs', 'http://www.chemspider.com/')
         csid = sel.xpath('.//cs:int/text()').extract()[0]
         #TODO: handle multiple csids in case of vague search term
         structure_url = self.website[:-1] + self.structure % csid
-        log.msg('chemspider URL: %s' % structure_url, level=log.WARNING)
-        return Request(structure_url, callback=self.parse)
+        extendedinfo_url = self.website[:-1] + self.extendedinfo % csid
+        log.msg('chemspider URL: %s' % structure_url, level=log.DEBUG)
+        return [Request(url=structure_url, callback=self.parse),
+                Request(url=extendedinfo_url, callback=self.parse_extendedinfo)]
     
     def new_compound_request(self,compound):
         if compound in self.ignore_list: #TODO: add regular expression
             return None
         searchurl = self.website[:-1] + self.search % compound
-        log.msg('chemspider compound', level=log.WARNING)
+        log.msg('chemspider compound', level=log.DEBUG)
         return Request(url=searchurl, callback=self.parse_searchrequest)
