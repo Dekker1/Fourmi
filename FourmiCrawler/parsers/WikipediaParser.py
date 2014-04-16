@@ -75,6 +75,6 @@ class WikipediaParser(Parser):
         return item
 
     def getchemspider(self, sel):
-        link=sel.xpath('//tr/td/a[@title="ChemSpider"]/../../td[2]/span/a/@href').extract() # ('//tr[contains(@href, "/wiki/Melting_point")]/text()').extract()
+        link=sel.xpath('//tr/td/a[@title="ChemSpider"]/../../td[2]/span/a/@href').extract()[0] # ('//tr[contains(@href, "/wiki/Melting_point")]/text()').extract()
         print link
         return link
