@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """
-Fourmi, an web scraper build to search specific information for a given compound (and it's pseudonyms).
+Fourmi, a web scraper build to search specific information for a given compound (and it's pseudonyms).
 
 Usage:
     fourmi search <compound>
