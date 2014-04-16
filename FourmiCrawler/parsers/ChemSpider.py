@@ -15,7 +15,7 @@ class ChemSpider(Parser):
 
     search = "Search.asmx/SimpleSearch?query=%s&token=052bfd06-5ce4-43d6-bf12-89eabefd2338"
     structure = "Chemical-Structure.%s.html"
-    extendedinfo = "MassSpecAPI.asmx/GetExtendedCompoundInfo?query=%s&token=052bfd06-5ce4-43d6-bf12-89eabefd2338"
+    extendedinfo = "MassSpecAPI.asmx/GetExtendedCompoundInfo?csid=%s&token=052bfd06-5ce4-43d6-bf12-89eabefd2338"
 
     ignore_list = []
 
