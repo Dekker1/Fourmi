@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """
-Fourmi, an web scraper build to search specific information for a given compound (and it's pseudonyms).
+Fourmi, a web scraper build to search specific information for a given compound (and it's pseudonyms).
 
 Usage:
     fourmi search <compound>
@@ -89,6 +89,6 @@ if __name__ == '__main__':
     arguments = docopt.docopt(__doc__, version='Fourmi - V0.1.0')
     start_log(arguments)
     settings = scrapy_settings_manipulation(arguments)
-    setup_crawler([arguments["<compound>"]], settings)
+    setup_crawler(arguments["<compound>"], settings)
     reactor.run()
 
