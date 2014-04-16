@@ -1,5 +1,6 @@
 import inspect
 import os
+import re
 from FourmiCrawler.parsers.parser import Parser
 
 
@@ -20,7 +21,10 @@ class SourceLoader:
                     known_parser.add(cls)
 
     def include(self, source_names):
-        pass # [todo] - implement source inclusion.
+        new = []
+        for name in source_names:
+            new.extend([src for src in self.sources if re.match(name, src.__class__.__name__)])
+        self.sources = new
 
     def exclude(self, source_names):
         pass # [todo] - implement source exclusion.
