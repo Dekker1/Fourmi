@@ -33,21 +33,20 @@ class WikipediaParser(Parser):
             item['value'] = prop_values[i].extract().encode('utf-8')
             item['source'] = "Wikipedia"
             items.append(item)
-            print "new: " + item['attribute']
-            print item['value']
+            #print "new: " + item['attribute']
+            #print item['value']
         items=filter(lambda a: a['value']!='', items) #remove items with an empty value
-        print items
+        #print items
+        self.cleanitems(items)
         return items
 
     def new_compound_request(self, compound):
         return Request(url=self.website[:-1] + compound, callback=self.parse)
 
-    def getmeltingpoint(self, sel):
-        item=Result()
-        item['attribute']="Melting point"
-        item['value']= sel.xpath('//tr/td/a[@title="Melting point"]/../../td[2]/text()').extract() # ('//tr[contains(@href, "/wiki/Melting_point")]/text()').extract()
-        item['source']= "Wikipedia"
-        return item
+    def cleanitems(self, items):
+        for item in items:
+            print item['value']
+        return items
 
     def getboilingpoint(self, sel):
         item=Result()
