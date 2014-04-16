@@ -2,6 +2,7 @@ from scrapy.http import Request
 from parser import Parser
 from scrapy.selector import Selector
 from FourmiCrawler.items import Result
+import re
 
 class WikipediaParser(Parser):
 
@@ -45,7 +46,9 @@ class WikipediaParser(Parser):
 
     def cleanitems(self, items):
         for item in items:
-            print item['value']
+            value=item['value']
+            if re.match('3(...)', value):
+                print value
         return items
 
     def getboilingpoint(self, sel):
