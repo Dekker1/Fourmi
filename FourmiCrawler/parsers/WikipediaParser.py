@@ -33,9 +33,12 @@ class WikipediaParser(Parser):
             item['value'] = prop_values[i].extract().encode('utf-8')
             item['source'] = "Wikipedia"
             items.append(item)
-            print "new: " + item['attribute']
-            print item['value']
+            #print "new: " + item['attribute']
+            #print item['value']
+        items=filter(lambda a: a['value']!='', items)
+        print items
         return items
+
 
     def new_compound_request(self, compound):
         return Request(url=self.website[:-1] + compound, callback=self.parse)
