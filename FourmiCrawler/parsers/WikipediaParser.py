@@ -23,7 +23,7 @@ class WikipediaParser(Parser):
         meltingpoint = self.getmeltingpoint(sel)
         items.append(meltingpoint)
         boilingpoint = self.getboilingpoint(sel)
-        print boilingpoint
+        chemlink = self.getchemspider(sel)
         items.append(boilingpoint)
         return items
 
@@ -42,4 +42,9 @@ class WikipediaParser(Parser):
         item['attribute']="Boiling point"
         item['value']= sel.xpath('//tr/td/a[@title="Boiling point"]/../../td[2]/text()').extract() # ('//tr[contains(@href, "/wiki/Melting_point")]/text()').extract()
         item['source']= "Wikipedia"
+        return item
+
+    def getchemspider(self, sel):
+        item=sel.xpath('//tr/td/a[@title="ChemSpider"]/../../td[2]/span/a/@href').extract() # ('//tr[contains(@href, "/wiki/Melting_point")]/text()').extract()
+        print item
         return item
