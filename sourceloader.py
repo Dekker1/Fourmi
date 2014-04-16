@@ -27,7 +27,10 @@ class SourceLoader:
         self.sources = new
 
     def exclude(self, source_names):
-        pass # [todo] - implement source exclusion.
+        exclude = []
+        for name in source_names:
+           exclude.extend([src for src in self.sources if re.match(source_names,src.__class__.__name__)])
+        self.sources = [src for src in self.sources if src not in exclude]
 
     def __str__(self):
         string = ""
