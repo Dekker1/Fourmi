@@ -20,11 +20,17 @@ class WikipediaParser(Parser):
         #self.log('A response from %s just arrived!' % response.url)
         sel = Selector(response)
         items = []
+        density = self.getdensity(sel)
+        items.append(density)
         meltingpoint = self.getmeltingpoint(sel)
         items.append(meltingpoint)
         boilingpoint = self.getboilingpoint(sel)
         chemlink = self.getchemspider(sel)
         items.append(boilingpoint)
+        heatcapacity = self.getheatcapacity(sel)
+        items.append(heatcapacity)
+        molarentropy = self.getmolarentropy(sel)
+        items.append(molarentropy)
         return items
 
     def new_compound_request(self, compound):
@@ -44,7 +50,31 @@ class WikipediaParser(Parser):
         item['source']= "Wikipedia"
         return item
 
-    def getchemspider(self, sel):
-        item=sel.xpath('//tr/td/a[@title="ChemSpider"]/../../td[2]/span/a/@href').extract() # ('//tr[contains(@href, "/wiki/Melting_point")]/text()').extract()
-        print item
+    def getdensity(self, sel):
+        item=Result()
+        item['attribute']="Density"
+        item['value']= sel.xpath('//tr/td/a[@title="Density"]/../../td[2]/text()').extract() # ('//tr[contains(@href, "/wiki/Melting_point")]/text()').extract()
+        item['source']= "Wikipedia"
+        print item['value']
         return item
+
+    def getheatcapacity(self, sel):
+        item=Result()
+        item['attribute']="Specific heat capacity"
+        item['value']= sel.xpath('//tr/td/a[@title="Specific heat capacity"]/../../td[2]/text()').extract() # ('//tr[contains(@href, "/wiki/Melting_point")]/text()').extract()
+        item['source']= "Wikipedia"
+        print item['value']
+        return item
+
+    def getmolarentropy(self, sel):
+        item=Result()
+        item['attribute']="Standard molar entropy"
+        item['value']= sel.xpath('//tr/td/a[@title="Standard molar entropy"]/../../td[2]/text()').extract() # ('//tr[contains(@href, "/wiki/Melting_point")]/text()').extract()
+        item['source']= "Wikipedia"
+        print item['value']
+        return item
+
+    def getchemspider(self, sel):
+        link=sel.xpath('//tr/td/a[@title="ChemSpider"]/../../td[2]/span/a/@href').extract() # ('//tr[contains(@href, "/wiki/Melting_point")]/text()').extract()
+        print link
+        return link
