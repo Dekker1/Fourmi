@@ -29,6 +29,7 @@ import docopt
 
 from FourmiCrawler.parsers.parser import Parser
 from FourmiCrawler.spider import FourmiSpider
+from sourceloader import SourceLoader
 
 
 def load_parsers(rel_dir="FourmiCrawler/parsers"):
@@ -94,9 +95,10 @@ def search(arguments):
 
 if __name__ == '__main__':
     arguments = docopt.docopt(__doc__, version='Fourmi - V0.1.0')
-    print arguments
+    loader = SourceLoader()
 
     if arguments["search"]:
         search(arguments)
     elif arguments["list"]:
-        load_parsers() #[todo] - this should just show the different sources.
+        print "-== Available Sources ==-"
+        print str(loader)
