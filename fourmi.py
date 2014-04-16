@@ -5,6 +5,7 @@ Fourmi, an web scraper build to search specific information for a given compound
 Usage:
     fourmi search <compound>
     fourmi [options] search <compound>
+    fourmi list
     fourmi -h | --help
     fourmi --version
 
@@ -84,11 +85,18 @@ def start_log(arguments):
         else:
             log.start(logstdout=True, loglevel=log.WARNING)
 
-
-if __name__ == '__main__':
-    arguments = docopt.docopt(__doc__, version='Fourmi - V0.1.0')
+def search(arguments):
     start_log(arguments)
     settings = scrapy_settings_manipulation(arguments)
     setup_crawler([arguments["<compound>"]], settings)
     reactor.run()
 
+
+if __name__ == '__main__':
+    arguments = docopt.docopt(__doc__, version='Fourmi - V0.1.0')
+    print arguments
+
+    if arguments["search"]:
+        search(arguments)
+    elif arguments["list"]:
+        load_parsers() #[todo] - this should just show the different sources.
