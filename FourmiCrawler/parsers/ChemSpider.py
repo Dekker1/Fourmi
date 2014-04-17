@@ -76,12 +76,17 @@ class ChemSpider(Parser):
     def parse_synonyms(self, sel):
         requests = []
         synonyms = []
-        for syn in sel.xpath('//p[@class="syn"]/strong/text()').extract():
-            synonyms.append( self.new_synonym( syn, 'high' ) )
-        for syn in sel.xpath('//p[@class="syn"]/span[@class="synonym_confirmed"]/text()').extract():
-            synonyms.append( self.new_synonym( syn, 'medium' ) )
-        for syn in sel.xpath('//p[@class="syn"]/span[@class=""]/text()').extract():
-            synonyms.append( self.new_synonym( syn, 'low' ) )
+        for syn in sel.xpath('//p[@class="syn"][strong]'):
+            name = syn.xpath('strong/text()').extract()[0]
+            synonyms.append(self.new_synonym(syn, name, 'high'))
+        for syn in sel.xpath(
+                        '//p[@class="syn"][span[@class="synonym_confirmed"]]'):
+            name = syn.xpath(
+                        'span[@class="synonym_confirmed"]/text()').extract()[0]
+            synonyms.append(self.new_synonym(syn, name, 'medium'))
+        for syn in sel.xpath('//p[@class="syn"][span[@class=""]]'):
+            name = syn.xpath('span[@class=""]/text()').extract()[0]
+            synonyms.append(self.new_synonym(syn, name, 'low'))
 
         for synonym in synonyms:
             if synonym['reliability'] == 'high':
@@ -89,7 +94,7 @@ class ChemSpider(Parser):
 
         return requests
 
-    def new_synonym(self, name, reliability):
+    def new_synonym(self, sel, name, reliability):
         log.msg('CS synonym: %s (%s)' % (name, reliability), level=log.DEBUG)
         self.ignore_list.append(name)
         synonym = Result()
