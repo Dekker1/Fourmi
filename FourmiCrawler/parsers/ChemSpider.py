@@ -89,7 +89,8 @@ class ChemSpider(Parser):
             synonyms.append(self.new_synonym(syn, name, 'nonvalidated'))
 
         for synonym in synonyms:
-            if synonym['category'] == 'expert':
+            if synonym['category'] == 'expert' and
+                synonym['language'] == 'English':
                 self._Parser__spider.get_synonym_requests(synonym['name'])
 
         return requests
