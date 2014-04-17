@@ -94,13 +94,20 @@ class ChemSpider(Parser):
 
         return requests
 
-    def new_synonym(self, sel, name, reliability):
-        log.msg('CS synonym: %s (%s)' % (name, reliability), level=log.DEBUG)
+    def new_synonym(self, sel, name, category):
         self.ignore_list.append(name)
+        language = sel.xpath('span[@class="synonym_language"]/text()').extract()
+        if language:
+            language = language[0][1:-1]
+        else:
+            language = 'English'
         synonym = {
                 'name': name,
                 'category': category,
+                'language': language
                 }
+        log.msg('CS synonym: %s (%s) (%s)' % (name, category, language),
+                level=log.DEBUG)
         return synonym
 
     def parse_extendedinfo(self, response):
