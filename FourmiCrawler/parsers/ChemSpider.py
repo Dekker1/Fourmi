@@ -134,15 +134,19 @@ somewhere.
         return requests
 
     def new_synonym(self, sel, name, category):
+        """Scrape for a single synonym at a given HTML tag"""
         self.ignore_list.append(name)
         language = sel.xpath('span[@class="synonym_language"]/text()')
         if language:
+            # The [1:-1] is to remove brackets around the language name
             language = language.extract()[0][1:-1]
         else:
+            # If language is not given, English is assumed, TODO: confirm
             language = 'English'
         log.msg('CS synonym: %s (%s) (%s)' % (name, category, language),
                 level=log.DEBUG)
         references = []
+        # A synonym can have multiple references, each optionally with link
         for ref in sel.xpath('span[@class="synonym_ref"]'):
             refname = ref.xpath('normalize-space(string())')
             references.append({
