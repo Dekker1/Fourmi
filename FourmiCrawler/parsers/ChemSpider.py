@@ -158,7 +158,7 @@ class ChemSpider(Parser):
             result = Result({
                 'attribute': name,
                 'value': value,
-                'source': 'ChemSpider',
+                'source': 'ChemSpider ExtendedCompoundInfo',
                 'reliability': 'Unknown',
                 'conditions': ''
                 })
