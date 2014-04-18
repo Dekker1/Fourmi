@@ -119,9 +119,9 @@ class ChemSpider(Parser):
 
     def new_synonym(self, sel, name, category):
         self.ignore_list.append(name)
-        language = sel.xpath('span[@class="synonym_language"]/text()').extract()
+        language = sel.xpath('span[@class="synonym_language"]/text()')
         if language:
-            language = language[0][1:-1]
+            language = language.extract()[0][1:-1]
         else:
             language = 'English'
         log.msg('CS synonym: %s (%s) (%s)' % (name, category, language),
@@ -129,7 +129,10 @@ class ChemSpider(Parser):
         references = []
         for ref in sel.xpath('span[@class="synonym_ref"]'):
             refname = ref.xpath('normalize-space(string())')
-            references.append({'name': refname.extract()[0][1:-1], 'URI': ''})
+            references.append({
+                'name': refname.extract()[0][1:-1],
+                'URI': ''
+                })
         for ref in sel.xpath('a[@class="synonym_ref"]'):
             references.append({
                 'name': ref.xpath('@title').extract()[0],
@@ -137,13 +140,13 @@ class ChemSpider(Parser):
                 })
         for ref in references:
             log.msg('CS synonym ref: %s %s' % (ref['name'], ref['URI']),
-                                                            level=log.DEBUG)
+                    level=log.DEBUG)
         synonym = {
-                'name': name,
-                'category': category,
-                'language': language,
-                'references': references
-                }
+            'name': name,
+            'category': category,
+            'language': language,
+            'references': references
+            }
         return synonym
 
     def parse_extendedinfo(self, response):
