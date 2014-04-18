@@ -47,6 +47,11 @@ class ChemSpider(Parser):
                 prop_name = m.group(1)
                 prop_conditions = m.group(2)
 
+            m = re.match(r'(.*) at (.*)', prop_value)
+            if m: 
+                prop_value = m.group(1)
+                prop_conditions = m.group(2)
+
             new_prop = Result({
                 'attribute': prop_name,
                 'value': prop_value,
