@@ -170,6 +170,7 @@ somewhere.
         return synonym
 
     def parse_extendedinfo(self, response):
+        """Scrape data from the ChemSpider GetExtendedCompoundInfo API"""
         sel = Selector(response)
         properties = []
         names = sel.xpath('*').xpath('name()').extract()
@@ -177,7 +178,7 @@ somewhere.
         for (name, value) in zip(names,values):
             result = Result({
                 'attribute': name,
-                'value': value,
+                'value': value, #These values have no unit!
                 'source': 'ChemSpider ExtendedCompoundInfo',
                 'reliability': 'Unknown',
                 'conditions': ''
