@@ -41,7 +41,7 @@ class ChemSpider(Parser):
                 'attribute': prop_name.extract().encode('utf-8'),
                 'value': prop_values[i].extract().encode('utf-8'),
                 'source': 'ChemSpider Predicted - ACD/Labs Tab',
-                'reliability': '',
+                'reliability': 'Unknown',
                 'conditions': ''
                        })
             properties.append(new_prop)
@@ -61,7 +61,7 @@ class ChemSpider(Parser):
                     'attribute': property_name,
                     'value': line.xpath('text()').extract()[0].rstrip(),
                     'source': line.xpath('strong/text()').extract()[0].rstrip(),
-                    'reliability': '',
+                    'reliability': 'Unknown',
                     'conditions': ''
                            })
                 properties.append(new_prop)
@@ -132,7 +132,7 @@ class ChemSpider(Parser):
                     'attribute': name,
                     'value': value,
                     'source': 'ChemSpider',
-                    'reliability': '',
+                    'reliability': 'Unknown',
                     'conditions': ''
                     })
             properties.append(result)
