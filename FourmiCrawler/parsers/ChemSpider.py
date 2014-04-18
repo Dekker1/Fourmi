@@ -5,13 +5,14 @@ from scrapy.selector import Selector
 from FourmiCrawler.items import Result
 import re
 
-"""
-This parser will manage searching for chemicals through the ChemsSpider API,
-and parsing the resulting ChemSpider page. 
-The token required for the API should be in a configuration file somewhere.
-"""
 class ChemSpider(Parser):
-    
+"""ChemSpider scraper for synonyms and properties
+
+This parser will manage searching for chemicals through the
+ChemsSpider API, and parsing the resulting ChemSpider page.
+The token required for the API should be in a configuration file
+somewhere.
+"""
     website = 'http://www.chemspider.com/*'
 
     search = ('Search.asmx/SimpleSearch?query=%s&token='
@@ -33,23 +34,29 @@ class ChemSpider(Parser):
         return requests
 
     def parse_properties(self, sel):
+        """scrape Experimental Data and Predicted ACD/Labs tabs"""
         requests = []
         properties = []
 
+        # Predicted - ACD/Labs tab
+        # TODO: test if tab contains data, some chemicals do not have data here
         td_list = sel.xpath('.//table[@id="acdlabs-table"]//td').xpath(
                                                 'normalize-space(string())')
         prop_names = td_list[::2]
         prop_values = td_list[1::2]
         for (prop_name, prop_value) in zip(prop_names, prop_values):
+            # [:-1] is to remove the colon at the end, TODO: test for colon
             prop_name = prop_name.extract().encode('utf-8')[:-1]
             prop_value = prop_value.extract().encode('utf-8')
             prop_conditions = ''
 
+            # Match for condition in parentheses
             m = re.match(r'(.*) \((.*)\)', prop_name)
             if m:
                 prop_name = m.group(1)
                 prop_conditions = m.group(2)
 
+            # Match for condition in value seperated by an 'at'
             m = re.match(r'(.*) at (.*)', prop_value)
             if m: 
                 prop_value = m.group(1)
@@ -67,10 +74,12 @@ class ChemSpider(Parser):
                 (new_prop['attribute'], new_prop['value'], new_prop['source']),
                 level=log.DEBUG)
 
+        # Experimental Data Tab, Physico-chemical properties in particular
         scraped_list = sel.xpath('.//li[span="Experimental Physico-chemical '
                                                 'Properties"]//li/table/tr/td')
         if not scraped_list:
             return properties
+        # Format is: property name followed by a list of values
         property_name = scraped_list.pop(0).xpath(
                                         'span/text()').extract()[0].rstrip()
         for line in scraped_list:
@@ -93,23 +102,30 @@ class ChemSpider(Parser):
         return properties
 
     def parse_synonyms(self, sel):
+    """Scrape list of Names and Identifiers"""
         requests = []
         synonyms = []
+
+        # Exact type for this is unknown, but equivalent to Validated by Expert
         for syn in sel.xpath('//p[@class="syn"][span[@class="synonym_cn"]]'):
             name = syn.xpath('span[@class="synonym_cn"]/text()').extract()[0]
             synonyms.append(self.new_synonym(syn, name, 'expert'))
+        # These synonyms are labeled by ChemSpider as "Validated by Experts"
         for syn in sel.xpath('//p[@class="syn"][strong]'):
             name = syn.xpath('strong/text()').extract()[0]
             synonyms.append(self.new_synonym(syn, name, 'expert'))
+        # These synonyms are labeled by ChemSpider as "Validated by Users"
         for syn in sel.xpath(
                         '//p[@class="syn"][span[@class="synonym_confirmed"]]'):
             name = syn.xpath(
                         'span[@class="synonym_confirmed"]/text()').extract()[0]
             synonyms.append(self.new_synonym(syn, name, 'user'))
+        # These syonyms are labeled as "Non-validated" and assumed unreliable
         for syn in sel.xpath('//p[@class="syn"][span[@class=""]]'):
             name = syn.xpath('span[@class=""]/text()').extract()[0]
             synonyms.append(self.new_synonym(syn, name, 'nonvalidated'))
 
+        # TODO: confirm if English User-Validated synonyms are OK too
         for syn in synonyms:
             if (syn['category'] == 'expert' and syn['language'] == 'English'):
                 log.msg('CS emit synonym: %s' % syn['name'], level=log.DEBUG)
