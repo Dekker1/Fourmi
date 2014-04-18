@@ -36,7 +36,8 @@ class ChemSpider(Parser):
         requests = []
         properties = []
 
-        td_list = sel.xpath('.//table[@id="acdlabs-table"]//td').xpath('normalize-space(string())')
+        td_list = sel.xpath('.//table[@id="acdlabs-table"]//td').xpath(
+                                                'normalize-space(string())')
         prop_names = td_list[::2]
         prop_values = td_list[1::2]
         for (prop_name, prop_value) in zip(prop_names, prop_values):
@@ -62,14 +63,16 @@ class ChemSpider(Parser):
                 'conditions': prop_conditions
                        })
             properties.append(new_prop)
-            log.msg('CS prop: |%s| |%s| |%s|' \
-            % (new_prop['attribute'],new_prop['value'], new_prop['source']),
-            level=log.DEBUG)
+            log.msg('CS prop: |%s| |%s| |%s|' %
+                (new_prop['attribute'], new_prop['value'], new_prop['source']),
+                level=log.DEBUG)
 
-        scraped_list = sel.xpath('.//li[span="Experimental Physico-chemical Properties"]//li/table/tr/td')
+        scraped_list = sel.xpath('.//li[span="Experimental Physico-chemical '
+                                                'Properties"]//li/table/tr/td')
         if not scraped_list:
             return properties
-        property_name = scraped_list.pop(0).xpath('span/text()').extract()[0].rstrip()
+        property_name = scraped_list.pop(0).xpath(
+                                        'span/text()').extract()[0].rstrip()
         for line in scraped_list:
             if line.xpath('span/text()'):
                 property_name = line.xpath('span/text()').extract()[0].rstrip()
@@ -77,14 +80,15 @@ class ChemSpider(Parser):
                 new_prop = Result({
                     'attribute': property_name[:-1],
                     'value': line.xpath('text()').extract()[0].rstrip(),
-                    'source': line.xpath('strong/text()').extract()[0].rstrip(),
+                    'source': line.xpath(
+                        'strong/text()').extract()[0].rstrip(),
                     'reliability': 'Unknown',
                     'conditions': ''
                            })
                 properties.append(new_prop)
-                log.msg('CS prop: |%s| |%s| |%s|' \
-                % (new_prop['attribute'],new_prop['value'], new_prop['source']),
-                level=log.DEBUG)
+                log.msg('CS prop: |%s| |%s| |%s|' %
+                    (new_prop['attribute'], new_prop['value'],
+                    new_prop['source']), level=log.DEBUG)
 
         return properties
 
