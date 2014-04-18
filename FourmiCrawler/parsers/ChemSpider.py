@@ -36,10 +36,10 @@ class ChemSpider(Parser):
         td_list = sel.xpath('.//table[@id="acdlabs-table"]//td').xpath('normalize-space(string())')
         prop_names = td_list[::2]
         prop_values = td_list[1::2]
-        for i, prop_name in enumerate(prop_names):
+        for (prop_name, prop_value) in zip(prop_names, prop_values):
             new_prop = Result({
                 'attribute': prop_name.extract().encode('utf-8'),
-                'value': prop_values[i].extract().encode('utf-8'),
+                'value': prop_value.extract().encode('utf-8'),
                 'source': 'ChemSpider Predicted - ACD/Labs Tab',
                 'reliability': 'Unknown',
                 'conditions': ''
