@@ -5,6 +5,9 @@ from scrapy.selector import Selector
 from FourmiCrawler.items import Result
 import re
 
+# TODO: Maybe clean up usage of '.extract()[0]', because it will raise an
+#       IndexError exception if the xpath matches nothing
+
 class ChemSpider(Parser):
 """ChemSpider scraper for synonyms and properties
 
@@ -187,6 +190,7 @@ somewhere.
         return properties
 
     def parse_searchrequest(self, response):
+        """Parse the initial response of the ChemSpider Search API """
         sel = Selector(response)
         log.msg('chemspider parse_searchrequest', level=log.DEBUG)
         sel.register_namespace('cs', 'http://www.chemspider.com/')
