@@ -156,12 +156,12 @@ class ChemSpider(Parser):
         values = sel.xpath('*').xpath('text()').extract()
         for (name, value) in zip(names,values):
             result = Result({
-                    'attribute': name,
-                    'value': value,
-                    'source': 'ChemSpider',
-                    'reliability': 'Unknown',
-                    'conditions': ''
-                    })
+                'attribute': name,
+                'value': value,
+                'source': 'ChemSpider',
+                'reliability': 'Unknown',
+                'conditions': ''
+                })
             properties.append(result)
         return properties
 
