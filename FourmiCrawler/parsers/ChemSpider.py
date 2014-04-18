@@ -74,6 +74,9 @@ class ChemSpider(Parser):
     def parse_synonyms(self, sel):
         requests = []
         synonyms = []
+        for syn in sel.xpath('//p[@class="syn"][span[@class="synonym_cn"]]'):
+            name = syn.xpath('span[@class="synonym_cn"]/text()').extract()[0]
+            synonyms.append(self.new_synonym(syn, name, 'expert'))
         for syn in sel.xpath('//p[@class="syn"][strong]'):
             name = syn.xpath('strong/text()').extract()[0]
             synonyms.append(self.new_synonym(syn, name, 'expert'))
