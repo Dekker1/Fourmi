@@ -38,15 +38,21 @@ class ChemSpider(Parser):
         prop_names = td_list[::2]
         prop_values = td_list[1::2]
         for (prop_name, prop_value) in zip(prop_names, prop_values):
-            prop_name = prop_name.extract().encode('utf-8')
+            prop_name = prop_name.extract().encode('utf-8')[:-1]
             prop_value = prop_value.extract().encode('utf-8')
+            prop_conditions = ''
+
+            m = re.match(r'(.*) \((.*)\)', prop_name)
+            if m:
+                prop_name = m.group(1)
+                prop_conditions = m.group(2)
 
             new_prop = Result({
-                'attribute': prop_name[:-1],
+                'attribute': prop_name,
                 'value': prop_value,
                 'source': 'ChemSpider Predicted - ACD/Labs Tab',
                 'reliability': 'Unknown',
-                'conditions': ''
+                'conditions': prop_conditions
                        })
             properties.append(new_prop)
             log.msg('CS prop: |%s| |%s| |%s|' \
