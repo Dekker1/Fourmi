@@ -12,11 +12,13 @@ The token required for the API should be in a configuration file somewhere.
 """
 class ChemSpider(Parser):
     
-    website = "http://www.chemspider.com/*"
+    website = 'http://www.chemspider.com/*'
 
-    search = "Search.asmx/SimpleSearch?query=%s&token=052bfd06-5ce4-43d6-bf12-89eabefd2338"
-    structure = "Chemical-Structure.%s.html"
-    extendedinfo = "MassSpecAPI.asmx/GetExtendedCompoundInfo?csid=%s&token=052bfd06-5ce4-43d6-bf12-89eabefd2338"
+    search = ('Search.asmx/SimpleSearch?query=%s&token='
+        '052bfd06-5ce4-43d6-bf12-89eabefd2338')
+    structure = 'Chemical-Structure.%s.html'
+    extendedinfo = ('MassSpecAPI.asmx/GetExtendedCompoundInfo?csid=%s&token='
+        '052bfd06-5ce4-43d6-bf12-89eabefd2338')
 
     ignore_list = []
 
