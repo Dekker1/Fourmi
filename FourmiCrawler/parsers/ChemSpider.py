@@ -3,6 +3,7 @@ from scrapy import log
 from scrapy.http import Request
 from scrapy.selector import Selector
 from FourmiCrawler.items import Result
+import re
 
 """
 This parser will manage searching for chemicals through the ChemsSpider API,
@@ -37,9 +38,12 @@ class ChemSpider(Parser):
         prop_names = td_list[::2]
         prop_values = td_list[1::2]
         for (prop_name, prop_value) in zip(prop_names, prop_values):
+            prop_name = prop_name.extract().encode('utf-8')
+            prop_value = prop_value.extract().encode('utf-8')
+
             new_prop = Result({
-                'attribute': prop_name.extract().encode('utf-8'),
-                'value': prop_value.extract().encode('utf-8'),
+                'attribute': prop_name,
+                'value': prop_value,
                 'source': 'ChemSpider Predicted - ACD/Labs Tab',
                 'reliability': 'Unknown',
                 'conditions': ''
