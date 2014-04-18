@@ -88,10 +88,10 @@ class ChemSpider(Parser):
             name = syn.xpath('span[@class=""]/text()').extract()[0]
             synonyms.append(self.new_synonym(syn, name, 'nonvalidated'))
 
-        for synonym in synonyms:
-            if synonym['category'] == 'expert' and
-                synonym['language'] == 'English':
-                self._Parser__spider.get_synonym_requests(synonym['name'])
+        for syn in synonyms:
+            if (syn['category'] == 'expert' and syn['language'] == 'English'):
+                log.msg('CS emit synonym: %s' % syn['name'], level=log.DEBUG)
+                self._Parser__spider.get_synonym_requests(syn['name'])
 
         return requests
 
