@@ -174,8 +174,10 @@ class ChemSpider(Parser):
         structure_url = self.website[:-1] + self.structure % csid
         extendedinfo_url = self.website[:-1] + self.extendedinfo % csid
         log.msg('chemspider URL: %s' % structure_url, level=log.DEBUG)
-        return [Request(url=structure_url, callback=self.parse),
-                Request(url=extendedinfo_url, callback=self.parse_extendedinfo)]
+        return [Request(url=structure_url,
+                        callback=self.parse),
+                Request(url=extendedinfo_url,
+                        callback=self.parse_extendedinfo)]
     
     def new_compound_request(self,compound):
         if compound in self.ignore_list: #TODO: add regular expression
