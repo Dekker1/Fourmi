@@ -42,7 +42,7 @@ class ChemSpider(Parser):
             prop_value = prop_value.extract().encode('utf-8')
 
             new_prop = Result({
-                'attribute': prop_name,
+                'attribute': prop_name[:-1],
                 'value': prop_value,
                 'source': 'ChemSpider Predicted - ACD/Labs Tab',
                 'reliability': 'Unknown',
@@ -62,7 +62,7 @@ class ChemSpider(Parser):
                 property_name = line.xpath('span/text()').extract()[0].rstrip()
             else:
                 new_prop = Result({
-                    'attribute': property_name,
+                    'attribute': property_name[:-1],
                     'value': line.xpath('text()').extract()[0].rstrip(),
                     'source': line.xpath('strong/text()').extract()[0].rstrip(),
                     'reliability': 'Unknown',
