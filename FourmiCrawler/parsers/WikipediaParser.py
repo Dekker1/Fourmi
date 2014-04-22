@@ -47,8 +47,13 @@ class WikipediaParser(Parser):
     def cleanitems(self, items):
         for item in items:
             value=item['value']
-            if re.match('3(...)', value):
-                print value
+            if re.search('F;\s(\d+[\.,]?\d*)', value):
+                #print re.search('F;\s(\d+[\.,]?\d*)', value).group(1)
+                item['value']=re.search('F;\s(\d+[\.,]?\d*)', value).group(1) + " K"
+            if re.match('(\d+[\.,]?\d*)\sJ\sK.+mol', value):
+                print item['value']
+                item['value']=re.search('(\d+[\.,]?\d*)\sJ\sK.+mol', value).group(1) + " J/K/mol"
+            print item['value']
         return items
 
     def getboilingpoint(self, sel):
