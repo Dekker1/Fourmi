@@ -5,8 +5,7 @@ from scrapy.selector import Selector
 from FourmiCrawler.items import Result
 import re
 
-# TODO: Maybe clean up usage of '.extract()[0]', because it will raise an
-#       IndexError exception if the xpath matches nothing
+# [TODO] - Maybe clean up usage of '.extract()[0]', because it will raise an IndexError exception if the xpath matches nothing.
 
 class ChemSpider(Parser):
 """ChemSpider scraper for synonyms and properties
@@ -18,6 +17,7 @@ somewhere.
 """
     website = 'http://www.chemspider.com/*'
 
+    # [TODO] - Save and access token of specific user.
     search = ('Search.asmx/SimpleSearch?query=%s&token='
         '052bfd06-5ce4-43d6-bf12-89eabefd2338')
     structure = 'Chemical-Structure.%s.html'
@@ -42,13 +42,13 @@ somewhere.
         properties = []
 
         # Predicted - ACD/Labs tab
-        # TODO: test if tab contains data, some chemicals do not have data here
+        # [TODO] - test if tab contains data, some chemicals do not have data here
         td_list = sel.xpath('.//table[@id="acdlabs-table"]//td').xpath(
                                                 'normalize-space(string())')
         prop_names = td_list[::2]
         prop_values = td_list[1::2]
         for (prop_name, prop_value) in zip(prop_names, prop_values):
-            # [:-1] is to remove the colon at the end, TODO: test for colon
+            # [:-1] is to remove the colon at the end, [TODO] - test for colon
             prop_name = prop_name.extract().encode('utf-8')[:-1]
             prop_value = prop_value.extract().encode('utf-8')
             prop_conditions = ''
@@ -61,7 +61,7 @@ somewhere.
 
             # Match for condition in value seperated by an 'at'
             m = re.match(r'(.*) at (.*)', prop_value)
-            if m: 
+            if m:
                 prop_value = m.group(1)
                 prop_conditions = m.group(2)
 
@@ -105,7 +105,7 @@ somewhere.
         return properties
 
     def parse_synonyms(self, sel):
-    """Scrape list of Names and Identifiers"""
+        """Scrape list of Names and Identifiers"""
         requests = []
         synonyms = []
 
@@ -128,7 +128,7 @@ somewhere.
             name = syn.xpath('span[@class=""]/text()').extract()[0]
             synonyms.append(self.new_synonym(syn, name, 'nonvalidated'))
 
-        # TODO: confirm if English User-Validated synonyms are OK too
+        # [TODO] - confirm if English User-Validated synonyms are OK too
         for syn in synonyms:
             if (syn['category'] == 'expert' and syn['language'] == 'English'):
                 log.msg('CS emit synonym: %s' % syn['name'], level=log.DEBUG)
@@ -144,7 +144,7 @@ somewhere.
             # The [1:-1] is to remove brackets around the language name
             language = language.extract()[0][1:-1]
         else:
-            # If language is not given, English is assumed, TODO: confirm
+            # If language is not given, English is assumed, [TODO] - confirm
             language = 'English'
         log.msg('CS synonym: %s (%s) (%s)' % (name, category, language),
                 level=log.DEBUG)
@@ -195,7 +195,7 @@ somewhere.
         log.msg('chemspider parse_searchrequest', level=log.DEBUG)
         sel.register_namespace('cs', 'http://www.chemspider.com/')
         csid = sel.xpath('.//cs:int/text()').extract()[0]
-        #TODO: handle multiple csids in case of vague search term
+        # [TODO] - handle multiple csids in case of vague search term
         structure_url = self.website[:-1] + self.structure % csid
         extendedinfo_url = self.website[:-1] + self.extendedinfo % csid
         log.msg('chemspider URL: %s' % structure_url, level=log.DEBUG)
@@ -203,9 +203,9 @@ somewhere.
                         callback=self.parse),
                 Request(url=extendedinfo_url,
                         callback=self.parse_extendedinfo)]
-    
+
     def new_compound_request(self,compound):
-        if compound in self.ignore_list: #TODO: add regular expression
+        if compound in self.ignore_list: #[TODO] - add regular expression
             return None
         searchurl = self.website[:-1] + self.search % compound
         log.msg('chemspider compound', level=log.DEBUG)
