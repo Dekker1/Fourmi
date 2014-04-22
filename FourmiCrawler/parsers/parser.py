@@ -3,11 +3,11 @@ from scrapy import log
 
 
 class Parser:
-    '''
-    website should be an regular expression of the urls of request the parser is able to parse.
-    '''
-    website = "http://something/*"
+    website = "http://something/*"  # Regex of URI's the source is able to parse
     _spider = None
+
+    def __init__(self):
+        pass
 
     def parse(self, reponse):
         log.msg("The parse function of the empty parser was used.", level=log.WARNING)
@@ -18,4 +18,4 @@ class Parser:
         pass
 
     def set_spider(self, spider):
-        self.__spider = spider
+        self._spider = spider
