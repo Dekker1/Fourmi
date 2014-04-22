@@ -5,7 +5,8 @@ from scrapy.selector import Selector
 from FourmiCrawler.items import Result
 import re
 
-# [TODO] - Maybe clean up usage of '.extract()[0]', because it will raise an IndexError exception if the xpath matches nothing.
+# [TODO] - Maybe clean up usage of '.extract()[0]', because of possible IndexError exception.
+
 
 class ChemSpider(Parser):
     """ChemSpider scraper for synonyms and properties
@@ -15,6 +16,10 @@ class ChemSpider(Parser):
     The token required for the API should be in a configuration file
     somewhere.
     """
+
+    def __init__(self):
+        pass
+
     website = 'http://www.chemspider.com/*'
 
     # [TODO] - Save and access token of specific user.
@@ -36,9 +41,9 @@ class ChemSpider(Parser):
 
         return requests
 
-    def parse_properties(self, sel):
+    @staticmethod
+    def parse_properties(sel):
         """scrape Experimental Data and Predicted ACD/Labs tabs"""
-        requests = []
         properties = []
 
         # Predicted - ACD/Labs tab
@@ -130,7 +135,7 @@ class ChemSpider(Parser):
 
         # [TODO] - confirm if English User-Validated synonyms are OK too
         for syn in synonyms:
-            if (syn['category'] == 'expert' and syn['language'] == 'English'):
+            if syn['category'] == 'expert' and syn['language'] == 'English':
                 log.msg('CS emit synonym: %s' % syn['name'], level=log.DEBUG)
                 self._Parser__spider.get_synonym_requests(syn['name'])
 
@@ -172,7 +177,8 @@ class ChemSpider(Parser):
         }
         return synonym
 
-    def parse_extendedinfo(self, response):
+    @staticmethod
+    def parse_extendedinfo(response):
         """Scrape data from the ChemSpider GetExtendedCompoundInfo API"""
         sel = Selector(response)
         properties = []
@@ -181,7 +187,7 @@ class ChemSpider(Parser):
         for (name, value) in zip(names, values):
             result = Result({
                 'attribute': name,
-                'value': value,  #These values have no unit!
+                'value': value,  # These values have no unit!
                 'source': 'ChemSpider ExtendedCompoundInfo',
                 'reliability': 'Unknown',
                 'conditions': ''
@@ -205,7 +211,7 @@ class ChemSpider(Parser):
                         callback=self.parse_extendedinfo)]
 
     def new_compound_request(self, compound):
-        if compound in self.ignore_list:  #[TODO] - add regular expression
+        if compound in self.ignore_list:  # [TODO] - add regular expression
             return None
         searchurl = self.website[:-1] + self.search % compound
         log.msg('chemspider compound', level=log.DEBUG)
