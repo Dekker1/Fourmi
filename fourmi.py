@@ -86,7 +86,7 @@ def start_log(arguments):
 
 
 if __name__ == '__main__':
-    arguments = docopt.docopt(__doc__, version='Fourmi - V0.1.0')
+    arguments = docopt.docopt(__doc__, version='Fourmi - V0.2.0')
     start_log(arguments)
     settings = scrapy_settings_manipulation(arguments)
     setup_crawler(arguments["<compound>"], settings)
