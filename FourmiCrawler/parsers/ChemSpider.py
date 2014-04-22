@@ -8,21 +8,21 @@ import re
 # [TODO] - Maybe clean up usage of '.extract()[0]', because it will raise an IndexError exception if the xpath matches nothing.
 
 class ChemSpider(Parser):
-"""ChemSpider scraper for synonyms and properties
+    """ChemSpider scraper for synonyms and properties
 
-This parser will manage searching for chemicals through the
-ChemsSpider API, and parsing the resulting ChemSpider page.
-The token required for the API should be in a configuration file
-somewhere.
-"""
+    This parser will manage searching for chemicals through the
+    ChemsSpider API, and parsing the resulting ChemSpider page.
+    The token required for the API should be in a configuration file
+    somewhere.
+    """
     website = 'http://www.chemspider.com/*'
 
     # [TODO] - Save and access token of specific user.
     search = ('Search.asmx/SimpleSearch?query=%s&token='
-        '052bfd06-5ce4-43d6-bf12-89eabefd2338')
+              '052bfd06-5ce4-43d6-bf12-89eabefd2338')
     structure = 'Chemical-Structure.%s.html'
     extendedinfo = ('MassSpecAPI.asmx/GetExtendedCompoundInfo?csid=%s&token='
-        '052bfd06-5ce4-43d6-bf12-89eabefd2338')
+                    '052bfd06-5ce4-43d6-bf12-89eabefd2338')
 
     ignore_list = []
 
@@ -44,7 +44,7 @@ somewhere.
         # Predicted - ACD/Labs tab
         # [TODO] - test if tab contains data, some chemicals do not have data here
         td_list = sel.xpath('.//table[@id="acdlabs-table"]//td').xpath(
-                                                'normalize-space(string())')
+            'normalize-space(string())')
         prop_names = td_list[::2]
         prop_values = td_list[1::2]
         for (prop_name, prop_value) in zip(prop_names, prop_values):
@@ -71,20 +71,20 @@ somewhere.
                 'source': 'ChemSpider Predicted - ACD/Labs Tab',
                 'reliability': 'Unknown',
                 'conditions': prop_conditions
-                })
+            })
             properties.append(new_prop)
             log.msg('CS prop: |%s| |%s| |%s|' %
-                (new_prop['attribute'], new_prop['value'], new_prop['source']),
-                level=log.DEBUG)
+                    (new_prop['attribute'], new_prop['value'], new_prop['source']),
+                    level=log.DEBUG)
 
         # Experimental Data Tab, Physico-chemical properties in particular
         scraped_list = sel.xpath('.//li[span="Experimental Physico-chemical '
-                                                'Properties"]//li/table/tr/td')
+                                 'Properties"]//li/table/tr/td')
         if not scraped_list:
             return properties
         # Format is: property name followed by a list of values
         property_name = scraped_list.pop(0).xpath(
-                                        'span/text()').extract()[0].rstrip()
+            'span/text()').extract()[0].rstrip()
         for line in scraped_list:
             if line.xpath('span/text()'):
                 property_name = line.xpath('span/text()').extract()[0].rstrip()
@@ -93,14 +93,14 @@ somewhere.
                     'attribute': property_name[:-1],
                     'value': line.xpath('text()').extract()[0].rstrip(),
                     'source': line.xpath(
-                                        'strong/text()').extract()[0].rstrip(),
+                        'strong/text()').extract()[0].rstrip(),
                     'reliability': 'Unknown',
                     'conditions': ''
-                           })
+                })
                 properties.append(new_prop)
                 log.msg('CS prop: |%s| |%s| |%s|' %
-                    (new_prop['attribute'], new_prop['value'],
-                    new_prop['source']), level=log.DEBUG)
+                        (new_prop['attribute'], new_prop['value'],
+                         new_prop['source']), level=log.DEBUG)
 
         return properties
 
@@ -119,9 +119,9 @@ somewhere.
             synonyms.append(self.new_synonym(syn, name, 'expert'))
         # These synonyms are labeled by ChemSpider as "Validated by Users"
         for syn in sel.xpath(
-                        '//p[@class="syn"][span[@class="synonym_confirmed"]]'):
+                '//p[@class="syn"][span[@class="synonym_confirmed"]]'):
             name = syn.xpath(
-                        'span[@class="synonym_confirmed"]/text()').extract()[0]
+                'span[@class="synonym_confirmed"]/text()').extract()[0]
             synonyms.append(self.new_synonym(syn, name, 'user'))
         # These syonyms are labeled as "Non-validated" and assumed unreliable
         for syn in sel.xpath('//p[@class="syn"][span[@class=""]]'):
@@ -155,12 +155,12 @@ somewhere.
             references.append({
                 'name': refname.extract()[0][1:-1],
                 'URI': ''
-                })
+            })
         for ref in sel.xpath('a[@class="synonym_ref"]'):
             references.append({
                 'name': ref.xpath('@title').extract()[0],
                 'URI': ref.xpath('@href').extract()[0]
-                })
+            })
         for ref in references:
             log.msg('CS synonym ref: %s %s' % (ref['name'], ref['URI']),
                     level=log.DEBUG)
@@ -169,7 +169,7 @@ somewhere.
             'category': category,
             'language': language,
             'references': references
-            }
+        }
         return synonym
 
     def parse_extendedinfo(self, response):
@@ -178,14 +178,14 @@ somewhere.
         properties = []
         names = sel.xpath('*').xpath('name()').extract()
         values = sel.xpath('*').xpath('text()').extract()
-        for (name, value) in zip(names,values):
+        for (name, value) in zip(names, values):
             result = Result({
                 'attribute': name,
-                'value': value, #These values have no unit!
+                'value': value,  #These values have no unit!
                 'source': 'ChemSpider ExtendedCompoundInfo',
                 'reliability': 'Unknown',
                 'conditions': ''
-                })
+            })
             properties.append(result)
         return properties
 
@@ -204,8 +204,8 @@ somewhere.
                 Request(url=extendedinfo_url,
                         callback=self.parse_extendedinfo)]
 
-    def new_compound_request(self,compound):
-        if compound in self.ignore_list: #[TODO] - add regular expression
+    def new_compound_request(self, compound):
+        if compound in self.ignore_list:  #[TODO] - add regular expression
             return None
         searchurl = self.website[:-1] + self.search % compound
         log.msg('chemspider compound', level=log.DEBUG)
