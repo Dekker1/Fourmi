@@ -7,7 +7,7 @@ class Parser:
     website should be an regular expression of the urls of request the parser is able to parse.
     '''
     website = "http://something/*"
-    __spider = None
+    _spider = None
 
     def parse(self, reponse):
         log.msg("The parse function of the empty parser was used.", level=log.WARNING)

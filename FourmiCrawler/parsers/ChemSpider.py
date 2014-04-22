@@ -137,7 +137,7 @@ class ChemSpider(Parser):
         for syn in synonyms:
             if syn['category'] == 'expert' and syn['language'] == 'English':
                 log.msg('CS emit synonym: %s' % syn['name'], level=log.DEBUG)
-                self._Parser__spider.get_synonym_requests(syn['name'])
+                self._spider.get_synonym_requests(syn['name'])
 
         return requests
 
