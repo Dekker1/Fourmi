@@ -68,6 +68,7 @@ def start_log(arguments):
         else:
             log.start(logstdout=True, loglevel=log.WARNING)
 
+
 def search(arguments, loader):
     start_log(arguments)
     settings = scrapy_settings_manipulation(arguments)
