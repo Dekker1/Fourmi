@@ -33,6 +33,8 @@ class WikipediaParser(Parser):
             item['attribute'] = prop_name.extract().encode('utf-8')
             item['value'] = prop_values[i].extract().encode('utf-8')
             item['source'] = "Wikipedia"
+            item['reliability'] = ""
+            item['conditions'] = ""
             items.append(item)
             #print "new: " + item['attribute']
             #print item['value']
