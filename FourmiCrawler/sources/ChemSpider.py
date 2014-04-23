@@ -1,4 +1,4 @@
-from parser import Parser
+from source import Parser
 from scrapy import log
 from scrapy.http import Request
 from scrapy.selector import Selector
@@ -18,7 +18,7 @@ class ChemSpider(Parser):
     """
 
     def __init__(self):
-        pass
+        Parser.__init__(self)
 
     website = 'http://www.chemspider.com/*'
 

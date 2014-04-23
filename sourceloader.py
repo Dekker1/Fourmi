@@ -1,13 +1,13 @@
 import inspect
 import os
 import re
-from FourmiCrawler.parsers.parser import Parser
+from FourmiCrawler.sources.source import Parser
 
 
 class SourceLoader:
     sources = []
 
-    def __init__(self, rel_dir="FourmiCrawler/parsers"):
+    def __init__(self, rel_dir="FourmiCrawler/sources"):
         path = os.path.dirname(os.path.abspath(__file__))
         path += "/" + rel_dir
         known_parser = set()
