@@ -15,7 +15,7 @@ class FourmiSpider(Spider):
     def parse(self, reponse):
         for parser in self.__parsers:
             if re.match(parser.website, reponse.url):
-                log.msg("Url: " + reponse.url + " -> Parser: " + parser.website, level=log.DEBUG)
+                log.msg("Url: " + reponse.url + " -> Source: " + parser.website, level=log.DEBUG)
                 return parser.parse(reponse)
         return None
 
