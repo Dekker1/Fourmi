@@ -1,12 +1,12 @@
 from scrapy.http import Request
 from scrapy import log
-from parser import Parser
+from source import Source
 from scrapy.selector import Selector
 from FourmiCrawler.items import Result
 import re
 
 
-class WikipediaParser(Parser):
+class WikipediaParser(Source):
 
     """ Wikipedia scraper for chemical properties
 
@@ -19,7 +19,7 @@ class WikipediaParser(Parser):
     searched_compounds = []
 
     def __init__(self):
-        pass
+        Source.__init__(self)
 
     def parse(self, response):
         """ Distributes the above described behaviour """
