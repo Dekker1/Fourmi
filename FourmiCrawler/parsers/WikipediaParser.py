@@ -46,7 +46,10 @@ class WikipediaParser(Parser):
             items.append(item)
             log.msg('Wiki prop: |%s| |%s| |%s|' % (item['attribute'], item['value'], item['source']), level=log.DEBUG)
         items=filter(lambda a: a['value']!='', items) #remove items with an empty value
-        return self.cleanitems(items)
+        itemlist=self.cleanitems(items)
+        request=Request(self.getchemspider(sel))
+        itemlist.append(request)
+        return itemlist
 
     def new_compound_request(self, compound):
         return Request(url=self.website[:-1] + compound, callback=self.parse)
