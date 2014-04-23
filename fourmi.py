@@ -79,7 +79,7 @@ def search(docopt_arguments, source_loader):
 
 
 if __name__ == '__main__':
-    arguments = docopt.docopt(__doc__, version='Fourmi - V0.1.0')
+    arguments = docopt.docopt(__doc__, version='Fourmi - V0.2.5')
     loader = SourceLoader()
 
     if arguments["--include"]:
