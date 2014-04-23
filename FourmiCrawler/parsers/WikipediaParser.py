@@ -22,9 +22,10 @@ class WikipediaParser(Parser):
         pass
 
     def parse(self, response):
+        """ Distributes the above described behaviour """
         log.msg('A response from %s just arrived!' % response.url, level=log.DEBUG)
         sel = Selector(response)
-        compound = sel.xpath('//h1[@id="firstHeading"]//span/text()').extract()[0]
+        compound = sel.xpath('//h1[@id="firstHeading"]//span/text()').extract()[0]  # makes sure to use main page
         if compound in self.searched_compounds:
             return None
         else:
@@ -33,7 +34,7 @@ class WikipediaParser(Parser):
             return items
 
     def parse_infobox(self, sel):
-        #scrape data from infobox on wikipedia.
+        """ scrape data from infobox on wikipedia. """
         items = []
 
         #be sure to get both chembox (wikipedia template) and drugbox (wikipedia template) to scrape
@@ -78,7 +79,7 @@ class WikipediaParser(Parser):
 
     @staticmethod
     def cleanitems(items):
-        #clean up properties using regex, makes it possible to split the values from the units
+        """ clean up properties using regex, makes it possible to split the values from the units """
         for item in items:
             value = item['value']
             m = re.search('F;\s(\d+[\.,]?\d*)', value)  # clean up numerical Kelvin value (after F)
@@ -91,7 +92,7 @@ class WikipediaParser(Parser):
 
     @staticmethod
     def get_identifiers(sel):
-        #find external links, named 'Identifiers' to different sources.
+        """ find external links, named 'Identifiers' to different sources. """
         links = sel.xpath('//span[contains(concat(" ",normalize-space(@class)," "),"reflink")]/a'
                           '[contains(concat(" ",normalize-space(@class)," "),"external")]/@href').extract()
         return links
