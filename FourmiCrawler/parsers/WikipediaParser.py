@@ -50,10 +50,18 @@ class WikipediaParser(Parser):
 
         # request=Request(self.getchemspider(sel))
         # itemlist.append(request)
-        for identifier in self.get_identifiers(sel):
-            request_identifier=Request(identifier)
-            # print request_identifier
-            itemlist.append(request_identifier)
+
+        identifiers=self.get_identifiers(sel)
+        # print identifiers
+
+        for i, identifier in enumerate(identifiers):
+            request = Request(identifier)
+            print request
+
+        # for identifier in self.get_identifiers(sel):
+        #     request_identifier=Request(identifier)
+        #     # print request_identifier
+        #     itemlist.append(request_identifier)
 
         return itemlist
 
@@ -79,9 +87,6 @@ class WikipediaParser(Parser):
 
     def get_identifiers(self, sel):
         links=sel.xpath('//span[contains(concat(" ",normalize-space(@class)," "),"reflink")]/a[contains(concat(" ",normalize-space(@class)," "),"external")]/@href').extract()
-        # identifiers=[]
-        # for link in links:
-        #     identifier=Request(link)
-        #     identifiers.append(identifier)
-        # print identifiers
+
+        print links
         return links
