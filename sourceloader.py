@@ -1,13 +1,13 @@
 import inspect
 import os
 import re
-from FourmiCrawler.parsers.parser import Parser
+from FourmiCrawler.sources.source import Source
 
 
 class SourceLoader:
     sources = []
 
-    def __init__(self, rel_dir="FourmiCrawler/parsers"):
+    def __init__(self, rel_dir="FourmiCrawler/sources"):
         path = os.path.dirname(os.path.abspath(__file__))
         path += "/" + rel_dir
         known_parser = set()
@@ -16,7 +16,7 @@ class SourceLoader:
             mod = __import__('.'.join([rel_dir.replace("/", "."), py]), fromlist=[py])
             classes = [getattr(mod, x) for x in dir(mod) if inspect.isclass(getattr(mod, x))]
             for cls in classes:
-                if issubclass(cls, Parser) and cls not in known_parser:
+                if issubclass(cls, Source) and cls not in known_parser:
                     self.sources.append(cls())  # [review] - Would we ever need arguments for the parsers?
                     known_parser.add(cls)
 
