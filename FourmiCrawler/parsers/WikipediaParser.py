@@ -20,7 +20,6 @@ class WikipediaParser(Parser):
         pass
 
     def parse(self, response):
-        print response.url
         log.msg('A response from %s just arrived!' % response.url, level=log.DEBUG)
         sel = Selector(response)
         compound = sel.xpath('//h1[@id="firstHeading"]//span/text()').extract()[0]
@@ -35,7 +34,7 @@ class WikipediaParser(Parser):
 
         items = []
 
-        tr_list = sel.xpath('.//table[@class="infobox bordered"]//td[not(@colspan)]').xpath('normalize-space(string())')
+        tr_list = sel.xpath('.//table[@class="infobox bordered" or @class="infobox"]//td[not(@colspan)]').xpath('normalize-space(string())')
         prop_names = tr_list[::2]
         prop_values = tr_list[1::2]
         for i, prop_name in enumerate(prop_names):
@@ -55,12 +54,13 @@ class WikipediaParser(Parser):
 
         for i, identifier in enumerate(identifiers):
             if re.match('//en\.wikipedia',identifier):
-                pass
+                log.msg('Found link to wikipedia, this is not something to scrape: %s' % identifier, level=log.WARNING)
             elif re.match('/{2}',identifier):
                 identifier = re.sub("/{2}", "http://", identifier)
                 request = Request(identifier)
             else:
                 request = Request(identifier)
+            log.msg('New identifier found, request: %s' % identifier, level=log.DEBUG)
             itemlist.append(request)
 
         return itemlist
@@ -76,9 +76,7 @@ class WikipediaParser(Parser):
                 item['value'] = m.group(1) + " K"
             m = re.match('(\d+[\.,]?\d*)\sJ\sK.+mol', value)
             if m:
-                print item['value']
                 item['value'] = m.group(1) + " J/K/mol"
-            print item['value']
         return items
 
     def get_identifiers(self, sel):
