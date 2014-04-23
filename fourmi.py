@@ -5,6 +5,7 @@ Fourmi, a web scraper build to search specific information for a given compound 
 Usage:
     fourmi search <compound>
     fourmi [options] search <compound>
+    fourmi [options] [--include=<sourcename> | --exclude=<sourcename>] search <compound>
     fourmi list
     fourmi [--include=<sourcename> | --exclude=<sourcename>] list
     fourmi -h | --help
@@ -31,9 +32,9 @@ from FourmiCrawler.spider import FourmiSpider
 from sourceloader import SourceLoader
 
 
-def setup_crawler(searchable, settings, loader):
+def setup_crawler(searchable, settings, source_loader):
     spider = FourmiSpider(compound=searchable)
-    spider.add_parsers(loader.sources)
+    spider.add_parsers(source_loader.sources)
     crawler = Crawler(settings)
     crawler.signals.connect(reactor.stop, signal=signals.spider_closed)
     crawler.configure()
@@ -41,39 +42,39 @@ def setup_crawler(searchable, settings, loader):
     crawler.start()
 
 
-def scrapy_settings_manipulation(arguments):
+def scrapy_settings_manipulation(docopt_arguments):
     settings = get_project_settings()
-
-    if arguments["--output"] != 'result.*format*':
-        settings.overrides["FEED_URI"] = arguments["--output"]
-    elif arguments["--format"] == "jsonlines":
+    # [todo] - add at least a warning for files that already exist
+    if docopt_arguments["--output"] != 'result.*format*':
+        settings.overrides["FEED_URI"] = docopt_arguments["--output"]
+    elif docopt_arguments["--format"] == "jsonlines":
         settings.overrides["FEED_URI"] = "results.json"
-    elif arguments["--format"] is not None:
-        settings.overrides["FEED_URI"] = "results." + arguments["--format"]
+    elif docopt_arguments["--format"] is not None:
+        settings.overrides["FEED_URI"] = "results." + docopt_arguments["--format"]
 
-    if arguments["--format"] is not None:
-        settings.overrides["FEED_FORMAT"] = arguments["--format"]
+    if docopt_arguments["--format"] is not None:
+        settings.overrides["FEED_FORMAT"] = docopt_arguments["--format"]
 
     return settings
 
 
-def start_log(arguments):
-    if arguments["--log"] is not None:
-        if arguments["--verbose"]:
-            log.start(logfile=arguments["--log"], logstdout=False, loglevel=log.DEBUG)
+def start_log(docopt_arguments):
+    if docopt_arguments["--log"] is not None:
+        if docopt_arguments["--verbose"]:
+            log.start(logfile=docopt_arguments["--log"], logstdout=False, loglevel=log.DEBUG)
         else:
-            log.start(logfile=arguments["--log"], logstdout=True, loglevel=log.WARNING)
+            log.start(logfile=docopt_arguments["--log"], logstdout=True, loglevel=log.WARNING)
     else:
-        if arguments["--verbose"]:
+        if docopt_arguments["--verbose"]:
             log.start(logstdout=False, loglevel=log.DEBUG)
         else:
             log.start(logstdout=True, loglevel=log.WARNING)
 
 
-def search(arguments, loader):
-    start_log(arguments)
-    settings = scrapy_settings_manipulation(arguments)
-    setup_crawler(arguments["<compound>"], settings, loader)
+def search(docopt_arguments, source_loader):
+    start_log(docopt_arguments)
+    settings = scrapy_settings_manipulation(docopt_arguments)
+    setup_crawler(docopt_arguments["<compound>"], settings, source_loader)
     reactor.run()
 
 

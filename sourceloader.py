@@ -21,7 +21,6 @@ class SourceLoader:
                     known_parser.add(cls)
 
     def include(self, source_names):
-        print source_names
         new = set()
         for name in source_names:
             new.update([src for src in self.sources if re.match(name, src.__class__.__name__)])
