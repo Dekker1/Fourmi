@@ -47,8 +47,14 @@ class WikipediaParser(Parser):
             log.msg('Wiki prop: |%s| |%s| |%s|' % (item['attribute'], item['value'], item['source']), level=log.DEBUG)
         items=filter(lambda a: a['value']!='', items) #remove items with an empty value
         itemlist=self.cleanitems(items)
-        request=Request(self.getchemspider(sel))
-        itemlist.append(request)
+
+        # request=Request(self.getchemspider(sel))
+        # itemlist.append(request)
+        for identifier in self.get_identifiers(sel):
+            request_identifier=Request(identifier)
+            # print request_identifier
+            itemlist.append(request_identifier)
+
         return itemlist
 
     def new_compound_request(self, compound):
@@ -67,6 +73,15 @@ class WikipediaParser(Parser):
         return items
 
     def getchemspider(self, sel):
-        link=sel.xpath('//tr/td/a[@title="ChemSpider"]/../../td[2]/span/a/@href').extract()[0] # ('//tr[contains(@href, "/wiki/Melting_point")]/text()').extract()
+        link=sel.xpath('//a[@title="ChemSpider"]/../../td[2]/span/a/@href').extract()[0] # ('//tr[contains(@href, "/wiki/Melting_point")]/text()').extract()
         print link
         return link
+
+    def get_identifiers(self, sel):
+        links=sel.xpath('//span[contains(concat(" ",normalize-space(@class)," "),"reflink")]/a[contains(concat(" ",normalize-space(@class)," "),"external")]/@href').extract()
+        # identifiers=[]
+        # for link in links:
+        #     identifier=Request(link)
+        #     identifiers.append(identifier)
+        # print identifiers
+        return links
