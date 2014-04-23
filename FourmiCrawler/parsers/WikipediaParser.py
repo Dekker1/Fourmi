@@ -56,37 +56,6 @@ class WikipediaParser(Parser):
             print item['value']
         return items
 
-    def getboilingpoint(self, sel):
-        item=Result()
-        item['attribute']="Boiling point"
-        item['value']= sel.xpath('//tr/td/a[@title="Boiling point"]/../../td[2]/text()').extract() # ('//tr[contains(@href, "/wiki/Melting_point")]/text()').extract()
-        item['source']= "Wikipedia"
-        return item
-
-    def getdensity(self, sel):
-        item=Result()
-        item['attribute']="Density"
-        item['value']= sel.xpath('//tr/td/a[@title="Density"]/../../td[2]/text()').extract() # ('//tr[contains(@href, "/wiki/Melting_point")]/text()').extract()
-        item['source']= "Wikipedia"
-        print item['value']
-        return item
-
-    def getheatcapacity(self, sel):
-        item=Result()
-        item['attribute']="Specific heat capacity"
-        item['value']= sel.xpath('//tr/td/a[@title="Specific heat capacity"]/../../td[2]/text()').extract() # ('//tr[contains(@href, "/wiki/Melting_point")]/text()').extract()
-        item['source']= "Wikipedia"
-        print item['value']
-        return item
-
-    def getmolarentropy(self, sel):
-        item=Result()
-        item['attribute']="Standard molar entropy"
-        item['value']= sel.xpath('//tr/td/a[@title="Standard molar entropy"]/../../td[2]/text()').extract() # ('//tr[contains(@href, "/wiki/Melting_point")]/text()').extract()
-        item['source']= "Wikipedia"
-        print item['value']
-        return item
-
     def getchemspider(self, sel):
         link=sel.xpath('//tr/td/a[@title="ChemSpider"]/../../td[2]/span/a/@href').extract()[0] # ('//tr[contains(@href, "/wiki/Melting_point")]/text()').extract()
         print link
