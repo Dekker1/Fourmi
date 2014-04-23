@@ -51,20 +51,17 @@ class WikipediaParser(Parser):
         items = filter(lambda a: a['value'] != '', items)  # remove items with an empty value
         itemlist = self.cleanitems(items)
 
-        # request=Request(self.getchemspider(sel))
-        # itemlist.append(request)
-
         identifiers = self.get_identifiers(sel)
-        # print identifiers
 
         for i, identifier in enumerate(identifiers):
-            request = Request(identifier)
-            print request
-
-        # for identifier in self.get_identifiers(sel):
-        #     request_identifier=Request(identifier)
-        #     # print request_identifier
-        #     itemlist.append(request_identifier)
+            if re.match('//en\.wikipedia',identifier):
+                pass
+            elif re.match('/{2}',identifier):
+                identifier = re.sub("/{2}", "http://", identifier)
+                request = Request(identifier)
+            else:
+                request = Request(identifier)
+            itemlist.append(request)
 
         return itemlist
 
@@ -87,6 +84,4 @@ class WikipediaParser(Parser):
     def get_identifiers(self, sel):
         links = sel.xpath('//span[contains(concat(" ",normalize-space(@class)," "),"reflink")]/a'
                           '[contains(concat(" ",normalize-space(@class)," "),"external")]/@href').extract()
-
-        print links
         return links
