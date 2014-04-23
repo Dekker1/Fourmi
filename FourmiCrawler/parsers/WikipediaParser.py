@@ -1,4 +1,5 @@
 from scrapy.http import Request
+from scrapy import log
 from parser import Parser
 from scrapy.selector import Selector
 from FourmiCrawler.items import Result
@@ -18,7 +19,7 @@ class WikipediaParser(Parser):
 
     def parse(self, response):
         print response.url
-        #self.log('A response from %s just arrived!' % response.url)
+        log.msg('A response from %s just arrived!' % response.url, level=log.DEBUG)
         sel = Selector(response)
         items = self.parse_infobox(sel)
         return items
@@ -36,10 +37,8 @@ class WikipediaParser(Parser):
             item['reliability'] = ""
             item['conditions'] = ""
             items.append(item)
-            #print "new: " + item['attribute']
-            #print item['value']
+            log.msg('Wiki prop: |%s| |%s| |%s|' % (item['attribute'], item['value'], item['source']), level=log.DEBUG)
         items=filter(lambda a: a['value']!='', items) #remove items with an empty value
-        #print items
         self.cleanitems(items)
         return items
 
