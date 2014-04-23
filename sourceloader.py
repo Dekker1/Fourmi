@@ -21,15 +21,16 @@ class SourceLoader:
                     known_parser.add(cls)
 
     def include(self, source_names):
-        new = []
+        print source_names
+        new = set()
         for name in source_names:
-            new.extend([src for src in self.sources if re.match(name, src.__class__.__name__)])
-        self.sources = new
+            new.update([src for src in self.sources if re.match(name, src.__class__.__name__)])
+        self.sources = list(new)
 
     def exclude(self, source_names):
         exclude = []
         for name in source_names:
-           exclude.extend([src for src in self.sources if re.match(source_names,src.__class__.__name__)])
+            exclude.extend([src for src in self.sources if re.match(name, src.__class__.__name__)])
         self.sources = [src for src in self.sources if src not in exclude]
 
     def __str__(self):
@@ -37,5 +38,5 @@ class SourceLoader:
         for src in self.sources:
             string += "Source: " + src.__class__.__name__
             string += " - "
-            string +=  "URI: " + src.website + "\n"
+            string += "URI: " + src.website + "\n"
         return string
