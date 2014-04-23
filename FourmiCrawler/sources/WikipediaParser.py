@@ -7,10 +7,9 @@ import re
 
 
 class WikipediaParser(Source):
-
     """ Wikipedia scraper for chemical properties
 
-    This parser parses Wikipedia infoboxes (also bordered) to obtain properties and their values.
+    This parser parses Wikipedia info boxes (also bordered) to obtain properties and their values.
      It also returns requests with other external sources which contain information on parsed subject.
     """
 
@@ -53,7 +52,7 @@ class WikipediaParser(Source):
             items.append(item)
             log.msg('Wiki prop: |%s| |%s| |%s|' % (item['attribute'], item['value'], item['source']), level=log.DEBUG)
         items = filter(lambda a: a['value'] != '', items)  # remove items with an empty value
-        itemlist = self.cleanitems(items)
+        item_list = self.clean_items(items)
 
         identifiers = self.get_identifiers(sel)
 
@@ -62,7 +61,7 @@ class WikipediaParser(Source):
             request = None
             #discard internal wikipedia links
             if re.match('//en\.wikipedia', identifier):
-                log.msg('Found link to wikipedia, this is not something to scrape: %s' % identifier, level=log.WARNING)
+                log.msg('Found link to Wikipedia, this is not something to scrape: %s' % identifier, level=log.WARNING)
             #fix links starting with '//www.'
             elif re.match('/{2}', identifier):
                 identifier = re.sub("/{2}", "http://", identifier)
@@ -70,15 +69,15 @@ class WikipediaParser(Source):
             else:
                 request = Request(identifier)
             log.msg('New identifier found, request: %s' % identifier, level=log.DEBUG)
-            itemlist.append(request)
+            item_list.append(request)
 
-        return itemlist
+        return item_list
 
     def new_compound_request(self, compound):
         return Request(url=self.website[:-1] + compound, callback=self.parse)
 
     @staticmethod
-    def cleanitems(items):
+    def clean_items(items):
         """ clean up properties using regex, makes it possible to split the values from the units """
         for item in items:
             value = item['value']
