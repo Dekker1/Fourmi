@@ -1,4 +1,4 @@
-from source import Parser
+from source import Source
 from scrapy import log
 from scrapy.http import Request
 from scrapy.selector import Selector
@@ -8,7 +8,7 @@ import re
 # [TODO] - Maybe clean up usage of '.extract()[0]', because of possible IndexError exception.
 
 
-class ChemSpider(Parser):
+class ChemSpider(Source):
     """ChemSpider scraper for synonyms and properties
 
     This parser will manage searching for chemicals through the
@@ -18,7 +18,7 @@ class ChemSpider(Parser):
     """
 
     def __init__(self):
-        Parser.__init__(self)
+        Source.__init__(self)
 
     website = 'http://www.chemspider.com/*'
 

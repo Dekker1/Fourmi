@@ -2,7 +2,7 @@ from scrapy import log
 # from scrapy.http import Request
 
 
-class Parser:
+class Source:
     website = "http://something/*"  # Regex of URI's the source is able to parse
     _spider = None
 
