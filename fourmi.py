@@ -6,6 +6,7 @@ Usage:
     fourmi search <compound>
     fourmi [options] search <compound>
     fourmi list
+    fourmi [--include=<sourcename> | --exclude=<sourcename>] list
     fourmi -h | --help
     fourmi --version
 
@@ -79,6 +80,11 @@ def search(arguments, loader):
 if __name__ == '__main__':
     arguments = docopt.docopt(__doc__, version='Fourmi - V0.1.0')
     loader = SourceLoader()
+
+    if arguments["--include"]:
+        loader.include(arguments["--include"].split(','))
+    elif arguments["--exclude"]:
+        loader.exclude(arguments["--exclude"].split(','))
 
     if arguments["search"]:
         search(arguments, loader)
