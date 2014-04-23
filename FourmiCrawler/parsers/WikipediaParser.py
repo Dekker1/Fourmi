@@ -5,6 +5,7 @@ from scrapy.selector import Selector
 from FourmiCrawler.items import Result
 import re
 
+
 class WikipediaParser(Parser):
 
 # General notes:
@@ -15,8 +16,8 @@ class WikipediaParser(Parser):
     __spider = None
     searched_compounds = []
 
-    #def __init__(self, csid):
-    #    self.website = "http://en.wikipedia.org/wiki/{id}".format(id=csid)
+    def __init__(self):
+        pass
 
     def parse(self, response):
         print response.url
@@ -31,27 +32,29 @@ class WikipediaParser(Parser):
             return items
 
     def parse_infobox(self, sel):
-        items=[]
+
+        items = []
 
         tr_list = sel.xpath('.//table[@class="infobox bordered"]//td[not(@colspan)]').xpath('normalize-space(string())')
         prop_names = tr_list[::2]
         prop_values = tr_list[1::2]
         for i, prop_name in enumerate(prop_names):
-            item = Result()
-            item['attribute'] = prop_name.extract().encode('utf-8')
-            item['value'] = prop_values[i].extract().encode('utf-8')
-            item['source'] = "Wikipedia"
-            item['reliability'] = ""
-            item['conditions'] = ""
+            item = Result({
+                'attribute': prop_name.extract().encode('utf-8'),
+                'value': prop_values[i].extract().encode('utf-8'),
+                'source': "Wikipedia",
+                'reliability': "",
+                'conditions': ""
+            })
             items.append(item)
             log.msg('Wiki prop: |%s| |%s| |%s|' % (item['attribute'], item['value'], item['source']), level=log.DEBUG)
-        items=filter(lambda a: a['value']!='', items) #remove items with an empty value
-        itemlist=self.cleanitems(items)
+        items = filter(lambda a: a['value'] != '', items)  # remove items with an empty value
+        itemlist = self.cleanitems(items)
 
         # request=Request(self.getchemspider(sel))
         # itemlist.append(request)
 
-        identifiers=self.get_identifiers(sel)
+        identifiers = self.get_identifiers(sel)
         # print identifiers
 
         for i, identifier in enumerate(identifiers):
@@ -70,23 +73,20 @@ class WikipediaParser(Parser):
 
     def cleanitems(self, items):
         for item in items:
-            value=item['value']
-            if re.search('F;\s(\d+[\.,]?\d*)', value):
-                #print re.search('F;\s(\d+[\.,]?\d*)', value).group(1)
-                item['value']=re.search('F;\s(\d+[\.,]?\d*)', value).group(1) + " K"
-            if re.match('(\d+[\.,]?\d*)\sJ\sK.+mol', value):
+            value = item['value']
+            m = re.search('F;\s(\d+[\.,]?\d*)', value)
+            if m:
+                item['value'] = m.group(1) + " K"
+            m = re.match('(\d+[\.,]?\d*)\sJ\sK.+mol', value)
+            if m:
                 print item['value']
-                item['value']=re.search('(\d+[\.,]?\d*)\sJ\sK.+mol', value).group(1) + " J/K/mol"
+                item['value'] = m.group(1) + " J/K/mol"
             print item['value']
         return items
 
-    def getchemspider(self, sel):
-        link=sel.xpath('//a[@title="ChemSpider"]/../../td[2]/span/a/@href').extract()[0] # ('//tr[contains(@href, "/wiki/Melting_point")]/text()').extract()
-        print link
-        return link
-
     def get_identifiers(self, sel):
-        links=sel.xpath('//span[contains(concat(" ",normalize-space(@class)," "),"reflink")]/a[contains(concat(" ",normalize-space(@class)," "),"external")]/@href').extract()
+        links = sel.xpath('//span[contains(concat(" ",normalize-space(@class)," "),"reflink")]/a'
+                          '[contains(concat(" ",normalize-space(@class)," "),"external")]/@href').extract()
 
         print links
         return links
