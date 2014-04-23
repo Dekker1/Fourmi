@@ -13,6 +13,7 @@ class WikipediaParser(Parser):
 
     website = "http://en.wikipedia.org/wiki/*"
     __spider = None
+    searched_compounds = []
 
     #def __init__(self, csid):
     #    self.website = "http://en.wikipedia.org/wiki/{id}".format(id=csid)
@@ -21,11 +22,17 @@ class WikipediaParser(Parser):
         print response.url
         log.msg('A response from %s just arrived!' % response.url, level=log.DEBUG)
         sel = Selector(response)
-        items = self.parse_infobox(sel)
-        return items
+        compound = sel.xpath('//h1[@id="firstHeading"]//span/text()').extract()[0]
+        if compound in self.searched_compounds:
+            return None
+        else:
+            items = self.parse_infobox(sel)
+            self.searched_compounds.append(compound)
+            return items
 
     def parse_infobox(self, sel):
         items=[]
+
         tr_list = sel.xpath('.//table[@class="infobox bordered"]//td[not(@colspan)]').xpath('normalize-space(string())')
         prop_names = tr_list[::2]
         prop_values = tr_list[1::2]
