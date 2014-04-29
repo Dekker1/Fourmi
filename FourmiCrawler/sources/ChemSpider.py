@@ -47,7 +47,6 @@ class ChemSpider(Source):
         properties = []
 
         # Predicted - ACD/Labs tab
-        # [TODO] - test if tab contains data, some chemicals do not have data here
         td_list = sel.xpath('.//table[@id="acdlabs-table"]//td').xpath(
             'normalize-space(string())')
         prop_names = td_list[::2]
@@ -57,6 +56,12 @@ class ChemSpider(Source):
             prop_name = prop_name.extract().encode('utf-8')[:-1]
             prop_value = prop_value.extract().encode('utf-8')
             prop_conditions = ''
+
+            # Test for properties without values, with one hardcoded exception
+            if (not re.match(r'^\d', prop_value) or
+                    (prop_name == 'Polarizability' and
+                    prop_value == '10-24cm3')):
+                continue
 
             # Match for condition in parentheses
             m = re.match(r'(.*) \((.*)\)', prop_name)
