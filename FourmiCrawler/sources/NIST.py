@@ -1,5 +1,8 @@
+from source import Source
 from scrapy import log
-# from scrapy.http import Request
+from scrapy.http import Request
+from scrapy.selector import Selector
+from FourmiCrawler.items import Result
 
 
 class NIST(Source):
