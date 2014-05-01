@@ -37,7 +37,7 @@ class WikipediaParser(Source):
         items = []
 
         #be sure to get both chembox (wikipedia template) and drugbox (wikipedia template) to scrape
-        tr_list = sel.xpath('.//table[@class="infobox bordered" or @class="infobox"]//td[not(@colspan)]').\
+        tr_list = sel.xpath('.//table[@class="infobox bordered"]//td[not(@colspan)]').\
             xpath('normalize-space(string())')
         prop_names = tr_list[::2]
         prop_values = tr_list[1::2]
@@ -51,6 +51,23 @@ class WikipediaParser(Source):
             })
             items.append(item)
             log.msg('Wiki prop: |%s| |%s| |%s|' % (item['attribute'], item['value'], item['source']), level=log.DEBUG)
+
+        tr_list2 = sel.xpath('.//table[@class="infobox"]//tr').\
+            xpath('normalize-space(string())')
+        log.msg('%s' %tr_list2,level=log.DEBUG)
+        #prop_names = tr_list2[::2]
+        #prop_values = tr_list2[1::2]
+        #for i, prop_name in enumerate(prop_names):
+        #    item = Result({
+        #        'attribute': prop_name.extract().encode('utf-8'),
+        #        'value': prop_values[i].extract().encode('utf-8'),
+        #        'source': "Wikipedia",
+        #        'reliability': "",
+        #        'conditions': ""
+        #    })
+        #    items.append(item)
+        #    log.msg('Wiki prop: |%s| |%s| |%s|' % (item['attribute'], item['value'], item['source']), level=log.DEBUG)
+
         items = filter(lambda a: a['value'] != '', items)  # remove items with an empty value
         item_list = self.clean_items(items)
 
