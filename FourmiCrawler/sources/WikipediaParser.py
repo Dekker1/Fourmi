@@ -46,27 +46,26 @@ class WikipediaParser(Source):
                 'attribute': prop_name.extract().encode('utf-8'),
                 'value': prop_values[i].extract().encode('utf-8'),
                 'source': "Wikipedia",
-                'reliability': "",
+                'reliability': "Unknown",
                 'conditions': ""
             })
             items.append(item)
             log.msg('Wiki prop: |%s| |%s| |%s|' % (item['attribute'], item['value'], item['source']), level=log.DEBUG)
 
-        tr_list2 = sel.xpath('.//table[@class="infobox"]//tr').\
-            xpath('normalize-space(string())')
-        log.msg('%s' %tr_list2,level=log.DEBUG)
-        #prop_names = tr_list2[::2]
-        #prop_values = tr_list2[1::2]
-        #for i, prop_name in enumerate(prop_names):
-        #    item = Result({
-        #        'attribute': prop_name.extract().encode('utf-8'),
-        #        'value': prop_values[i].extract().encode('utf-8'),
-        #        'source': "Wikipedia",
-        #        'reliability': "",
-        #        'conditions': ""
-        #    })
-        #    items.append(item)
-        #    log.msg('Wiki prop: |%s| |%s| |%s|' % (item['attribute'], item['value'], item['source']), level=log.DEBUG)
+        tr_list2 = sel.xpath('.//table[@class="infobox"]//tr')#.xpath('normalize-space(string())')
+        log.msg('dit: %s' %tr_list2,level=log.DEBUG)
+        for tablerow in tr_list2:
+            log.msg('item: %s' %tablerow.xpath('./th').xpath('normalize-space(string())'),level=log.DEBUG)
+            if tablerow.xpath('./th').xpath('normalize-space(string())') and tablerow.xpath('./td').xpath('normalize-space(string())'):
+                item = Result({
+                    'attribute': tablerow.xpath('./th').xpath('normalize-space(string())').extract()[0].encode('utf-8'),
+                    'value': tablerow.xpath('./td').xpath('normalize-space(string())').extract()[0].encode('utf-8'),
+                    'source': "Wikipedia",
+                    'reliability': "Unknown",
+                    'conditions': ""
+                })
+                items.append(item)
+                log.msg('Wiki prop: |attribute: %s| |value: %s| |%s|' % (item['attribute'], item['value'], item['source']), level=log.DEBUG)
 
         items = filter(lambda a: a['value'] != '', items)  # remove items with an empty value
         item_list = self.clean_items(items)
