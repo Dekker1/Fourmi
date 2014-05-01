@@ -205,8 +205,14 @@ class ChemSpider(Source):
         sel = Selector(response)
         log.msg('chemspider parse_searchrequest', level=log.DEBUG)
         sel.register_namespace('cs', 'http://www.chemspider.com/')
-        csid = sel.xpath('.//cs:int/text()').extract()[0]
-        # [TODO] - handle multiple csids in case of vague search term
+        csids = sel.xpath('.//cs:int/text()').extract()
+        if len(csids) == 0:
+            log.msg('ChemSpider found nothing', level=log.ERROR)
+            return
+        elif len(csids) > 1:
+            log.msg('ChemSpider found multiple substances, taking first '
+                    'element', level=log.DEBUG)
+        csid = csids[0]
         structure_url = self.website[:-1] + self.structure % csid
         extendedinfo_url = self.website[:-1] + self.extendedinfo % csid
         log.msg('chemspider URL: %s' % structure_url, level=log.DEBUG)
