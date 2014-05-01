@@ -197,7 +197,8 @@ class ChemSpider(Source):
                 'reliability': 'Unknown',
                 'conditions': ''
             })
-            properties.append(result)
+            if result['value']:
+                properties.append(result)
         return properties
 
     def parse_searchrequest(self, response):
