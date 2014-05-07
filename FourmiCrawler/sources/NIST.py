@@ -3,7 +3,7 @@ from scrapy import log
 from scrapy.http import Request
 from scrapy.selector import Selector
 from FourmiCrawler.items import Result
-
+import re
 
 class NIST(Source):
     website = "http://webbook.nist.gov/*"  
@@ -35,6 +35,8 @@ class NIST(Source):
             elif tables.xpath('tr/th="Initial Phase"').extract()[0] == '1':
                 log.msg('NIST table; Enthalpy/entropy of phase transition',
                         level=log.DEBUG)
+                requests.extend(
+                    self.parse_transition_data(tables, symbol_table))
             elif tables.xpath('tr[1]/td'):
                 log.msg('NIST table: Horizontal table', level=log.DEBUG)
             elif (tables.xpath('@summary').extract()[0] ==
@@ -68,6 +70,28 @@ class NIST(Source):
             })
             log.msg('NIST: |%s|' % data, level=log.DEBUG)
             results.append(result)
+        return results
+
+    @staticmethod
+    def parse_transition_data(table, symbol_table):
+        results = []
+
+        name = table.xpath('@summary').extract()[0]
+        unit = table.xpath('tr[1]/th[1]/node()').extract()[-1][2:-1]
+
+        for tr in table.xpath('tr[td]'):
+            tds = tr.xpath('td/text()').extract()
+            result = Result({
+                'attribute': name,
+                'value': tds[0] + ' ' + unit,
+                'source': 'NIST',
+                'reliability': 'Unknown',
+                'conditions': '%s K, (%s -> %s)' % (tds[1], tds[2], tds[3])
+            })
+            log.msg('NIST: |%s|' % result, level=log.DEBUG)
+            results.append(result)
+
+
         return results
 
     def new_compound_request(self, compound):
