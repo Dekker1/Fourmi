@@ -8,7 +8,7 @@ from FourmiCrawler.items import Result
 class NIST(Source):
     website = "http://webbook.nist.gov/*"  
 
-    search = 'cgi/cbook.cgi?Name=%s&Units=SI&cTG=on&cTC=on&cTP=on'
+    search = 'cgi/cbook.cgi?Name=%s&Units=SI&cTP=on'
 
     def __init__(self):
         Source.__init__(self)
