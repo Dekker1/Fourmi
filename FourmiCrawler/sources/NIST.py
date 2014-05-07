@@ -46,9 +46,13 @@ class NIST(Source):
             elif len(tables.xpath('tr[1]/th')) == 5:
                 log.msg('NIST table: generic 5 columns', level=log.DEBUG)
                 # Symbol (unit) Temperature (K) Method Reference Comment
+                requests.extend(
+                    self.parse_generic_data(tables))
             elif len(tables.xpath('tr[1]/th')) == 4:
                 log.msg('NIST table: generic 4 columns', level=log.DEBUG)
                 # Symbol (unit) Temperature (K) Reference Comment
+                requests.extend(
+                    self.parse_generic_data(tables))
             else:
                 log.msg('NIST table: NOT SUPPORTED', level=log.WARNING)
                 continue #Assume unsupported
@@ -92,6 +96,26 @@ class NIST(Source):
             results.append(result)
 
 
+        return results
+
+    @staticmethod
+    def parse_generic_data(table):
+        results = []
+
+        name = table.xpath('@summary').extract()[0]
+        unit = table.xpath('tr[1]/th[1]/node()').extract()[-1][2:-1]
+
+        for tr in table.xpath('tr[td]'):
+            tds = tr.xpath('td/text()').extract()
+            result = Result({
+                'attribute': name,
+                'value': tds[0] + ' ' + unit,
+                'source': 'NIST',
+                'reliability': 'Unknown',
+                'conditions': '%s K' % tds[1]
+            })
+            log.msg('NIST: |%s|' % result, level=log.DEBUG)
+            results.append(result)
         return results
 
     def new_compound_request(self, compound):
