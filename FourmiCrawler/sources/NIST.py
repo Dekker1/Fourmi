@@ -16,6 +16,8 @@ class NIST(Source):
     def parse(self, response):
         sel = Selector(response)
 
+        requests = []
+
         symbol_table = {}
         tds = sel.xpath('//table[@class="symbol_table"]/tr/td')
         for (symbol_td, name_td) in zip(tds[::2], tds[1::2]):
@@ -28,6 +30,8 @@ class NIST(Source):
         for tables in sel.xpath('//table[@class="data"]'):
             if tables.xpath('@summary').extract()[0] == 'One dimensional data':
                 log.msg('NIST table: Aggregrate data', level=log.DEBUG)
+                requests.extend(
+                    self.parse_aggregate_data(tables, symbol_table))
             elif tables.xpath('tr/th="Initial Phase"').extract()[0] == '1':
                 log.msg('NIST table; Enthalpy/entropy of phase transition',
                         level=log.DEBUG)
@@ -46,6 +50,25 @@ class NIST(Source):
             else:
                 log.msg('NIST table: NOT SUPPORTED', level=log.WARNING)
                 continue #Assume unsupported
+        return requests
+
+    @staticmethod
+    def parse_aggregate_data(table, symbol_table):
+        results = []
+        for tr in table.xpath('tr[td]'):
+            data = []
+            for td in tr.xpath('td'):
+                data.append(''.join(td.xpath('node()').extract()))
+            result = Result({
+                'attribute': symbol_table[data[0]],
+                'value': data[1] + ' ' + data[2],
+                'source': 'NIST',
+                'reliability': 'Unknown',
+                'conditions': ''
+            })
+            log.msg('NIST: |%s|' % data, level=log.DEBUG)
+            results.append(result)
+        return results
 
     def new_compound_request(self, compound):
         return Request(url=self.website[:-1] + self.search % compound,
