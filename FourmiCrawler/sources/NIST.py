@@ -43,6 +43,8 @@ class NIST(Source):
                     'Antoine Equation Parameters'):
                 log.msg('NIST table: Antoine Equation Parameters',
                         level=log.DEBUG)
+                requests.extend(
+                    self.parse_antoine_data(tables))
             elif len(tables.xpath('tr[1]/th')) == 5:
                 log.msg('NIST table: generic 5 columns', level=log.DEBUG)
                 # Symbol (unit) Temperature (K) Method Reference Comment
@@ -116,6 +118,25 @@ class NIST(Source):
             })
             log.msg('NIST: |%s|' % result, level=log.DEBUG)
             results.append(result)
+        return results
+
+    @staticmethod
+    def parse_antoine_data(table):
+        results = []
+
+        name = table.xpath('@summary').extract()[0]
+
+        for tr in table.xpath('tr[td]'):
+            tds = tr.xpath('td/text()').extract()
+            result = Result({
+                'attribute': name,
+                'value': 'A=%s, B=%s, C=%s' % (tds[1], tds[2], tds[3]),
+                'source': 'NIST',
+                'reliability': 'Unknown',
+                'conditions': '%s K' % tds[0]
+            })
+            results.append(result)
+
         return results
 
     def new_compound_request(self, compound):
