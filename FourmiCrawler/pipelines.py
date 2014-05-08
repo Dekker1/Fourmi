@@ -6,7 +6,7 @@ import re
 from scrapy.exceptions import DropItem
 
 
-class FourmiPipeline(object):
+class DuplicatePipeline(object):
 
     def __init__(self):
         self.known_values = set()
@@ -18,7 +18,7 @@ class FourmiPipeline(object):
         :param spider: The spider which scraped the spider
         :return: :raise DropItem: Returns the item if unique or drops them if it's already known
         """
-        value = item['attribute'], item['value']
+        value = (item['attribute'], item['value'], item['conditions'])
         if value in self.known_values:
             raise DropItem("Duplicate item found: %s" % item) # #[todo] append sources of first item.
         else:
