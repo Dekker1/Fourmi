@@ -98,7 +98,6 @@ class NIST(Source):
                 'reliability': 'Unknown',
                 'conditions': '%s K, (%s -> %s)' % (tds[1], tds[2], tds[3])
             })
-            log.msg('NIST: |%s|' % result, level=log.DEBUG)
             results.append(result)
 
 
@@ -124,7 +123,6 @@ class NIST(Source):
                 'reliability': 'Unknown',
                 'conditions': '%s K' % tds[1]
             })
-            log.msg('NIST: |%s|' % result, level=log.DEBUG)
             results.append(result)
         return results
 
