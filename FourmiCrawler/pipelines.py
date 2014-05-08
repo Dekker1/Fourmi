@@ -2,6 +2,7 @@
 #
 # Don't forget to add your pipeline to the ITEM_PIPELINES setting
 # See: http://doc.scrapy.org/en/latest/topics/item-pipeline.html
+import re
 from scrapy.exceptions import DropItem
 
 
@@ -23,3 +24,14 @@ class FourmiPipeline(object):
         else:
             self.known_values.add(value)
             return item
+
+class AttributeSelectionPipeline(object):
+
+    def __init__(self):
+        pass;
+
+    def process_item(self, item, spider):
+        if [x for x in spider.selected_attributes if re.match(x, item["attribute"])]:
+            return item
+        else:
+            raise DropItem("Attribute not selected by used: %s" % item)
