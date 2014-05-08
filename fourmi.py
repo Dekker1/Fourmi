@@ -12,14 +12,15 @@ Usage:
     fourmi --version
 
 Options:
+    --attributes=<regex>            Include only that match these regular expressions split by a comma. [default: .*]
     -h --help                       Show this screen.
     --version                       Show version.
     --verbose                       Verbose logging output.
     --log=<file>                    Save log to an file.
     -o <file> --output=<file>       Output file [default: result.*format*]
     -f <format> --format=<format>   Output formats (supported: csv, json, jsonlines, xml) [default: jsonlines]
-    --include=<sourcenames>         Include only sources that match the regular these expressions split by a comma.
-    --exclude=<sourcenames>         Exclude the sources that match the regular these expressions split by a comma.
+    --include=<regex>               Include only sources that match these regular expressions split by a comma.
+    --exclude=<regex>               Exclude the sources that match these regular expressions split by a comma.
 """
 
 from twisted.internet import reactor
@@ -32,8 +33,8 @@ from FourmiCrawler.spider import FourmiSpider
 from sourceloader import SourceLoader
 
 
-def setup_crawler(searchable, settings, source_loader):
-    spider = FourmiSpider(compound=searchable)
+def setup_crawler(searchable, settings, source_loader, attributes):
+    spider = FourmiSpider(compound=searchable, selected_attributes=attributes)
     spider.add_parsers(source_loader.sources)
     crawler = Crawler(settings)
     crawler.signals.connect(reactor.stop, signal=signals.spider_closed)
@@ -74,7 +75,7 @@ def start_log(docopt_arguments):
 def search(docopt_arguments, source_loader):
     start_log(docopt_arguments)
     settings = scrapy_settings_manipulation(docopt_arguments)
-    setup_crawler(docopt_arguments["<compound>"], settings, source_loader)
+    setup_crawler(docopt_arguments["<compound>"], settings, source_loader, docopt_arguments["--attributes"].split(','))
     reactor.run()
 
 
