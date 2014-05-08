@@ -22,7 +22,6 @@ Options:
     --include=<regex>               Include only sources that match these regular expressions split by a comma.
     --exclude=<regex>               Exclude the sources that match these regular expressions split by a comma.
 """
-import re
 
 from twisted.internet import reactor
 from scrapy.crawler import Crawler

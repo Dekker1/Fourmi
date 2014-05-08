@@ -31,6 +31,13 @@ class AttributeSelectionPipeline(object):
         pass;
 
     def process_item(self, item, spider):
+        """
+        The items are processed using the selected attribute list available in the spider,
+        items that don't match the selected items are dropped.
+        :param item: The incoming item
+        :param spider: The spider which scraped the item. Should have an attribute "selected_attributes".
+        :return: :raise DropItem: Returns item if it matches an selected attribute, else it is dropped.
+        """
         if [x for x in spider.selected_attributes if re.match(x, item["attribute"])]:
             return item
         else:
