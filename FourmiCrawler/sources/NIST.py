@@ -83,7 +83,11 @@ class NIST(Source):
         results = []
 
         name = table.xpath('@summary').extract()[0]
-        unit = table.xpath('tr[1]/th[1]/node()').extract()[-1][2:-1]
+        tr_unit = ''.join(table.xpath('tr[1]/th[1]/node()').extract())
+        m = re.search(r'\((.*)\)', tr_unit)
+        unit = '!'
+        if m:
+            unit = m.group(1)
 
         for tr in table.xpath('tr[td]'):
             tds = tr.xpath('td/text()').extract()
@@ -105,7 +109,11 @@ class NIST(Source):
         results = []
 
         name = table.xpath('@summary').extract()[0]
-        unit = table.xpath('tr[1]/th[1]/node()').extract()[-1][2:-1]
+        tr_unit = ''.join(table.xpath('tr[1]/th[1]/node()').extract())
+        m = re.search(r'\((.*)\)', tr_unit)
+        unit = '!'
+        if m:
+            unit = m.group(1)
 
         for tr in table.xpath('tr[td]'):
             tds = tr.xpath('td/text()').extract()
