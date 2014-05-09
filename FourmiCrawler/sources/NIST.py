@@ -152,7 +152,30 @@ class NIST(Source):
         return results
 
     def parse_individual_datapoints(self, response):
-        pass
+        sel = Selector(response)
+        table = sel.xpath('//table[@class="data"]')[0]
+
+        results = []
+
+        name = table.xpath('@summary').extract()[0]
+        tr_unit = ''.join(table.xpath('tr[1]/th[1]/node()').extract())
+        m = re.search(r'\((.*)\)', tr_unit)
+        unit = '!'
+        if m:
+            unit = m.group(1)
+
+        for tr in table.xpath('tr[td]'):
+            tds = tr.xpath('td/text()').extract()
+            result = Result({
+                'attribute': name,
+                'value': '%s %s' % (tds[0], unit),
+                'source': 'NIST',
+                'reliability': 'Unknown',
+                'conditions': ''
+            })
+            results.append(result)
+
+        return results
 
     def new_compound_request(self, compound):
         return Request(url=self.website[:-1] + self.search % compound,
