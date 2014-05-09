@@ -166,9 +166,14 @@ class NIST(Source):
 
         for tr in table.xpath('tr[td]'):
             tds = tr.xpath('td/text()').extract()
+            uncertainty = ''
+            m = re.search('Uncertainty assigned by TRC =  (.*?) ', tds[-1])
+            if m:
+                uncertainty = '+- %s ' % m.group(1)
+                # [TODO]: get the plusminus sign working in here
             result = Result({
                 'attribute': name,
-                'value': '%s %s' % (tds[0], unit),
+                'value': '%s %s%s' % (tds[0], uncertainty, unit),
                 'source': 'NIST',
                 'reliability': 'Unknown',
                 'conditions': ''
