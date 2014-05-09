@@ -60,10 +60,16 @@ class NIST(Source):
                 continue #Assume unsupported
         return requests
 
-    @staticmethod
-    def parse_aggregate_data(table, symbol_table):
+    def parse_aggregate_data(self, table, symbol_table):
         results = []
         for tr in table.xpath('tr[td]'):
+            extra_data_url = tr.xpath('td[last()][a="Individual data points"]'
+                                '/a/@href').extract()
+            if extra_data_url:
+                request = Request(url=self.website[:-1] + extra_data_url[0],
+                    callback=self.parse_individual_datapoints)
+                results.append(request)
+                continue
             data = []
             for td in tr.xpath('td'):
                 data.append(''.join(td.xpath('node()').extract()))
@@ -144,6 +150,9 @@ class NIST(Source):
             results.append(result)
 
         return results
+
+    def parse_individual_datapoints(self, response):
+        pass
 
     def new_compound_request(self, compound):
         return Request(url=self.website[:-1] + self.search % compound,
