@@ -7,13 +7,13 @@ from FourmiCrawler.sources.source import Source
 class SourceLoader:
     sources = []
 
-    def __init__(self, rel_dir="FourmiCrawler/sources"):
+    def __init__(self, rel_dir="FourmiCrawler\\sources"):
         path = os.path.dirname(os.path.abspath(__file__))
-        path += "/" + rel_dir
+        path += "\\" + rel_dir
         known_parser = set()
 
         for py in [f[:-3] for f in os.listdir(path) if f.endswith('.py') and f != '__init__.py']:
-            mod = __import__('.'.join([rel_dir.replace("/", "."), py]), fromlist=[py])
+            mod = __import__('.'.join([rel_dir.replace("\\", "."), py]), fromlist=[py])
             classes = [getattr(mod, x) for x in dir(mod) if inspect.isclass(getattr(mod, x))]
             for cls in classes:
                 if issubclass(cls, Source) and cls not in known_parser:
