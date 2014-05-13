@@ -48,7 +48,7 @@ interface(CLI). (Assignee: Harmen)
 - Create an configuration file to hold logins and API keys.
 - Determine reliability of our data point.
 - Create an module to gather data from NIST. (Assignee: Rob)
-- Create an module to gather data from PubChem. (Assignee: Rob)
+- Create an module to gather data from PubChem. (Assignee: Nout)
 
 __Side goals:__
 
