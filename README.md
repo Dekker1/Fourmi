@@ -39,29 +39,21 @@ Fourmi application can be found on our [wiki](...).
 
 The Fourmi project has the following goals for the nearby future:
 
-** Main goals: **
+__Main goals:__
 
 - Improve our documentation and guides. (Assignee: Dekker)
-
 - Build an graphical user interface(GUI) as alternative for the command line
 interface(CLI). (Assignee: Harmen)
-
 - Compiling the source into an windows executable. (Assignee: Bas)
-
 - Create an configuration file to hold logins and API keys.
-
 - Determine reliability of our data point.
-
 - Create an module to gather data from NIST. (Assignee: Rob)
-
 - Create an module to gather data from PubChem. (Assignee: Rob)
 
-** Side goals: **
+__Side goals:__
 
 - Clean and unify data.
-
 - Extensive reliability analysis using statistical tests.
-
 - Test data with Descartes 1.
 
 ### Project Origin
@@ -82,13 +74,8 @@ creating a web crawler, we've named our application Fourmi (Englis: Ants).
 The following people were part of the original team:
 
 - [Jip J. Dekker](http://jip.dekker.li)
-
 - Rob ten Berge
-
 - Harmen Prins
-
 - Bas van Berkel
-
 - Nout van Deijck
-
 - Michail Kuznetcov
