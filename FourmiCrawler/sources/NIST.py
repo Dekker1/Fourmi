@@ -73,12 +73,21 @@ class NIST(Source):
             data = []
             for td in tr.xpath('td'):
                 data.append(''.join(td.xpath('node()').extract()))
+
+            name = symbol_table[data[0]]
+            condition = ''
+
+            m = re.match(r'(.*) at (.*)', name)
+            if m:
+                name = m.group(1)
+                condition = m.group(2)
+
             result = Result({
-                'attribute': symbol_table[data[0]],
+                'attribute': name,
                 'value': data[1] + ' ' + data[2],
                 'source': 'NIST',
                 'reliability': 'Unknown',
-                'conditions': ''
+                'conditions': condition
             })
             log.msg('NIST: |%s|' % data, level=log.DEBUG)
             results.append(result)
@@ -158,6 +167,12 @@ class NIST(Source):
         results = []
 
         name = table.xpath('@summary').extract()[0]
+        condition = ''
+        m = re.match(r'(.*) at (.*)', name)
+        if m:
+            name = m.group(1)
+            condition = m.group(2)
+
         tr_unit = ''.join(table.xpath('tr[1]/th[1]/node()').extract())
         m = re.search(r'\((.*)\)', tr_unit)
         unit = '!'
@@ -176,7 +191,7 @@ class NIST(Source):
                 'value': '%s %s%s' % (tds[0], uncertainty, unit),
                 'source': 'NIST',
                 'reliability': 'Unknown',
-                'conditions': ''
+                'conditions': condition
             })
             results.append(result)
 
