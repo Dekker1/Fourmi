@@ -18,6 +18,8 @@ class NIST(Source):
 
         requests = []
 
+        requests.extend(self.parse_generic_info(sel))
+
         symbol_table = {}
         tds = sel.xpath('//table[@class="symbol_table"]/tr/td')
         for (symbol_td, name_td) in zip(tds[::2], tds[1::2]):
@@ -58,6 +60,41 @@ class NIST(Source):
             else:
                 log.msg('NIST table: NOT SUPPORTED', level=log.WARNING)
                 continue #Assume unsupported
+        return requests
+
+    def parse_generic_info(self, sel):
+        ul = sel.xpath('body/ul[li/strong="IUPAC Standard InChI:"]')
+        li = ul.xpath('li')
+
+        data = {}
+
+        raw_formula = ul.xpath('li[strong/a="Formula"]//text()').extract()
+        data['Chemical formula'] = ''.join(raw_formula[2:]).strip()
+
+        raw_mol_weight = ul.xpath('li[strong/a="Molecular weight"]/text()')
+        data['Molecular weight'] = raw_mol_weight.extract()[0].strip()
+
+        raw_inchi = ul.xpath('li[strong="IUPAC Standard InChI:"]//tt/text()')
+        data['IUPAC Standard InChI'] = raw_inchi.extract()[0]
+
+        raw_inchikey = ul.xpath('li[strong="IUPAC Standard InChIKey:"]'
+                            '/tt/text()')
+        data['IUPAC Standard InChIKey'] = raw_inchikey.extract()[0]
+
+        raw_cas_number = ul.xpath('li[strong="CAS Registry Number:"]/text()')
+        data['CAS Registry Number'] = raw_cas_number.extract()[0].strip()
+
+        requests = []
+        for key, value in data.iteritems():
+            result = Result({
+                'attribute': key,
+                'value': value,
+                'source': 'NIST',
+                'reliability': 'Unknown',
+                'conditions': ''
+            })
+            requests.append(result)
+
         return requests
 
     def parse_aggregate_data(self, table, symbol_table):
