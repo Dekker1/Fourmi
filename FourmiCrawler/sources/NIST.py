@@ -20,6 +20,11 @@ class NIST(Source):
     def parse(self, response):
         sel = Selector(response)
 
+        title = sel.xpath('head/title/text()').extract()[0]
+        if title == 'Name Not Found':
+            log.msg('NIST: Chemical not found!', level=log.ERROR)
+            return
+
         requests = []
 
         requests.extend(self.parse_generic_info(sel))
