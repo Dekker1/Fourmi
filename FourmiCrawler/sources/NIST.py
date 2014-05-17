@@ -79,6 +79,12 @@ class NIST(Source):
         ul = sel.xpath('body/ul[li/strong="IUPAC Standard InChI:"]')
         li = ul.xpath('li')
 
+        raw_synonyms = ul.xpath('li[strong="Other names:"]/text()').extract()
+        for synonym in raw_synonyms[0].strip().split(';\n'):
+            log.msg('NIST synonym: %s' % synonym, level=log.DEBUG)
+            self.ignore_list.update(synonym)
+            self._spider.get_synonym_requests(synonym)
+
         data = {}
 
         raw_formula = ul.xpath('li[strong/a="Formula"]//text()').extract()
