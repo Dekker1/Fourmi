@@ -24,6 +24,10 @@ class NIST(Source):
         if title == 'Name Not Found':
             log.msg('NIST: Chemical not found!', level=log.ERROR)
             return
+        if title not in self.ignore_list:
+            self.ignore_list.update(title)
+            log.msg('NIST emit synonym: %s' % title, level=log.DEBUG)
+            self._spider.get_synonym_requests(title)
 
         requests = []
 
