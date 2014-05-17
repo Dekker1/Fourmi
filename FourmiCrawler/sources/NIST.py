@@ -5,10 +5,14 @@ from scrapy.selector import Selector
 from FourmiCrawler.items import Result
 import re
 
+# [TODO]: values can be '128.', perhaps remove the dot in that case?
+
 class NIST(Source):
     website = "http://webbook.nist.gov/*"  
 
     search = 'cgi/cbook.cgi?Name=%s&Units=SI&cTP=on'
+
+    ignore_list = set()
 
     def __init__(self):
         Source.__init__(self)
@@ -235,5 +239,7 @@ class NIST(Source):
         return results
 
     def new_compound_request(self, compound):
-        return Request(url=self.website[:-1] + self.search % compound,
-                       callback=self.parse)
+        if compound not in self.ignore_list:
+            self.ignore_list.update(compound)
+            return Request(url=self.website[:-1] + self.search % compound,
+                           callback=self.parse)
