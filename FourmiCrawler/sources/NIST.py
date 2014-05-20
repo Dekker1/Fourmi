@@ -6,8 +6,15 @@ from FourmiCrawler.items import Result
 import re
 
 # [TODO]: values can be '128.', perhaps remove the dot in that case?
+# [TODO]: properties have references and comments which do not exist in the
+#         Result item, but should be included eventually.
 
 class NIST(Source):
+    """NIST Scraper plugin
+
+    This plugin manages searching for a chemical on the NIST website
+    and parsing the resulting page if the chemical exists on NIST.
+    """
     website = "http://webbook.nist.gov/*"  
 
     search = 'cgi/cbook.cgi?Name=%s&Units=SI&cTP=on'
@@ -76,6 +83,9 @@ class NIST(Source):
         return requests
 
     def parse_generic_info(self, sel):
+        """Parses: synonyms, chemical formula, molecular weight, InChI,
+        InChiKey, CAS number
+        """
         ul = sel.xpath('body/ul[li/strong="IUPAC Standard InChI:"]')
         li = ul.xpath('li')
 
@@ -117,6 +127,9 @@ class NIST(Source):
         return requests
 
     def parse_aggregate_data(self, table, symbol_table):
+        """Parses the table(s) which contain possible links to individual
+        data points
+        """
         results = []
         for tr in table.xpath('tr[td]'):
             extra_data_url = tr.xpath('td[last()][a="Individual data points"]'
@@ -151,6 +164,7 @@ class NIST(Source):
 
     @staticmethod
     def parse_transition_data(table, symbol_table):
+        """Parses the table containing properties regarding phase changes"""
         results = []
 
         name = table.xpath('@summary').extract()[0]
@@ -176,6 +190,11 @@ class NIST(Source):
 
     @staticmethod
     def parse_generic_data(table):
+        """Parses the common tables of 4 and 5 rows. Assumes they are of the
+        form:
+        Symbol (unit)|Temperature (K)|Method|Reference|Comment
+        Symbol (unit)|Temperature (K)|Reference|Comment
+        """
         results = []
 
         name = table.xpath('@summary').extract()[0]
@@ -199,6 +218,7 @@ class NIST(Source):
 
     @staticmethod
     def parse_antoine_data(table):
+        """Parse table containing parameters for the Antione equation"""
         results = []
 
         name = table.xpath('@summary').extract()[0]
@@ -217,6 +237,7 @@ class NIST(Source):
         return results
 
     def parse_individual_datapoints(self, response):
+        """Parses the page linked from aggregate data"""
         sel = Selector(response)
         table = sel.xpath('//table[@class="data"]')[0]
 
