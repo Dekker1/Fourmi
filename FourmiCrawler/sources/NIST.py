@@ -49,33 +49,30 @@ class NIST(Source):
             log.msg('NIST symbol: |%s|, name: |%s|' % (symbol, name),
                     level=log.DEBUG)
 
-        for tables in sel.xpath('//table[@class="data"]'):
-            if tables.xpath('@summary').extract()[0] == 'One dimensional data':
+        for table in sel.xpath('//table[@class="data"]'):
+            if table.xpath('@summary').extract()[0] == 'One dimensional data':
                 log.msg('NIST table: Aggregrate data', level=log.DEBUG)
                 requests.extend(
-                    self.parse_aggregate_data(tables, symbol_table))
-            elif tables.xpath('tr/th="Initial Phase"').extract()[0] == '1':
+                    self.parse_aggregate_data(table, symbol_table))
+            elif table.xpath('tr/th="Initial Phase"').extract()[0] == '1':
                 log.msg('NIST table; Enthalpy/entropy of phase transition',
                         level=log.DEBUG)
-                requests.extend(self.parse_transition_data(tables))
-            elif tables.xpath('tr[1]/td'):
+                requests.extend(self.parse_transition_data(table))
+            elif table.xpath('tr[1]/td'):
                 log.msg('NIST table: Horizontal table', level=log.DEBUG)
-            elif (tables.xpath('@summary').extract()[0] ==
+            elif (table.xpath('@summary').extract()[0] ==
                     'Antoine Equation Parameters'):
                 log.msg('NIST table: Antoine Equation Parameters',
                         level=log.DEBUG)
-                requests.extend(
-                    self.parse_antoine_data(tables))
-            elif len(tables.xpath('tr[1]/th')) == 5:
+                requests.extend(self.parse_antoine_data(table))
+            elif len(table.xpath('tr[1]/th')) == 5:
                 log.msg('NIST table: generic 5 columns', level=log.DEBUG)
                 # Symbol (unit) Temperature (K) Method Reference Comment
-                requests.extend(
-                    self.parse_generic_data(tables))
-            elif len(tables.xpath('tr[1]/th')) == 4:
+                requests.extend(self.parse_generic_data(table))
+            elif len(table.xpath('tr[1]/th')) == 4:
                 log.msg('NIST table: generic 4 columns', level=log.DEBUG)
                 # Symbol (unit) Temperature (K) Reference Comment
-                requests.extend(
-                    self.parse_generic_data(tables))
+                requests.extend(self.parse_generic_data(table))
             else:
                 log.msg('NIST table: NOT SUPPORTED', level=log.WARNING)
                 continue #Assume unsupported
