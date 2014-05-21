@@ -19,12 +19,10 @@ class PubChem(Source):
 
 
     website = 'https://www.ncbi.nlm.nih.gov/*'
-
-
     search = 'pccompound?term=%s'
 
     __spider = None
-    searched_compounds = []
+    searched_compounds = set()
 
     def __init__(self):
         Source.__init__(self)
@@ -34,12 +32,21 @@ class PubChem(Source):
         log.msg('A response from %s just arrived!' % response.url, level=log.DEBUG)
         sel = Selector(response)
         compound = sel.xpath('//h1/text()').extract()[0]
+        raw_synonyms = sel.xpath('//div[@class="smalltext"]/text()').extract()[0]
+        for synonym in raw_synonyms.strip().split(', '):
+            log.msg('PubChem synonym found: %s' % synonym, level=log.DEBUG)
+            self.searched_compounds.update(synonym)
+            self._spider.get_synonym_requests(synonym)
+
+
+        log.msg('Raw synonyms found: %s' % raw_synonyms, level=log.DEBUG)
+
         if compound in self.searched_compounds:
             return None
         else:
             # items = self.parse_properties(sel)
             items = []
-            self.searched_compounds.append(compound)
+            self.searched_compounds.update(compound)
             print items
             return items
 
