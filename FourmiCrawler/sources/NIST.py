@@ -50,7 +50,8 @@ class NIST(Source):
                     level=log.DEBUG)
 
         for table in sel.xpath('//table[@class="data"]'):
-            if table.xpath('@summary').extract()[0] == 'One dimensional data':
+            summary = table.xpath('@summary').extract()[0]
+            if summary == 'One dimensional data':
                 log.msg('NIST table: Aggregrate data', level=log.DEBUG)
                 requests.extend(
                     self.parse_aggregate_data(table, symbol_table))
@@ -60,8 +61,7 @@ class NIST(Source):
                 requests.extend(self.parse_transition_data(table))
             elif table.xpath('tr[1]/td'):
                 log.msg('NIST table: Horizontal table', level=log.DEBUG)
-            elif (table.xpath('@summary').extract()[0] ==
-                    'Antoine Equation Parameters'):
+            elif summary == 'Antoine Equation Parameters'):
                 log.msg('NIST table: Antoine Equation Parameters',
                         level=log.DEBUG)
                 requests.extend(self.parse_antoine_data(table))
