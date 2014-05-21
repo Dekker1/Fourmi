@@ -57,8 +57,7 @@ class NIST(Source):
             elif tables.xpath('tr/th="Initial Phase"').extract()[0] == '1':
                 log.msg('NIST table; Enthalpy/entropy of phase transition',
                         level=log.DEBUG)
-                requests.extend(
-                    self.parse_transition_data(tables, symbol_table))
+                requests.extend(self.parse_transition_data(tables))
             elif tables.xpath('tr[1]/td'):
                 log.msg('NIST table: Horizontal table', level=log.DEBUG)
             elif (tables.xpath('@summary').extract()[0] ==
@@ -163,7 +162,7 @@ class NIST(Source):
         return results
 
     @staticmethod
-    def parse_transition_data(table, symbol_table):
+    def parse_transition_data(table):
         """Parses the table containing properties regarding phase changes"""
         results = []
 
