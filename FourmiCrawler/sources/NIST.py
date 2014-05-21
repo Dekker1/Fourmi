@@ -163,7 +163,6 @@ class NIST(Source):
         """Parses the table containing properties regarding phase changes"""
         results = []
 
-        name = table.xpath('@summary').extract()[0]
         tr_unit = ''.join(table.xpath('tr[1]/th[1]/node()').extract())
         m = re.search(r'\((.*)\)', tr_unit)
         unit = '!'
@@ -173,7 +172,7 @@ class NIST(Source):
         for tr in table.xpath('tr[td]'):
             tds = tr.xpath('td/text()').extract()
             result = Result({
-                'attribute': name,
+                'attribute': summary,
                 'value': tds[0] + ' ' + unit,
                 'source': 'NIST',
                 'reliability': 'Unknown',
@@ -193,7 +192,6 @@ class NIST(Source):
         """
         results = []
 
-        name = table.xpath('@summary').extract()[0]
         tr_unit = ''.join(table.xpath('tr[1]/th[1]/node()').extract())
         m = re.search(r'\((.*)\)', tr_unit)
         unit = '!'
@@ -203,7 +201,7 @@ class NIST(Source):
         for tr in table.xpath('tr[td]'):
             tds = tr.xpath('td/text()').extract()
             result = Result({
-                'attribute': name,
+                'attribute': summary,
                 'value': tds[0] + ' ' + unit,
                 'source': 'NIST',
                 'reliability': 'Unknown',
@@ -217,12 +215,10 @@ class NIST(Source):
         """Parse table containing parameters for the Antione equation"""
         results = []
 
-        name = table.xpath('@summary').extract()[0]
-
         for tr in table.xpath('tr[td]'):
             tds = tr.xpath('td/text()').extract()
             result = Result({
-                'attribute': name,
+                'attribute': summary,
                 'value': 'A=%s, B=%s, C=%s' % (tds[1], tds[2], tds[3]),
                 'source': 'NIST',
                 'reliability': 'Unknown',
