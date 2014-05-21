@@ -12,10 +12,16 @@ class PubChem(Source):
         This parser parses the part on PubChem pages that gives Chemical and Physical properties of a substance.
     """
 
-    # TO DO: make url variable with help of PubChem identifier ID given by Wikipedia
+    # TO DO: make url variable with help of PubChem identifier ID / cid
 
     #website = "https://pubchem.ncbi.nlm.nih.gov/summary/summary.cgi?cid=297"            #contains name of compound but not all parsable data
-    website = "https://pubchem.ncbi.nlm.nih.gov/toc/summary_toc.cgi?tocid=27&cid=297"  #contains properties to parse
+    # website = "https://pubchem.ncbi.nlm.nih.gov/toc/summary_toc.cgi?tocid=27&cid=297"  #contains properties to parse
+
+
+    website = 'https://www.ncbi.nlm.nih.gov/*'
+
+
+    search = 'pccompound?term=%s'
 
     __spider = None
     searched_compounds = []
@@ -31,8 +37,10 @@ class PubChem(Source):
         if compound in self.searched_compounds:
             return None
         else:
-            items = self.parse_properties(sel)
+            # items = self.parse_properties(sel)
+            items = []
             self.searched_compounds.append(compound)
+            print items
             return items
 
     def parse_properties(self, sel):
@@ -68,7 +76,7 @@ class PubChem(Source):
         return items
 
     def new_compound_request(self, compound):
-        return Request(url=self.website[:-1] + compound, callback=self.parse)
+        return Request(url=self.website[:-1] + self.search % compound, callback=self.parse)
 
     # @staticmethod
     # def clean_items(items):
