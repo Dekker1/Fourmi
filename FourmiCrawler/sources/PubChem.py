@@ -18,8 +18,11 @@ class PubChem(Source):
     # website = "https://pubchem.ncbi.nlm.nih.gov/toc/summary_toc.cgi?tocid=27&cid=297"  #contains properties to parse
 
 
-    website = 'https://www.ncbi.nlm.nih.gov/*'
+    website = 'https://*.ncbi.nlm.nih.gov/*'
+    website_www = 'https://www.ncbi.nlm.nih.gov/*'
+    website_pubchem = 'https://pubchem.ncbi.nlm.nih.gov/*'
     search = 'pccompound?term=%s'
+    data_url = 'toc/summary_toc.cgi?tocid=27&cid=%s'
 
     __spider = None
     searched_compounds = set()
@@ -29,26 +32,39 @@ class PubChem(Source):
 
     def parse(self, response):
         """ Distributes the above described behaviour """
+        requests = []
         log.msg('A response from %s just arrived!' % response.url, level=log.DEBUG)
+
         sel = Selector(response)
         compound = sel.xpath('//h1/text()').extract()[0]
+        if compound in self.searched_compounds:
+            return None
+
+        self.searched_compounds.update(compound)
         raw_synonyms = sel.xpath('//div[@class="smalltext"]/text()').extract()[0]
         for synonym in raw_synonyms.strip().split(', '):
             log.msg('PubChem synonym found: %s' % synonym, level=log.DEBUG)
             self.searched_compounds.update(synonym)
             self._spider.get_synonym_requests(synonym)
-
-
         log.msg('Raw synonyms found: %s' % raw_synonyms, level=log.DEBUG)
 
-        if compound in self.searched_compounds:
-            return None
-        else:
-            # items = self.parse_properties(sel)
-            items = []
-            self.searched_compounds.update(compound)
-            print items
-            return items
+        n = re.search(r'cid=(\d+)',response.url)
+        if n:
+            cid = n.group(1)
+        log.msg('cid: %s' % cid, level=log.DEBUG)
+        requests.append(Request(url=self.website_pubchem[:-1] + self.data_url % cid, callback=self.parse_data))
+
+        return requests
+
+    def parse_data(self, response):
+        log.msg('parsing data', level=log.DEBUG)
+        requests = []
+
+
+
+
+        return requests
+
 
     def parse_properties(self, sel):
         """ scrape data from 'Chemical and Physical Properties' box on PubChem. """
@@ -83,7 +99,7 @@ class PubChem(Source):
         return items
 
     def new_compound_request(self, compound):
-        return Request(url=self.website[:-1] + self.search % compound, callback=self.parse)
+        return Request(url=self.website_www[:-1] + self.search % compound, callback=self.parse)
 
     # @staticmethod
     # def clean_items(items):
