@@ -58,21 +58,21 @@ class NIST(Source):
             elif table.xpath('tr/th="Initial Phase"').extract()[0] == '1':
                 log.msg('NIST table; Enthalpy/entropy of phase transition',
                         level=log.DEBUG)
-                requests.extend(self.parse_transition_data(table))
+                requests.extend(self.parse_transition_data(table, summary))
             elif table.xpath('tr[1]/td'):
                 log.msg('NIST table: Horizontal table', level=log.DEBUG)
-            elif summary == 'Antoine Equation Parameters'):
+            elif summary == 'Antoine Equation Parameters':
                 log.msg('NIST table: Antoine Equation Parameters',
                         level=log.DEBUG)
-                requests.extend(self.parse_antoine_data(table))
+                requests.extend(self.parse_antoine_data(table, summary))
             elif len(table.xpath('tr[1]/th')) == 5:
                 log.msg('NIST table: generic 5 columns', level=log.DEBUG)
                 # Symbol (unit) Temperature (K) Method Reference Comment
-                requests.extend(self.parse_generic_data(table))
+                requests.extend(self.parse_generic_data(table, summary))
             elif len(table.xpath('tr[1]/th')) == 4:
                 log.msg('NIST table: generic 4 columns', level=log.DEBUG)
                 # Symbol (unit) Temperature (K) Reference Comment
-                requests.extend(self.parse_generic_data(table))
+                requests.extend(self.parse_generic_data(table, summary))
             else:
                 log.msg('NIST table: NOT SUPPORTED', level=log.WARNING)
                 continue #Assume unsupported
@@ -159,7 +159,7 @@ class NIST(Source):
         return results
 
     @staticmethod
-    def parse_transition_data(table):
+    def parse_transition_data(table, summary):
         """Parses the table containing properties regarding phase changes"""
         results = []
 
@@ -185,7 +185,7 @@ class NIST(Source):
         return results
 
     @staticmethod
-    def parse_generic_data(table):
+    def parse_generic_data(table, summary):
         """Parses the common tables of 4 and 5 rows. Assumes they are of the
         form:
         Symbol (unit)|Temperature (K)|Method|Reference|Comment
@@ -213,7 +213,7 @@ class NIST(Source):
         return results
 
     @staticmethod
-    def parse_antoine_data(table):
+    def parse_antoine_data(table, summary):
         """Parse table containing parameters for the Antione equation"""
         results = []
 
