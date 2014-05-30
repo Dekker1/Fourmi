@@ -47,7 +47,6 @@ class ChemSpider(Source):
         properties = []
 
         # Predicted - ACD/Labs tab
-        # [TODO] - test if tab contains data, some chemicals do not have data here
         td_list = sel.xpath('.//table[@id="acdlabs-table"]//td').xpath(
             'normalize-space(string())')
         prop_names = td_list[::2]
@@ -57,6 +56,12 @@ class ChemSpider(Source):
             prop_name = prop_name.extract().encode('utf-8')[:-1]
             prop_value = prop_value.extract().encode('utf-8')
             prop_conditions = ''
+
+            # Test for properties without values, with one hardcoded exception
+            if (not re.match(r'^\d', prop_value) or
+                    (prop_name == 'Polarizability' and
+                    prop_value == '10-24cm3')):
+                continue
 
             # Match for condition in parentheses
             m = re.match(r'(.*) \((.*)\)', prop_name)
@@ -192,7 +197,8 @@ class ChemSpider(Source):
                 'reliability': 'Unknown',
                 'conditions': ''
             })
-            properties.append(result)
+            if result['value']:
+                properties.append(result)
         return properties
 
     def parse_searchrequest(self, response):
@@ -200,8 +206,14 @@ class ChemSpider(Source):
         sel = Selector(response)
         log.msg('chemspider parse_searchrequest', level=log.DEBUG)
         sel.register_namespace('cs', 'http://www.chemspider.com/')
-        csid = sel.xpath('.//cs:int/text()').extract()[0]
-        # [TODO] - handle multiple csids in case of vague search term
+        csids = sel.xpath('.//cs:int/text()').extract()
+        if len(csids) == 0:
+            log.msg('ChemSpider found nothing', level=log.ERROR)
+            return
+        elif len(csids) > 1:
+            log.msg('ChemSpider found multiple substances, taking first '
+                    'element', level=log.DEBUG)
+        csid = csids[0]
         structure_url = self.website[:-1] + self.structure % csid
         extendedinfo_url = self.website[:-1] + self.extendedinfo % csid
         log.msg('chemspider URL: %s' % structure_url, level=log.DEBUG)

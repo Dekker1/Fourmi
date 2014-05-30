@@ -11,8 +11,9 @@ BOT_NAME = 'FourmiCrawler'
 SPIDER_MODULES = ['FourmiCrawler']
 NEWSPIDER_MODULE = 'FourmiCrawler'
 ITEM_PIPELINES = {
-    'FourmiCrawler.pipelines.AttributeSelectionPipeline': 100,
-    'FourmiCrawler.pipelines.DuplicatePipeline': 200,
+    "FourmiCrawler.pipelines.RemoveNonePipeline": 100,
+    'FourmiCrawler.pipelines.AttributeSelectionPipeline': 200,
+    'FourmiCrawler.pipelines.DuplicatePipeline': 300,
 }
 FEED_URI = 'results.json'
 FEED_FORMAT = 'jsonlines'
