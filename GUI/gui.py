@@ -3,18 +3,37 @@ import tkMessageBox
 from fourmi import search
 from sourceloader import SourceLoader
 
+class configImporter():
+    def __init__(self, filename):
+        import ConfigParser
+        self.filename = filename
+        self.parser = ConfigParser.ConfigParser()
+        self.parser.read(self.filename)
+
+    def load_common_parameters(self):
+        return self.parser.get('GUIoptions', 'CommonParameters')
+
+    def load_output_types(self):
+        return self.parser.get('GUIoptions', 'OutputTypes')
+
+    def load_always_parameters(self):
+        return self.parser.get('GUIoptions', 'AlwaysParameters')
 
 class GUI():
     def __init__(self):
+        self.configurator = configImporter('config.cfg')
         self.finish_with_search = False
         self.values = {}
         self.window, self.variables = self.generate_window(self.load_common_parameters(), self.load_output_types())
 
     def load_common_parameters(self):
-        return ["Boiling Point", "Density", "Molecular Formula", "More0", "More1", "More2", "More3", "More4"]
+        return [x.strip() for x in self.configurator.load_common_parameters().split(',')]
 
     def load_output_types(self):
-        return ["json", "csv", "xlsx"]
+        return [x.strip() for x in self.configurator.load_output_types().split(',')]
+
+    def load_always_parameters(self):
+        return ','.join([x.strip() for x in self.configurator.load_always_parameters().split(',')])
 
     def generate_window(self, common_parameters, output_types):
         window = Tk()
@@ -32,8 +51,9 @@ class GUI():
         input_substance.pack()
 
         frame_all_parameters = Frame(window)
+        frame_selecting_parameters = Frame(frame_all_parameters)
 
-        frame_new_parameters = Frame(frame_all_parameters)
+        frame_new_parameters = Frame(frame_selecting_parameters)
         label_new_parameters = Label(frame_new_parameters, text="Parameters: ")
         input_new_parameters = Text(frame_new_parameters, font=("Helvetica",8), width=25, height=7, padx=5, pady=5)
         variables.update({"new_parameters":input_new_parameters})
@@ -41,7 +61,7 @@ class GUI():
         label_new_parameters.pack()
         input_new_parameters.pack()
 
-        frame_common_parameters = Frame(frame_all_parameters)
+        frame_common_parameters = Frame(frame_selecting_parameters)
         label_common_parameters = Label(frame_common_parameters, text="Common Parameters: ")
         input_common_parameters = Listbox(frame_common_parameters, selectmode=MULTIPLE, height=7)
         scrollbar_common_parameters = Scrollbar(frame_common_parameters)
@@ -55,20 +75,35 @@ class GUI():
         input_common_parameters.pack(side=LEFT)
         scrollbar_common_parameters.pack(side=RIGHT, fill=Y)
 
+        frame_selecting_parameters.pack()
+
+        frame_checkbox_parameters = Frame(frame_all_parameters)
+        variable_all_parameters = BooleanVar()
+        variable_all_parameters.set(False)
+        input_all_parameters = Checkbutton(frame_checkbox_parameters, text="Search ALL parameters", variable=variable_all_parameters)
+        variables.update({"all_parameters":variable_all_parameters})
+        frame_checkbox_parameters.pack(side=BOTTOM)
+        input_all_parameters.pack()
+
         frame_all_parameters.pack()
 
-        output_type = StringVar()
-        output_type.set(output_types[0] if output_types and len(output_types) != 0 else "json")
-        variables.update({"output_type":output_type})
-        frame_output_type = Frame(window)
-        label_output_type = Label(frame_output_type, text="Output: ")
-        if output_types and len(output_types) > 0:
-            input_output_type = OptionMenu(frame_output_type, output_type, *output_types)
+        if output_types and len(output_types) == 1:
+            output_type = StringVar()
+            output_type.set(output_types[0])
+            variables.update({"output_type":output_type})
         else:
-            input_output_type = Label(frame_output_type, text="No output types in config file\nSelecting json")
-        frame_output_type.pack()
-        label_output_type.pack()
-        input_output_type.pack()
+            output_type = StringVar()
+            output_type.set(output_types[0] if output_types and len(output_types) != 0 else "json")
+            variables.update({"output_type":output_type})
+            frame_output_type = Frame(window)
+            label_output_type = Label(frame_output_type, text="Output: ")
+            if output_types and len(output_types) > 0:
+                input_output_type = OptionMenu(frame_output_type, output_type, *output_types)
+            else:
+                input_output_type = Label(frame_output_type, text="No output types in config file\nSelecting json")
+            frame_output_type.pack()
+            label_output_type.pack()
+            input_output_type.pack()
 
         frame_last = Frame(window)
         search_button = Button(frame_last, text="Start search", command=self.prepare_search)
@@ -85,22 +120,36 @@ class GUI():
         variables = self.variables
         values = {}
 
+
+        values.update({"Always Parameters":self.load_always_parameters()})
         for name, var in variables.iteritems():
             if var.__class__ is StringVar:
+                values.update({name: var.get()})
+            elif var.__class__ is BooleanVar:
                 values.update({name: var.get()})
             elif var.__class__ is Text:
                 values.update({name: str(var.get("1.0", END)).strip()})
             elif var.__class__ is Listbox:
                 values.update({name: ", ".join([var.get(int(i)) for i in var.curselection()])})
             else:
-                print "No known class"
+                print "No known class, {}, {}".format(name, var)
 
         self.values = values
         self.window.destroy()
 
     def execute_search(self):
         print self.values
-        arguments = {'--exclude': None,
+
+        if self.values.get('all_parameters'):
+            attributes = ""
+        else:
+            parameters = ['Parameters', 'Common Parameters', 'Always Parameters']
+            attributes = ','.join([str(self.values.get(parameter)) for parameter in parameters])
+
+        print attributes
+
+        arguments = {'--attributes': attributes,
+                     '--exclude': None,
                      '--format': self.values.get('output_type'),
                      '--help': False,
                      '--include': None,
