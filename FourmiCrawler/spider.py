@@ -22,17 +22,17 @@ class FourmiSpider(Spider):
         self.synonyms.append(compound)
         self.selected_attributes = selected_attributes;
 
-    def parse(self, reponse):
+    def parse(self, response):
         """
         The function that is called when a response to a request is available. This function distributes this to a
         parser which should be able to handle parsing the data.
-        :param reponse: A Scrapy Response object that should be parsed
+        :param response: A Scrapy Response object that should be parsed
         :return: A list of Result items and new Request to be handled by the scrapy core.
         """
         for parser in self.__parsers:
-            if re.match(parser.website, reponse.url):
-                log.msg("Url: " + reponse.url + " -> Source: " + parser.website, level=log.DEBUG)
-                return parser.parse(reponse)
+            if re.match(parser.website, response.url):
+                log.msg("Url: " + response.url + " -> Source: " + parser.website, level=log.DEBUG)
+                return parser.parse(response)
         return None
 
     def get_synonym_requests(self, compound):
