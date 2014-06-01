@@ -12,13 +12,13 @@ class Source:
         """
         pass
 
-    def parse(self, reponse):
+    def parse(self, response):
         """
         This function should be able to parse all Scrapy Response objects with a URL matching the website Regex.
-        :param reponse: A Scrapy Response object
+        :param response: A Scrapy Response object
         :return: A list of Result items and new Scrapy Requests
         """
-        log.msg("The parse function of the empty parser was used.", level=log.WARNING)
+        log.msg("The parse function of the empty source was used.", level=log.WARNING)
         pass
 
     def new_compound_request(self, compound):
