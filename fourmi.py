@@ -33,15 +33,15 @@ from FourmiCrawler.spider import FourmiSpider
 from sourceloader import SourceLoader
 
 
-def setup_crawler(searchable, settings, source_loader, attributes):
+def setup_crawler(compound, settings, source_loader, attributes):
     """
     This function prepares and start the crawler which starts the actual search on the internet
-    :param searchable: The compound which should be searched
+    :param compound: The compound which should be searched
     :param settings: A scrapy settings object
     :param source_loader: A fully functional SourceLoader object which contains only the sources that should be used.
     :param attributes: A list of regular expressions which the attribute names should match.
     """
-    spider = FourmiSpider(compound=searchable, selected_attributes=attributes)
+    spider = FourmiSpider(compound=compound, selected_attributes=attributes)
     spider.add_parsers(source_loader.sources)
     crawler = Crawler(settings)
     crawler.signals.connect(reactor.stop, signal=signals.spider_closed)
