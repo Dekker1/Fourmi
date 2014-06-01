@@ -42,7 +42,7 @@ def setup_crawler(compound, settings, source_loader, attributes):
     :param attributes: A list of regular expressions which the attribute names should match.
     """
     spider = FourmiSpider(compound=compound, selected_attributes=attributes)
-    spider.add_parsers(source_loader.sources)
+    spider.add_sources(source_loader.sources)
     crawler = Crawler(settings)
     crawler.signals.connect(reactor.stop, signal=signals.spider_closed)
     crawler.configure()

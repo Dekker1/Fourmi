@@ -9,7 +9,7 @@ class FourmiSpider(Spider):
     A spider writen for the Fourmi Project which calls upon all available sources to request and scrape data.
     """
     name = "FourmiSpider"
-    __parsers = []
+    __sources = []
     synonyms = []
 
     def __init__(self, compound=None, selected_attributes=[".*"], *args, **kwargs):
@@ -25,14 +25,14 @@ class FourmiSpider(Spider):
     def parse(self, response):
         """
         The function that is called when a response to a request is available. This function distributes this to a
-        parser which should be able to handle parsing the data.
+        source which should be able to handle parsing the data.
         :param response: A Scrapy Response object that should be parsed
         :return: A list of Result items and new Request to be handled by the scrapy core.
         """
-        for parser in self.__parsers:
-            if re.match(parser.website, response.url):
-                log.msg("Url: " + response.url + " -> Source: " + parser.website, level=log.DEBUG)
-                return parser.parse(response)
+        for source in self.__sources:
+            if re.match(source.website, response.url):
+                log.msg("Url: " + response.url + " -> Source: " + source.website, level=log.DEBUG)
+                return source.parse(response)
         return None
 
     def get_synonym_requests(self, compound):
@@ -42,7 +42,7 @@ class FourmiSpider(Spider):
         :return: A list of Scrapy Request objects
         """
         requests = []
-        for parser in self.__parsers:
+        for parser in self.__sources:
             parser_requests = parser.new_compound_request(compound)
             if parser_requests is not None:
                 requests.append(parser_requests)
@@ -58,18 +58,18 @@ class FourmiSpider(Spider):
             requests.extend(self.get_synonym_requests(synonym))
         return requests
 
-    def add_parsers(self, parsers):
+    def add_sources(self, sources):
         """
-        A function to add a new Parser objects to the list of available parsers.
-        :param parsers: A list of Parser Objects.
+        A function to add a new Parser objects to the list of available sources.
+        :param sources: A list of Source Objects.
         """
-        for parser in parsers:
-            self.add_parser(parser)
+        for parser in sources:
+            self.add_source(parser)
 
-    def add_parser(self, parser):
+    def add_source(self, source):
         """
         A function add a new Parser object to the list of available parsers.
-        :param parser: A Parser Object
+        :param source: A Source Object
         """
-        self.__parsers.append(parser)
-        parser.set_spider(self)
+        self.__sources.append(source)
+        source.set_spider(self)
