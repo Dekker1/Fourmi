@@ -1,8 +1,7 @@
-# Define your item pipelines here
-#
-# Don't forget to add your pipeline to the ITEM_PIPELINES setting
-# See: http://doc.scrapy.org/en/latest/topics/item-pipeline.html
+# For more information on item pipelines, see the Scrapy documentation in:
+# http://doc.scrapy.org/en/latest/topics/item-pipeline.html
 import re
+
 from scrapy.exceptions import DropItem
 
 
