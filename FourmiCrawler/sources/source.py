@@ -7,15 +7,32 @@ class Source:
     _spider = None
 
     def __init__(self):
+        """
+        Initiation of a new Source
+        """
         pass
 
     def parse(self, reponse):
+        """
+        This function should be able to parse all Scrapy Response objects with a URL matching the website Regex.
+        :param reponse: A Scrapy Response object
+        :return: A list of Result items and new Scrapy Requests
+        """
         log.msg("The parse function of the empty parser was used.", level=log.WARNING)
         pass
 
     def new_compound_request(self, compound):
+        """
+        This function should return a Scrapy Request for the given compound request.
+        :param compound: A compound name.
+        :return: A new Scrapy Request
+        """
         # return Request(url=self.website[:-1] + compound, callback=self.parse)
         pass
 
     def set_spider(self, spider):
+        """
+        A Function to save the associated spider.
+        :param spider: A FourmiSpider object
+        """
         self._spider = spider
