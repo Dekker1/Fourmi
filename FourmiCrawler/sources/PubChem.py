@@ -60,12 +60,20 @@ class PubChem(Source):
         log.msg('parsing data', level=log.DEBUG)
         requests = []
 
+        sel = Selector(response)
+        # props = sel.xpath('.//div')
+        prop_values = sel.xpath('//div//a/text()').extract()
+        prop_names = sel.xpath('//div//a/ancestor::div/b/text()').extract()
 
+        print prop_values
+        print prop_names
 
+        # print props
 
         return requests
 
 
+    # this (old) definition is only here to help myself
     def parse_properties(self, sel):
         """ scrape data from 'Chemical and Physical Properties' box on PubChem. """
         items = []
@@ -95,8 +103,8 @@ class PubChem(Source):
         items = filter(lambda a: a['value'] != '', items)  # remove items with an empty value
         # item_list = self.clean_items(items)
 
-
         return items
+
 
     def new_compound_request(self, compound):
         return Request(url=self.website_www[:-1] + self.search % compound, callback=self.parse)
