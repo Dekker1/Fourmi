@@ -1,9 +1,11 @@
+import re
+
 from scrapy.http import Request
 from scrapy import log
-from source import Source
 from scrapy.selector import Selector
+
+from source import Source
 from FourmiCrawler.items import Result
-import re
 
 
 class WikipediaParser(Source):
@@ -36,7 +38,7 @@ class WikipediaParser(Source):
         """ scrape data from infobox on wikipedia. """
         items = []
 
-        #be sure to get chembox (wikipedia template)
+        # be sure to get chembox (wikipedia template)
         tr_list = sel.xpath('.//table[@class="infobox bordered"]//td[not(@colspan)]'). \
             xpath('normalize-space(string())')
         prop_names = tr_list[::2]
