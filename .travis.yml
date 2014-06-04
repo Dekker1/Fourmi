@@ -15,5 +15,5 @@ script:
 notifications:
   slack: descartes2:6sgCzx3PvrO9IIMwKxj12dDM
 
-after_succes:
+after_success:
   coveralls --verbose
