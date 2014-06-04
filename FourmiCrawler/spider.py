@@ -20,7 +20,7 @@ class FourmiSpider(Spider):
         """
         super(FourmiSpider, self).__init__(*args, **kwargs)
         self.synonyms.append(compound)
-        self.selected_attributes = selected_attributes;
+        self.selected_attributes = selected_attributes
 
     def parse(self, response):
         """
