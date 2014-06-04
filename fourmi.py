@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+# !/usr/bin/env python
 """
 Fourmi, a web scraper build to search specific information for a given compound (and it's pseudonyms).
 

@@ -8,7 +8,6 @@ from FourmiCrawler.sources.source import Source
 
 
 class TestFoumiSpider(unittest.TestCase):
-
     def setUp(self):
         self.compound = "test_compound"
         self.attributes = ["a.*", ".*a"]

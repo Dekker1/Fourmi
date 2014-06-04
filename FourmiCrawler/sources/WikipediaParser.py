@@ -38,7 +38,7 @@ class WikipediaParser(Source):
         """ scrape data from infobox on wikipedia. """
         items = []
 
-        #be sure to get chembox (wikipedia template)
+        # be sure to get chembox (wikipedia template)
         tr_list = sel.xpath('.//table[@class="infobox bordered"]//td[not(@colspan)]'). \
             xpath('normalize-space(string())')
         prop_names = tr_list[::2]

@@ -4,8 +4,8 @@ import re
 
 from scrapy.exceptions import DropItem
 
-class RemoveNonePipeline(object):
 
+class RemoveNonePipeline(object):
     def __init__(self):
         pass
 
@@ -21,8 +21,8 @@ class RemoveNonePipeline(object):
                 item[key] = ""
         return item
 
-class DuplicatePipeline(object):
 
+class DuplicatePipeline(object):
     def __init__(self):
         self.known_values = set()
 
@@ -35,13 +35,13 @@ class DuplicatePipeline(object):
         """
         value = (item['attribute'], item['value'], item['conditions'])
         if value in self.known_values:
-            raise DropItem("Duplicate item found: %s" % item) #[todo] append sources of first item.
+            raise DropItem("Duplicate item found: %s" % item)  # [todo] append sources of first item.
         else:
             self.known_values.add(value)
             return item
 
-class AttributeSelectionPipeline(object):
 
+class AttributeSelectionPipeline(object):
     def __init__(self):
         pass;
 
