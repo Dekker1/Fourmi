@@ -9,7 +9,8 @@ class RemoveNonePipeline(object):
     def __init__(self):
         pass
 
-    def process_item(self, item, spider):
+    @staticmethod
+    def process_item(item, spider):
         """
         Processing the items so None values are replaced by empty strings
         :param item: The incoming item
@@ -43,9 +44,10 @@ class DuplicatePipeline(object):
 
 class AttributeSelectionPipeline(object):
     def __init__(self):
-        pass;
+        pass
 
-    def process_item(self, item, spider):
+    @staticmethod
+    def process_item(item, spider):
         """
         The items are processed using the selected attribute list available in the spider,
         items that don't match the selected items are dropped.

@@ -10,7 +10,7 @@ class TestPipelines(unittest.TestCase):
     def setUp(self):
         self.testItem = items.Result()
 
-    def test_NonePipeline(self):
+    def test_none_pipeline(self):
         # Testing the pipeline that replaces the None values in items.
         self.testItem["value"] = "abc"
         pipe = pipelines.RemoveNonePipeline()
@@ -23,7 +23,7 @@ class TestPipelines(unittest.TestCase):
             if key is not "value":
                 self.assertIs(processed[key], "")
 
-    def test_DuplicatePipeline(self):
+    def test_duplicate_pipeline(self):
         # Testing the pipeline that removes duplicates.
         self.testItem["attribute"] = "test"
         self.testItem["value"] = "test"
@@ -33,11 +33,11 @@ class TestPipelines(unittest.TestCase):
         self.assertEqual(pipe.process_item(self.testItem, spider.FourmiSpider()), self.testItem)
         self.assertRaises(DropItem, pipe.process_item, self.testItem, spider.FourmiSpider())
 
-        otherItem = copy.deepcopy(self.testItem)
-        otherItem["value"] = "test1"
-        self.assertEqual(pipe.process_item(otherItem, spider.FourmiSpider()), otherItem)
+        other_item = copy.deepcopy(self.testItem)
+        other_item["value"] = "test1"
+        self.assertEqual(pipe.process_item(other_item, spider.FourmiSpider()), other_item)
 
-    def test_AttributeSelection(self):
+    def test_attribute_selection(self):
         # Testing the pipeline that selects attributes.
         item1 = copy.deepcopy(self.testItem)
         item2 = copy.deepcopy(self.testItem)

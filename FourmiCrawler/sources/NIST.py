@@ -78,7 +78,7 @@ class NIST(Source):
                 requests.extend(self.parse_generic_data(table, summary))
             else:
                 log.msg('NIST table: NOT SUPPORTED', level=log.WARNING)
-                continue  #Assume unsupported
+                continue  # Assume unsupported
         return requests
 
     def parse_generic_info(self, sel):
@@ -230,7 +230,8 @@ class NIST(Source):
 
         return results
 
-    def parse_individual_datapoints(self, response):
+    @staticmethod
+    def parse_individual_datapoints(response):
         """Parses the page linked from aggregate data"""
         sel = Selector(response)
         table = sel.xpath('//table[@class="data"]')[0]
