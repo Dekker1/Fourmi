@@ -35,7 +35,7 @@ class DuplicatePipeline(object):
         """
         value = (item['attribute'], item['value'], item['conditions'])
         if value in self.known_values:
-            raise DropItem("Duplicate item found: %s" % item) # #[todo] append sources of first item.
+            raise DropItem("Duplicate item found: %s" % item) #[todo] append sources of first item.
         else:
             self.known_values.add(value)
             return item
