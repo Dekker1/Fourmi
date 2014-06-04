@@ -61,14 +61,34 @@ class PubChem(Source):
         requests = []
 
         sel = Selector(response)
-        # props = sel.xpath('.//div')
-        prop_values = sel.xpath('//div//a/text()').extract()
-        prop_names = sel.xpath('//div//a/ancestor::div/b/text()').extract()
+        props = sel.xpath('//div')
 
-        print prop_values
-        print prop_names
-
-        # print props
+        for prop in props:
+            prop_name = ''.join(prop.xpath('b/text()').extract())
+            if prop.xpath('a'):
+                prop_source = ''.join(prop.xpath('a/@title').extract())
+                prop_value = ''.join(prop.xpath('a/text()').extract())
+                new_prop = Result({
+                    'attribute': prop_name,
+                    'value': prop_value,
+                    'source': prop_source,
+                    'reliability': 'Unknown',
+                    'conditions': ''
+                })
+                requests.append(new_prop)
+            elif prop.xpath('ul'):
+                prop_values = prop.xpath('ul//li')
+                for prop_li in prop_values:
+                    prop_value = ''.join(prop_li.xpath('a/text()').extract())
+                    prop_source = ''.join(prop_li.xpath('a/@title').extract())
+                    new_prop = Result({
+                        'attribute': prop_name,
+                        'value': prop_value,
+                        'source': prop_source,
+                        'reliability': 'Unknown',
+                        'conditions': ''
+                    })
+                    requests.append(new_prop)
 
         return requests
 
