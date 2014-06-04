@@ -1,9 +1,11 @@
+import re
+
 from scrapy.http import Request
 from scrapy import log
-from source import Source
 from scrapy.selector import Selector
+
+from source import Source
 from FourmiCrawler.items import Result
-import re
 
 
 class WikipediaParser(Source):

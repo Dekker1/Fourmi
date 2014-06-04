@@ -1,9 +1,12 @@
-from source import Source
+import re
+
 from scrapy import log
 from scrapy.http import Request
 from scrapy.selector import Selector
+
+from source import Source
 from FourmiCrawler.items import Result
-import re
+
 
 # [TODO]: values can be '128.', perhaps remove the dot in that case?
 # [TODO]: properties have references and comments which do not exist in the
