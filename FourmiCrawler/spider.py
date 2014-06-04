@@ -10,7 +10,7 @@ class FourmiSpider(Spider):
     """
     name = "FourmiSpider"
     _sources = []
-    synonyms = []
+    synonyms = set()
 
     def __init__(self, compound=None, selected_attributes=[".*"], *args, **kwargs):
         """
@@ -19,7 +19,7 @@ class FourmiSpider(Spider):
         :param selected_attributes: A list of regular expressions that the attributes should match.
         """
         super(FourmiSpider, self).__init__(*args, **kwargs)
-        self.synonyms.append(compound)
+        self.synonyms.add(compound)
         self.selected_attributes = selected_attributes
 
     def parse(self, response):
@@ -42,10 +42,12 @@ class FourmiSpider(Spider):
         :return: A list of Scrapy Request objects
         """
         requests = []
-        for parser in self._sources:
-            parser_requests = parser.new_compound_request(compound)
-            if parser_requests is not None:
-                requests.append(parser_requests)
+        if compound not in self.synonyms:
+            self.synonyms.add(compound)
+            for parser in self._sources:
+                parser_requests = parser.new_compound_request(compound)
+                if parser_requests is not None:
+                    requests.append(parser_requests)
         return requests
 
     def start_requests(self):
