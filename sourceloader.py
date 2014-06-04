@@ -12,13 +12,11 @@ class SourceLoader:
 
         if hasattr(sys,'frozen'):
             path = os.path.dirname(sys.executable)
-            path += "\\" + rel_dir
-            known_parser = set()
-
         else:
             path = os.path.dirname(os.path.abspath(__file__))
-            path += "\\" + rel_dir
-            known_parser = set()
+
+        path += "\\" + rel_dir
+        known_parser = set()
 
         for py in [f[:-3] for f in os.listdir(path) if f.endswith('.py') and f != '__init__.py']:
             mod = __import__('.'.join([rel_dir.replace('\\', "."), py]), fromlist=[py])
