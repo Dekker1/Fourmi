@@ -15,16 +15,19 @@ class TestFoumiSpider(unittest.TestCase):
         self.spi = spider.FourmiSpider(self.compound, self.attributes)
 
     def test_init(self):
+        # Test the initiation of the Fourmi spider
         self.assertIn(self.compound, self.spi.synonyms)
         for attr in self.attributes:
             self.assertIn(attr, self.spi.selected_attributes)
 
     def test_add_source(self):
+        # Testing the source adding function of the Fourmi spider
         src = Source()
         self.spi.add_source(src)
         self.assertIn(src, self.spi._sources)
 
     def test_add_sources(self):
+        # Testing the function that adds multiple sources
         srcs = [Source(), Source(), Source()]
         self.spi.add_sources(srcs)
 
@@ -32,6 +35,7 @@ class TestFoumiSpider(unittest.TestCase):
             self.assertIn(src, self.spi._sources)
 
     def test_start_requests(self):
+        # A test for the function that generates the start requests
         self.spi._sources = []
 
         src = Source()
@@ -43,6 +47,7 @@ class TestFoumiSpider(unittest.TestCase):
         self.assertIsNotNone(self.spi.start_requests())
 
     def test_synonym_requests(self):
+        # A test for the synonym request function
         self.spi._sources = []
 
         src = Source()
