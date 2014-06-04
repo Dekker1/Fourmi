@@ -16,4 +16,4 @@ notifications:
   slack: descartes2:6sgCzx3PvrO9IIMwKxj12dDM
 
 after_succes:
-  coveralls
+  coveralls --verbose
