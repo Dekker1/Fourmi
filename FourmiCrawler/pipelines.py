@@ -7,7 +7,7 @@ from scrapy.exceptions import DropItem
 class RemoveNonePipeline(object):
 
     def __init__(self):
-        self.known_values = set()
+        pass
 
     def process_item(self, item, spider):
         """
