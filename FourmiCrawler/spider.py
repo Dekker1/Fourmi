@@ -9,8 +9,8 @@ class FourmiSpider(Spider):
     A spider writen for the Fourmi Project which calls upon all available sources to request and scrape data.
     """
     name = "FourmiSpider"
-    __sources = []
-    synonyms = []
+    _sources = []
+    synonyms = set()
 
     def __init__(self, compound=None, selected_attributes=[".*"], *args, **kwargs):
         """
@@ -19,8 +19,8 @@ class FourmiSpider(Spider):
         :param selected_attributes: A list of regular expressions that the attributes should match.
         """
         super(FourmiSpider, self).__init__(*args, **kwargs)
-        self.synonyms.append(compound)
-        self.selected_attributes = selected_attributes;
+        self.synonyms.add(compound)
+        self.selected_attributes = selected_attributes
 
     def parse(self, response):
         """
@@ -29,7 +29,7 @@ class FourmiSpider(Spider):
         :param response: A Scrapy Response object that should be parsed
         :return: A list of Result items and new Request to be handled by the scrapy core.
         """
-        for source in self.__sources:
+        for source in self._sources:
             if re.match(source.website, response.url):
                 log.msg("Url: " + response.url + " -> Source: " + source.website, level=log.DEBUG)
                 return source.parse(response)
@@ -42,10 +42,12 @@ class FourmiSpider(Spider):
         :return: A list of Scrapy Request objects
         """
         requests = []
-        for parser in self.__sources:
-            parser_requests = parser.new_compound_request(compound)
-            if parser_requests is not None:
-                requests.append(parser_requests)
+        if compound not in self.synonyms:
+            self.synonyms.add(compound)
+            for parser in self._sources:
+                parser_requests = parser.new_compound_request(compound)
+                if parser_requests is not None:
+                    requests.append(parser_requests)
         return requests
 
     def start_requests(self):
@@ -71,5 +73,5 @@ class FourmiSpider(Spider):
         A function add a new Parser object to the list of available parsers.
         :param source: A Source Object
         """
-        self.__sources.append(source)
+        self._sources.append(source)
         source.set_spider(self)
