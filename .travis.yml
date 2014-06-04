@@ -10,3 +10,6 @@ install:
 # command to run tests, e.g. python setup.py test
 script:
   - nosetests tests
+
+notifications:
+  slack: descartes2:6sgCzx3PvrO9IIMwKxj12dDM
