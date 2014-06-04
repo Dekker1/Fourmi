@@ -4,12 +4,13 @@ import re
 
 from scrapy.exceptions import DropItem
 
+
 class RemoveNonePipeline(object):
-
     def __init__(self):
-        self.known_values = set()
+        pass
 
-    def process_item(self, item, spider):
+    @staticmethod
+    def process_item(item, spider):
         """
         Processing the items so None values are replaced by empty strings
         :param item: The incoming item
@@ -21,8 +22,8 @@ class RemoveNonePipeline(object):
                 item[key] = ""
         return item
 
-class DuplicatePipeline(object):
 
+class DuplicatePipeline(object):
     def __init__(self):
         self.known_values = set()
 
@@ -35,17 +36,18 @@ class DuplicatePipeline(object):
         """
         value = (item['attribute'], item['value'], item['conditions'])
         if value in self.known_values:
-            raise DropItem("Duplicate item found: %s" % item) # #[todo] append sources of first item.
+            raise DropItem("Duplicate item found: %s" % item)  # [todo] append sources of first item.
         else:
             self.known_values.add(value)
             return item
 
+
 class AttributeSelectionPipeline(object):
-
     def __init__(self):
-        pass;
+        pass
 
-    def process_item(self, item, spider):
+    @staticmethod
+    def process_item(item, spider):
         """
         The items are processed using the selected attribute list available in the spider,
         items that don't match the selected items are dropped.
