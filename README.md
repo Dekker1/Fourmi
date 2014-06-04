@@ -1,5 +1,9 @@
 # Fourmi
 
+**Master branch**: [![Build Status](https://travis-ci.org/Recondor/Fourmi.svg?branch=master)](https://travis-ci.org/Recondor/Fourmi)
+
+**Developing branch**: [![Build Status](https://travis-ci.org/Recondor/Fourmi.svg?branch=develop)](https://travis-ci.org/Recondor/Fourmi)
+
 Fourmi is an web scraper for chemical substances. The program is designed to be
 used as a search engine to search multiple chemical databases for a specific
 substance. The program will produce all available attributes of the substance
