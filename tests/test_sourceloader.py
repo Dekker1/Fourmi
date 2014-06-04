@@ -2,7 +2,6 @@ import unittest
 from sourceloader import SourceLoader
 
 
-
 class TestSourceloader(unittest.TestCase):
 
     def setUp(self):
