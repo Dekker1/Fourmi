@@ -1,10 +1,25 @@
-# Define your item pipelines here
-#
-# Don't forget to add your pipeline to the ITEM_PIPELINES setting
-# See: http://doc.scrapy.org/en/latest/topics/item-pipeline.html
+# For more information on item pipelines, see the Scrapy documentation in:
+# http://doc.scrapy.org/en/latest/topics/item-pipeline.html
 import re
+
 from scrapy.exceptions import DropItem
 
+class RemoveNonePipeline(object):
+
+    def __init__(self):
+        self.known_values = set()
+
+    def process_item(self, item, spider):
+        """
+        Processing the items so None values are replaced by empty strings
+        :param item: The incoming item
+        :param spider: The spider which scraped the spider
+        :return: :raise DropItem: Returns the item if unique or drops them if it's already known
+        """
+        for key in item:
+            if item[key] is None:
+                item[key] = ""
+        return item
 
 class DuplicatePipeline(object):
 
