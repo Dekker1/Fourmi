@@ -12,6 +12,8 @@ class SourceLoader:
     def __init__(self, rel_dir="FourmiCrawler/sources"):
         """
         The initiation of a SourceLoader, selects and indexes a directory for usable sources.
+        Also loads a configuration file for Sources and passes the arguments in
+        the named section to the source
         :param rel_dir: A relative path to a directory.
         """
         path = os.path.dirname(os.path.abspath(__file__))
