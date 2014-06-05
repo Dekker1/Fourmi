@@ -29,7 +29,7 @@ class SourceLoader:
                     sourcecfg = dict()
                     if config.has_section(cls.__name__):
                         sourcecfg = dict(config.items(cls.__name__))
-                    self.sources.append(cls())  # [review] - Would we ever need arguments for the parsers?
+                    self.sources.append(cls(sourcecfg))
                     known_parser.add(cls)
 
     def include(self, source_names):

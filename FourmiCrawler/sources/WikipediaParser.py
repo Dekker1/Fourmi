@@ -19,8 +19,8 @@ class WikipediaParser(Source):
     __spider = None
     searched_compounds = []
 
-    def __init__(self):
-        Source.__init__(self)
+    def __init__(self, config):
+        Source.__init__(self, config)
 
     def parse(self, response):
         """ Distributes the above described behaviour """
