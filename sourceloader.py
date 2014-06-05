@@ -1,6 +1,7 @@
 import inspect
 import os
 import re
+import ConfigParser
 
 from FourmiCrawler.sources.source import Source
 
@@ -17,11 +18,17 @@ class SourceLoader:
         path += "/" + rel_dir
         known_parser = set()
 
+        config = ConfigParser.ConfigParser()
+        config.read('sources.cfg')
+
         for py in [f[:-3] for f in os.listdir(path) if f.endswith('.py') and f != '__init__.py']:
             mod = __import__('.'.join([rel_dir.replace("/", "."), py]), fromlist=[py])
             classes = [getattr(mod, x) for x in dir(mod) if inspect.isclass(getattr(mod, x))]
             for cls in classes:
                 if issubclass(cls, Source) and cls not in known_parser:
+                    sourcecfg = dict()
+                    if config.has_section(cls.__name__):
+                        sourcecfg = dict(config.items(cls.__name__))
                     self.sources.append(cls())  # [review] - Would we ever need arguments for the parsers?
                     known_parser.add(cls)
 
