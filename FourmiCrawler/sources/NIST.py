@@ -1,13 +1,16 @@
-from source import Source
+import re
+
 from scrapy import log
 from scrapy.http import Request
 from scrapy.selector import Selector
+
+from source import Source
 from FourmiCrawler.items import Result
-import re
+
 
 # [TODO]: values can be '128.', perhaps remove the dot in that case?
 # [TODO]: properties have references and comments which do not exist in the
-#         Result item, but should be included eventually.
+# Result item, but should be included eventually.
 
 class NIST(Source):
     """NIST Scraper plugin
@@ -15,7 +18,7 @@ class NIST(Source):
     This plugin manages searching for a chemical on the NIST website
     and parsing the resulting page if the chemical exists on NIST.
     """
-    website = "http://webbook.nist.gov/*"  
+    website = "http://webbook.nist.gov/*"
 
     search = 'cgi/cbook.cgi?Name=%s&Units=SI&cTP=on'
 
@@ -75,7 +78,7 @@ class NIST(Source):
                 requests.extend(self.parse_generic_data(table, summary))
             else:
                 log.msg('NIST table: NOT SUPPORTED', level=log.WARNING)
-                continue #Assume unsupported
+                continue  # Assume unsupported
         return requests
 
     def parse_generic_info(self, sel):
@@ -103,7 +106,7 @@ class NIST(Source):
         data['IUPAC Standard InChI'] = raw_inchi.extract()[0]
 
         raw_inchikey = ul.xpath('li[strong="IUPAC Standard InChIKey:"]'
-                            '/tt/text()')
+                                '/tt/text()')
         data['IUPAC Standard InChIKey'] = raw_inchikey.extract()[0]
 
         raw_cas_number = ul.xpath('li[strong="CAS Registry Number:"]/text()')
@@ -129,10 +132,10 @@ class NIST(Source):
         results = []
         for tr in table.xpath('tr[td]'):
             extra_data_url = tr.xpath('td[last()][a="Individual data points"]'
-                                '/a/@href').extract()
+                                      '/a/@href').extract()
             if extra_data_url:
                 request = Request(url=self.website[:-1] + extra_data_url[0],
-                    callback=self.parse_individual_datapoints)
+                                  callback=self.parse_individual_datapoints)
                 results.append(request)
                 continue
             data = []
@@ -179,7 +182,6 @@ class NIST(Source):
                 'conditions': '%s K, (%s -> %s)' % (tds[1], tds[2], tds[3])
             })
             results.append(result)
-
 
         return results
 
@@ -228,7 +230,8 @@ class NIST(Source):
 
         return results
 
-    def parse_individual_datapoints(self, response):
+    @staticmethod
+    def parse_individual_datapoints(response):
         """Parses the page linked from aggregate data"""
         sel = Selector(response)
         table = sel.xpath('//table[@class="data"]')[0]
