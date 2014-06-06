@@ -199,18 +199,16 @@ class ChemSpider(Source):
         names = sel.xpath('*').xpath('name()').extract()
         values = sel.xpath('*').xpath('text()').extract()
         for (name, value) in zip(names, values):
-            result = Result({
-                'attribute': name,
-                'value': value,  # These values have no unit!
-                'source': 'ChemSpider ExtendedCompoundInfo',
-                'reliability': 'Unknown',
-                'conditions': ''
-            })
+            result = self.newresult(
+                attribute=name,
+                value=value,  # These values have no unit!
+                source='ChemSpider ExtendedCompoundInfo',
+            )
             if result['value']:
                 properties.append(result)
         return properties
 
-    def newresult(self, attribute, value, conditions, source='ChemSpider'):
+    def newresult(self, attribute, value, conditions='', source='ChemSpider'):
         return Result({
                 'attribute': attribute,
                 'value': value,
