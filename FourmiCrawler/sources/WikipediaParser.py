@@ -124,3 +124,12 @@ class WikipediaParser(Source):
         links = sel.xpath('//span[contains(concat(" ",normalize-space(@class)," "),"reflink")]/a'
                           '[contains(concat(" ",normalize-space(@class)," "),"external")]/@href').extract()
         return links
+
+    def newresult(self, attribute, value):
+        return Result({
+            'attribute': attribute,
+            'value': value,
+            'source': 'Wikipedia',
+            'reliability': self.cfg['reliability'],
+            'conditions': ''
+            })
