@@ -187,8 +187,7 @@ class ChemSpider(Source):
         }
         return synonym
 
-    @staticmethod
-    def parse_extendedinfo(response):
+    def parse_extendedinfo(self, response):
         """Scrape data from the ChemSpider GetExtendedCompoundInfo API"""
         sel = Selector(response)
         properties = []
