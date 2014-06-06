@@ -19,8 +19,15 @@ class WikipediaParser(Source):
     __spider = None
     searched_compounds = []
 
+    cfg = {}
+
     def __init__(self, config={}):
         Source.__init__(self, config)
+        self.cfg = config
+        if 'reliability' not in self.cfg or self.cfg['reliability'] == '':
+            log.msg('Reliability not set for Wikipedia', level=log.WARNING)
+            self.cfg['reliability'] = ''
+
 
     def parse(self, response):
         """ Distributes the above described behaviour """
