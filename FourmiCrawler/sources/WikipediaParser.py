@@ -28,7 +28,6 @@ class WikipediaParser(Source):
             log.msg('Reliability not set for Wikipedia', level=log.WARNING)
             self.cfg['reliability'] = ''
 
-
     def parse(self, response):
         """ Distributes the above described behaviour """
         log.msg('A response from %s just arrived!' % response.url, level=log.DEBUG)
@@ -51,13 +50,10 @@ class WikipediaParser(Source):
         prop_names = tr_list[::2]
         prop_values = tr_list[1::2]
         for i, prop_name in enumerate(prop_names):
-            item = Result({
-                'attribute': prop_name.extract().encode('utf-8'),
-                'value': prop_values[i].extract().encode('utf-8'),
-                'source': "Wikipedia",
-                'reliability': "Unknown",
-                'conditions': ""
-            })
+            item = self.newresult(
+                attribute=prop_name.extract().encode('utf-8'),
+                value=prop_values[i].extract().encode('utf-8')
+            )
             items.append(item)
             log.msg('Wiki prop: |%s| |%s| |%s|' % (item['attribute'], item['value'], item['source']), level=log.DEBUG)
 
@@ -68,13 +64,10 @@ class WikipediaParser(Source):
             log.msg('item: %s' % tablerow.xpath('./th').xpath('normalize-space(string())'), level=log.DEBUG)
             if tablerow.xpath('./th').xpath('normalize-space(string())') and tablerow.xpath('./td').xpath(
                     'normalize-space(string())'):
-                item = Result({
-                    'attribute': tablerow.xpath('./th').xpath('normalize-space(string())').extract()[0].encode('utf-8'),
-                    'value': tablerow.xpath('./td').xpath('normalize-space(string())').extract()[0].encode('utf-8'),
-                    'source': "Wikipedia",
-                    'reliability': "Unknown",
-                    'conditions': ""
-                })
+                item = self.newresult(
+                    attribute=tablerow.xpath('./th').xpath('normalize-space(string())').extract()[0].encode('utf-8'),
+                    value=tablerow.xpath('./td').xpath('normalize-space(string())').extract()[0].encode('utf-8'),
+                )
                 items.append(item)
                 log.msg(
                     'Wiki prop: |attribute: %s| |value: %s| |%s|' % (item['attribute'], item['value'], item['source']),
