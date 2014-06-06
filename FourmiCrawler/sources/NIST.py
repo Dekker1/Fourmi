@@ -150,13 +150,11 @@ class NIST(Source):
                 name = m.group(1)
                 condition = m.group(2)
 
-            result = Result({
-                'attribute': name,
-                'value': data[1] + ' ' + data[2],
-                'source': 'NIST',
-                'reliability': 'Unknown',
-                'conditions': condition
-            })
+            result = Result(
+                attribute=name,
+                value=data[1] + ' ' + data[2],
+                conditions=condition
+            )
             log.msg('NIST: |%s|' % data, level=log.DEBUG)
             results.append(result)
         return results
