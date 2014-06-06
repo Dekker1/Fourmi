@@ -230,8 +230,7 @@ class NIST(Source):
 
         return results
 
-    @staticmethod
-    def parse_individual_datapoints(response):
+    def parse_individual_datapoints(self, response):
         """Parses the page linked from aggregate data"""
         sel = Selector(response)
         table = sel.xpath('//table[@class="data"]')[0]
@@ -258,13 +257,11 @@ class NIST(Source):
             if m:
                 uncertainty = '+- %s ' % m.group(1)
                 # [TODO]: get the plusminus sign working in here
-            result = Result({
-                'attribute': name,
-                'value': '%s %s%s' % (tds[0], uncertainty, unit),
-                'source': 'NIST',
-                'reliability': 'Unknown',
-                'conditions': condition
-            })
+            result = self.newresult(
+                attribute=name,
+                value='%s %s%s' % (tds[0], uncertainty, unit),
+                conditions=condition
+            )
             results.append(result)
 
         return results
