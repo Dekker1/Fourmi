@@ -43,7 +43,10 @@ class TestFoumiSpider(unittest.TestCase):
 
         src2 = ChemSpider()
         self.spi.add_source(src2)
-        self.assertGreater(len(self.spi.start_requests()), 0)
+        requests = self.spi.start_requests()
+        self.assertGreater(len(requests), 0)
+        self.assertIsInstance(requests[0], Request)
+
 
     def test_synonym_requests(self):
         # A test for the synonym request function
