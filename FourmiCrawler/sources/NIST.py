@@ -114,13 +114,10 @@ class NIST(Source):
 
         requests = []
         for key, value in data.iteritems():
-            result = Result({
-                'attribute': key,
-                'value': value,
-                'source': 'NIST',
-                'reliability': 'Unknown',
-                'conditions': ''
-            })
+            result = self.newresult(
+                attribute=key,
+                value=value
+            )
             requests.append(result)
 
         return requests
