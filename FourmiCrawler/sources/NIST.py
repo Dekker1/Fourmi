@@ -212,20 +212,17 @@ class NIST(Source):
             results.append(result)
         return results
 
-    @staticmethod
-    def parse_antoine_data(table, summary):
+    def parse_antoine_data(self, table, summary):
         """Parse table containing parameters for the Antione equation"""
         results = []
 
         for tr in table.xpath('tr[td]'):
             tds = tr.xpath('td/text()').extract()
-            result = Result({
-                'attribute': summary,
-                'value': 'A=%s, B=%s, C=%s' % (tds[1], tds[2], tds[3]),
-                'source': 'NIST',
-                'reliability': 'Unknown',
-                'conditions': '%s K' % tds[0]
-            })
+            result = self.newresult(
+                attribute=summary,
+                value='A=%s, B=%s, C=%s' % (tds[1], tds[2], tds[3]),
+                conditions='%s K' % tds[0]
+            )
             results.append(result)
 
         return results
