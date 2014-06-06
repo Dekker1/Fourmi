@@ -35,14 +35,14 @@ class FourmiSpider(Spider):
                 return source.parse(response)
         return None
 
-    def get_synonym_requests(self, compound):
+    def get_synonym_requests(self, compound, force=False):
         """
         A function that generates new Scrapy Request for each source given a new synonym of a compound.
         :param compound: A compound name
         :return: A list of Scrapy Request objects
         """
         requests = []
-        if compound not in self.synonyms:
+        if force or compound not in self.synonyms:
             self.synonyms.add(compound)
             for parser in self._sources:
                 parser_requests = parser.new_compound_request(compound)
@@ -57,7 +57,7 @@ class FourmiSpider(Spider):
         """
         requests = []
         for synonym in self.synonyms:
-            requests.extend(self.get_synonym_requests(synonym))
+            requests.extend(self.get_synonym_requests(synonym, force=True))
         return requests
 
     def add_sources(self, sources):
