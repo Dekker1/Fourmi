@@ -269,6 +269,15 @@ class NIST(Source):
 
         return results
 
+    def newresult(self, attribute, value, conditions=''):
+        return Result({
+            'attribute': attribute,
+            'value': value,
+            'source': 'NIST',
+            'reliability': self.cfg['reliability'],
+            'conditions': conditions
+            })
+
     def new_compound_request(self, compound):
         if compound not in self.ignore_list:
             self.ignore_list.update(compound)
