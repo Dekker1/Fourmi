@@ -53,8 +53,7 @@ class ChemSpider(Source):
 
         return requests
 
-    @staticmethod
-    def parse_properties(sel):
+    def parse_properties(self, sel):
         """scrape Experimental Data and Predicted ACD/Labs tabs"""
         properties = []
 
