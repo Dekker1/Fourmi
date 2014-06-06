@@ -9,7 +9,7 @@ from FourmiCrawler.items import Result
 
 
 # [TODO] - Maybe clean up usage of '.extract()[0]', because of possible IndexError exception.
-
+# [TODO] - Add checks at search request and extendedCompoundInfo on whether the token was valid or not
 
 class ChemSpider(Source):
     """ChemSpider scraper for synonyms and properties
@@ -20,19 +20,27 @@ class ChemSpider(Source):
     somewhere.
     """
 
-    def __init__(self, config={}):
-        Source.__init__(self, config)
-
     website = 'http://www.chemspider.com/*'
 
-    # [TODO] - Save and access token of specific user.
-    search = ('Search.asmx/SimpleSearch?query=%s&token='
-              '052bfd06-5ce4-43d6-bf12-89eabefd2338')
+    search = 'Search.asmx/SimpleSearch?query=%s&token='
     structure = 'Chemical-Structure.%s.html'
-    extendedinfo = ('MassSpecAPI.asmx/GetExtendedCompoundInfo?csid=%s&token='
-                    '052bfd06-5ce4-43d6-bf12-89eabefd2338')
+    extendedinfo = 'MassSpecAPI.asmx/GetExtendedCompoundInfo?csid=%s&token='
 
+    cfg = {}
     ignore_list = []
+
+    def __init__(self, config={}):
+        Source.__init__(self, config)
+        self.cfg = config
+        if 'reliability' not in self.cfg:
+            log.msg('Reliability not set for ChemSpider', level=log.WARNING)
+        if 'token' not in self.cfg or self.cfg['token'] == '':
+            log.msg('ChemSpider token not set or empty, search/MassSpec API '
+                    'not available', level=log.WARNING)
+            self.cfg['token'] = ''
+        self.search += self.cfg['token']
+        self.extendedinfo += self.cfg['token']
+
 
     def parse(self, response):
         sel = Selector(response)
@@ -224,7 +232,7 @@ class ChemSpider(Source):
                         callback=self.parse_extendedinfo)]
 
     def new_compound_request(self, compound):
-        if compound in self.ignore_list:  # [TODO] - add regular expression
+        if compound in self.ignore_list or self.cfg['token'] == '':
             return None
         searchurl = self.website[:-1] + self.search % compound
         log.msg('chemspider compound', level=log.DEBUG)
