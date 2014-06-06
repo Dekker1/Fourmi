@@ -210,6 +210,15 @@ class ChemSpider(Source):
                 properties.append(result)
         return properties
 
+    def newresult(self, attribute, value, conditions, source='ChemSpider'):
+        return Result({
+                'attribute': attribute,
+                'value': value,
+                'source': source,
+                'reliability': self.cfg['reliability'],
+                'conditions': conditions
+                })
+
     def parse_searchrequest(self, response):
         """Parse the initial response of the ChemSpider Search API """
         sel = Selector(response)
