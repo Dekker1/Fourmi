@@ -84,13 +84,12 @@ class ChemSpider(Source):
                 prop_value = m.group(1)
                 prop_conditions = m.group(2)
 
-            new_prop = Result({
-                'attribute': prop_name,
-                'value': prop_value,
-                'source': 'ChemSpider Predicted - ACD/Labs Tab',
-                'reliability': 'Unknown',
-                'conditions': prop_conditions
-            })
+            new_prop = self.newresult(
+                attribute=prop_name,
+                value=prop_value,
+                source='ChemSpider Predicted - ACD/Labs Tab',
+                conditions=prop_conditions
+            )
             properties.append(new_prop)
             log.msg('CS prop: |%s| |%s| |%s|' %
                     (new_prop['attribute'], new_prop['value'], new_prop['source']),
@@ -108,14 +107,11 @@ class ChemSpider(Source):
             if line.xpath('span/text()'):
                 property_name = line.xpath('span/text()').extract()[0].rstrip()
             else:
-                new_prop = Result({
-                    'attribute': property_name[:-1],
-                    'value': line.xpath('text()').extract()[0].rstrip(),
-                    'source': line.xpath(
-                        'strong/text()').extract()[0].rstrip(),
-                    'reliability': 'Unknown',
-                    'conditions': ''
-                })
+                new_prop = self.newresult(
+                    attribute=property_name[:-1],
+                    value=line.xpath('text()').extract()[0].rstrip(),
+                    source=line.xpath('strong/text()').extract()[0].rstrip(),
+                )
                 properties.append(new_prop)
                 log.msg('CS prop: |%s| |%s| |%s|' %
                         (new_prop['attribute'], new_prop['value'],
