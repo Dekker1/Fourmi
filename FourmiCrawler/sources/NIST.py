@@ -161,8 +161,7 @@ class NIST(Source):
             results.append(result)
         return results
 
-    @staticmethod
-    def parse_transition_data(table, summary):
+    def parse_transition_data(self, table, summary):
         """Parses the table containing properties regarding phase changes"""
         results = []
 
@@ -174,13 +173,11 @@ class NIST(Source):
 
         for tr in table.xpath('tr[td]'):
             tds = tr.xpath('td/text()').extract()
-            result = Result({
-                'attribute': summary,
-                'value': tds[0] + ' ' + unit,
-                'source': 'NIST',
-                'reliability': 'Unknown',
-                'conditions': '%s K, (%s -> %s)' % (tds[1], tds[2], tds[3])
-            })
+            result = self.newresult(
+                attribute=summary,
+                value=tds[0] + ' ' + unit,
+                conditions='%s K, (%s -> %s)' % (tds[1], tds[2], tds[3])
+            )
             results.append(result)
 
         return results
