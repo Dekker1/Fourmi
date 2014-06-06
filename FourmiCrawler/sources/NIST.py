@@ -152,7 +152,7 @@ class NIST(Source):
                 name = m.group(1)
                 condition = m.group(2)
 
-            result = Result(
+            result = self.newresult(
                 attribute=name,
                 value=data[1] + ' ' + data[2],
                 conditions=condition
