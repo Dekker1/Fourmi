@@ -24,7 +24,7 @@ class NIST(Source):
 
     ignore_list = set()
 
-    def __init__(self, config):
+    def __init__(self, config={}):
         Source.__init__(self, config)
 
     def parse(self, response):

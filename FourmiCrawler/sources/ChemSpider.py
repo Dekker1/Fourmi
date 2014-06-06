@@ -20,7 +20,7 @@ class ChemSpider(Source):
     somewhere.
     """
 
-    def __init__(self, config):
+    def __init__(self, config={}):
         Source.__init__(self, config)
 
     website = 'http://www.chemspider.com/*'
