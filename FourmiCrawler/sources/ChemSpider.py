@@ -34,6 +34,7 @@ class ChemSpider(Source):
         self.cfg = config
         if 'reliability' not in self.cfg:
             log.msg('Reliability not set for ChemSpider', level=log.WARNING)
+            self.cfg['reliability'] = ''
         if 'token' not in self.cfg or self.cfg['token'] == '':
             log.msg('ChemSpider token not set or empty, search/MassSpec API '
                     'not available', level=log.WARNING)
