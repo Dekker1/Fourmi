@@ -185,8 +185,7 @@ class NIST(Source):
 
         return results
 
-    @staticmethod
-    def parse_generic_data(table, summary):
+    def parse_generic_data(self, table, summary):
         """Parses the common tables of 4 and 5 rows. Assumes they are of the
         form:
         Symbol (unit)|Temperature (K)|Method|Reference|Comment
@@ -202,13 +201,11 @@ class NIST(Source):
 
         for tr in table.xpath('tr[td]'):
             tds = tr.xpath('td/text()').extract()
-            result = Result({
-                'attribute': summary,
-                'value': tds[0] + ' ' + unit,
-                'source': 'NIST',
-                'reliability': 'Unknown',
-                'conditions': '%s K' % tds[1]
-            })
+            result = self.newresult(
+                attribute=summary,
+                value=tds[0] + ' ' + unit,
+                conditions='%s K' % tds[1]
+            )
             results.append(result)
         return results
 
