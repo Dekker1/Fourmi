@@ -23,9 +23,14 @@ class NIST(Source):
     search = 'cgi/cbook.cgi?Name=%s&Units=SI&cTP=on'
 
     ignore_list = set()
+    cfg = {}
 
     def __init__(self, config={}):
         Source.__init__(self, config)
+        self.cfg = config
+        if 'reliability' not in self.cfg or self.cfg['reliability'] == '':
+            log.msg('Reliability not set for NIST', level=log.WARNING)
+            self.cfg['reliability'] = ''
 
     def parse(self, response):
         sel = Selector(response)
