@@ -40,11 +40,11 @@ class TestConfigurator(unittest.TestCase):
         config.set('DEFAULT', 'reliability', 'Low')
 
         section = self.conf.get_section(config, 'test')
-        self.assertEquals(section['reliability'] = 'Low')
+        self.assertEquals(section['reliability'], 'Low')
 
         config.add_section('test')
         config.set('test', 'var', 'Maybe')
 
         section = self.conf.get_section(config, 'test')
-        self.assertEquals(section['reliability'] = 'Low')
+        self.assertEquals(section['reliability'], 'Low')
         self.assertEqual(section['var'], 'Maybe')
