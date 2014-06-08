@@ -9,7 +9,7 @@ from FourmiCrawler.items import Result
 
 
 # [TODO] - Maybe clean up usage of '.extract()[0]', because of possible IndexError exception.
-
+# [TODO] - Add checks at search request and extendedCompoundInfo on whether the token was valid or not
 
 class ChemSpider(Source):
     """ChemSpider scraper for synonyms and properties
@@ -20,19 +20,23 @@ class ChemSpider(Source):
     somewhere.
     """
 
-    def __init__(self):
-        Source.__init__(self)
-
     website = 'http://www.chemspider.com/*'
 
-    # [TODO] - Save and access token of specific user.
-    search = ('Search.asmx/SimpleSearch?query=%s&token='
-              '052bfd06-5ce4-43d6-bf12-89eabefd2338')
+    search = 'Search.asmx/SimpleSearch?query=%s&token='
     structure = 'Chemical-Structure.%s.html'
-    extendedinfo = ('MassSpecAPI.asmx/GetExtendedCompoundInfo?csid=%s&token='
-                    '052bfd06-5ce4-43d6-bf12-89eabefd2338')
+    extendedinfo = 'MassSpecAPI.asmx/GetExtendedCompoundInfo?csid=%s&token='
 
-    ignore_list = []
+    def __init__(self, config={}):
+        Source.__init__(self, config)
+        self.cfg = config
+        self.ignore_list = []
+        if 'token' not in self.cfg or self.cfg['token'] == '':
+            log.msg('ChemSpider token not set or empty, search/MassSpec API '
+                    'not available', level=log.WARNING)
+            self.cfg['token'] = ''
+        self.search += self.cfg['token']
+        self.extendedinfo += self.cfg['token']
+
 
     def parse(self, response):
         sel = Selector(response)
@@ -44,8 +48,7 @@ class ChemSpider(Source):
 
         return requests
 
-    @staticmethod
-    def parse_properties(sel):
+    def parse_properties(self, sel):
         """scrape Experimental Data and Predicted ACD/Labs tabs"""
         properties = []
 
@@ -76,13 +79,12 @@ class ChemSpider(Source):
                 prop_value = m.group(1)
                 prop_conditions = m.group(2)
 
-            new_prop = Result({
-                'attribute': prop_name,
-                'value': prop_value,
-                'source': 'ChemSpider Predicted - ACD/Labs Tab',
-                'reliability': 'Unknown',
-                'conditions': prop_conditions
-            })
+            new_prop = self.newresult(
+                attribute=prop_name,
+                value=prop_value,
+                source='ChemSpider Predicted - ACD/Labs Tab',
+                conditions=prop_conditions
+            )
             properties.append(new_prop)
             log.msg('CS prop: |%s| |%s| |%s|' %
                     (new_prop['attribute'], new_prop['value'], new_prop['source']),
@@ -100,14 +102,11 @@ class ChemSpider(Source):
             if line.xpath('span/text()'):
                 property_name = line.xpath('span/text()').extract()[0].rstrip()
             else:
-                new_prop = Result({
-                    'attribute': property_name[:-1],
-                    'value': line.xpath('text()').extract()[0].rstrip(),
-                    'source': line.xpath(
-                        'strong/text()').extract()[0].rstrip(),
-                    'reliability': 'Unknown',
-                    'conditions': ''
-                })
+                new_prop = self.newresult(
+                    attribute=property_name[:-1],
+                    value=line.xpath('text()').extract()[0].rstrip(),
+                    source=line.xpath('strong/text()').extract()[0].rstrip(),
+                )
                 properties.append(new_prop)
                 log.msg('CS prop: |%s| |%s| |%s|' %
                         (new_prop['attribute'], new_prop['value'],
@@ -183,24 +182,30 @@ class ChemSpider(Source):
         }
         return synonym
 
-    @staticmethod
-    def parse_extendedinfo(response):
+    def parse_extendedinfo(self, response):
         """Scrape data from the ChemSpider GetExtendedCompoundInfo API"""
         sel = Selector(response)
         properties = []
         names = sel.xpath('*').xpath('name()').extract()
         values = sel.xpath('*').xpath('text()').extract()
         for (name, value) in zip(names, values):
-            result = Result({
-                'attribute': name,
-                'value': value,  # These values have no unit!
-                'source': 'ChemSpider ExtendedCompoundInfo',
-                'reliability': 'Unknown',
-                'conditions': ''
-            })
+            result = self.newresult(
+                attribute=name,
+                value=value,  # These values have no unit!
+                source='ChemSpider ExtendedCompoundInfo',
+            )
             if result['value']:
                 properties.append(result)
         return properties
+
+    def newresult(self, attribute, value, conditions='', source='ChemSpider'):
+        return Result({
+                'attribute': attribute,
+                'value': value,
+                'source': source,
+                'reliability': self.cfg['reliability'],
+                'conditions': conditions
+                })
 
     def parse_searchrequest(self, response):
         """Parse the initial response of the ChemSpider Search API """
@@ -224,7 +229,7 @@ class ChemSpider(Source):
                         callback=self.parse_extendedinfo)]
 
     def new_compound_request(self, compound):
-        if compound in self.ignore_list:  # [TODO] - add regular expression
+        if compound in self.ignore_list or self.cfg['token'] == '':
             return None
         searchurl = self.website[:-1] + self.search % compound
         log.msg('chemspider compound', level=log.DEBUG)
