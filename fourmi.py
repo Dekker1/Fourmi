@@ -18,7 +18,7 @@ Options:
     --verbose                       Verbose logging output.
     --log=<file>                    Save log to an file.
     -o <file> --output=<file>       Output file [default: results.*format*]
-    -f <format> --format=<format>   Output formats (supported: csv, json, jsonlines, xml) [default: jsonlines]
+    -f <format> --format=<format>   Output formats (supported: csv, json, jsonlines, xml) [default: csv]
     --include=<regex>               Include only sources that match these regular expressions split by a comma.
     --exclude=<regex>               Exclude the sources that match these regular expressions split by a comma.
 """
