@@ -20,7 +20,7 @@ class Configurator:
         :param fileformat: The format in which the output will be.
         """
 
-        if filename != 'result.*format*':
+        if filename != 'results.*format*':
             self.scrapy_settings.overrides["FEED_URI"] = fileformat
         elif fileformat == "jsonlines":
             self.scrapy_settings.overrides["FEED_URI"] = "results.json"
