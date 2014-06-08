@@ -66,7 +66,7 @@ def search(docopt_arguments, source_loader):
 
 # The start for the Fourmi Command Line interface.
 if __name__ == '__main__':
-    arguments = docopt.docopt(__doc__, version='Fourmi - V0.4.2')
+    arguments = docopt.docopt(__doc__, version='Fourmi - V0.5.0')
     loader = SourceLoader()
 
     if arguments["--include"]:
