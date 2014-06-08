@@ -3,6 +3,10 @@ from scrapy.utils.project import get_project_settings
 
 
 class Configurator:
+    """
+    A helper class in the fourmi class. This class is used to process the settings as set
+    from one of the Fourmi applications.
+    """
 
     def __init__(self):
         self.scrapy_settings = get_project_settings()
