@@ -1,6 +1,6 @@
 from scrapy import log
 from scrapy.utils.project import get_project_settings
-
+import ConfigParser
 
 class Configurator:
     """
@@ -47,3 +47,13 @@ class Configurator:
                 log.start(logstdout=False, loglevel=log.DEBUG)
             else:
                 log.start(logstdout=True, loglevel=log.WARNING)
+
+    def get_section(self, config, sourcename):
+        section = dict()
+        if config.has_section(sourcename):
+            section = dict(config.items(sourcename))
+        if 'reliability' not in section:
+            log.msg('Reliability not set for %s' % sourcename,
+                    level=log.WARNING)
+            section['reliability'] = ''
+        return section
