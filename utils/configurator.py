@@ -50,12 +50,24 @@ class Configurator:
 
     @staticmethod
     def read_sourceconfiguration():
+        """
+        This function reads sources.cfg in the main folder for configuration
+        variables for sources
+        :return a ConfigParser object of sources.cfg
+        """
         config = ConfigParser.ConfigParser()
         config.read('sources.cfg') # [TODO]: should be softcoded eventually
         return config
 
     @staticmethod
     def get_section(config, sourcename):
+        """
+        This function reads a config section labeled in variable sourcename and
+        tests whether the reliability variable is set else set to empty string
+        :param config: a ConfigParser object
+        :param sourcename: the name of the section to be read
+        :return a dictionary of the section in the config labeled in sourcename
+        """
         section = dict()
         if config.has_section(sourcename):
             section = dict(config.items(sourcename))
