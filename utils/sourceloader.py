@@ -9,7 +9,7 @@ from FourmiCrawler.sources.source import Source
 class SourceLoader:
     sources = []
 
-    def __init__(self, rel_dir="FourmiCrawler/sources"):
+    def __init__(self, rel_dir="../FourmiCrawler/sources"):
         """
         The initiation of a SourceLoader, selects and indexes a directory for usable sources.
         Also loads a configuration file for Sources and passes the arguments in
@@ -24,7 +24,7 @@ class SourceLoader:
         config.read('sources.cfg')
 
         for py in [f[:-3] for f in os.listdir(path) if f.endswith('.py') and f != '__init__.py']:
-            mod = __import__('.'.join([rel_dir.replace("/", "."), py]), fromlist=[py])
+            mod = __import__('.'.join([rel_dir.replace("../", "").replace("/", "."), py]), fromlist=[py])
             classes = [getattr(mod, x) for x in dir(mod) if inspect.isclass(getattr(mod, x))]
             for cls in classes:
                 if issubclass(cls, Source) and cls not in known_parser:
