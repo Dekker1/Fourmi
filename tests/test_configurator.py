@@ -1,6 +1,7 @@
 import unittest
 from utils.configurator import Configurator
 
+import ConfigReader
 
 class TestConfigurator(unittest.TestCase):
 
@@ -25,3 +26,25 @@ class TestConfigurator(unittest.TestCase):
     #     self.conf.start_log("test.log", False)
     #     self.conf.start_log(None, True)
     #     self.conf.start_log(None, False)
+
+    def test_read_sourceconfiguration(self):
+        config = self.conf.read_sourceconfiguration()
+        self.assertIsInstance(config, ConfigReader)
+
+    def test_get_section(self):
+        config = ConfigReader.ConfigReader()
+        section = self.conf.get_section(config, 'test')
+        self.assertIn(section, 'reliability')
+        self.assertEquals(section['reliability'], '')
+
+        config.set('DEFAULT', 'reliability', 'Low')
+
+        section = self.conf.get_section(config, 'test')
+        self.assertEquals(section['reliability'] = 'Low')
+
+        config.add_section('test')
+        config.set('test', 'var', 'Maybe')
+
+        section = self.conf.get_section(config, 'test')
+        self.assertEquals(section['reliability'] = 'Low')
+        self.assertEqual(section['var'], 'Maybe')
