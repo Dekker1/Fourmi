@@ -26,12 +26,10 @@ class ChemSpider(Source):
     structure = 'Chemical-Structure.%s.html'
     extendedinfo = 'MassSpecAPI.asmx/GetExtendedCompoundInfo?csid=%s&token='
 
-    cfg = {}
-    ignore_list = []
-
     def __init__(self, config={}):
         Source.__init__(self, config)
         self.cfg = config
+        self.ignore_list = []
         if 'reliability' not in self.cfg:
             log.msg('Reliability not set for ChemSpider', level=log.WARNING)
             self.cfg['reliability'] = ''
