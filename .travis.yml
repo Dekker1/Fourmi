@@ -10,7 +10,7 @@ install:
 
 # command to run tests, e.g. python setup.py test
 script:
-  - nosetests --with-coverage --cover-package=FourmiCrawler tests
+  - nosetests --with-coverage --cover-package=FourmiCrawler,utils tests
 
 notifications:
   slack: descartes2:6sgCzx3PvrO9IIMwKxj12dDM

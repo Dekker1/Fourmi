@@ -9,8 +9,6 @@ class FourmiSpider(Spider):
     A spider writen for the Fourmi Project which calls upon all available sources to request and scrape data.
     """
     name = "FourmiSpider"
-    _sources = []
-    synonyms = set()
 
     def __init__(self, compound=None, selected_attributes=[".*"], *args, **kwargs):
         """
@@ -18,6 +16,8 @@ class FourmiSpider(Spider):
         :param compound: compound that will be searched.
         :param selected_attributes: A list of regular expressions that the attributes should match.
         """
+        self._sources = []
+        self.synonyms = set()
         super(FourmiSpider, self).__init__(*args, **kwargs)
         self.synonyms.add(compound)
         self.selected_attributes = selected_attributes

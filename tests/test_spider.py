@@ -3,7 +3,7 @@ import unittest
 from scrapy.http import Request
 
 from FourmiCrawler import spider
-from FourmiCrawler.sources.ChemSpider import ChemSpider
+from FourmiCrawler.sources.NIST import NIST
 from FourmiCrawler.sources.source import Source
 
 
@@ -41,7 +41,7 @@ class TestFoumiSpider(unittest.TestCase):
         self.spi.add_source(src)
         self.assertEqual(self.spi.start_requests(), [])
 
-        src2 = ChemSpider()
+        src2 = NIST()
         self.spi.add_source(src2)
         requests = self.spi.start_requests()
         self.assertGreater(len(requests), 0)
@@ -57,7 +57,7 @@ class TestFoumiSpider(unittest.TestCase):
         self.assertEqual(self.spi.get_synonym_requests("new_compound"), [])
         self.assertIn("new_compound", self.spi.synonyms)
 
-        src2 = ChemSpider()
+        src2 = NIST()
         self.spi.add_source(src2)
         self.assertIsInstance(self.spi.get_synonym_requests("other_compound")[0], Request)
         self.assertIn("other_compound", self.spi.synonyms)
