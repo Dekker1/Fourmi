@@ -28,9 +28,6 @@ class NIST(Source):
         Source.__init__(self, config)
         self.ignore_list = set()
         self.cfg = config
-        if 'reliability' not in self.cfg or self.cfg['reliability'] == '':
-            log.msg('Reliability not set for NIST', level=log.WARNING)
-            self.cfg['reliability'] = ''
 
     def parse(self, response):
         sel = Selector(response)
