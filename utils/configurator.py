@@ -21,7 +21,7 @@ class Configurator:
         """
 
         if filename != 'results.*format*':
-            self.scrapy_settings.overrides["FEED_URI"] = fileformat
+            self.scrapy_settings.overrides["FEED_URI"] = filename
         elif fileformat == "jsonlines":
             self.scrapy_settings.overrides["FEED_URI"] = "results.json"
         elif fileformat is not None:
