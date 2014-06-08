@@ -48,12 +48,14 @@ class Configurator:
             else:
                 log.start(logstdout=True, loglevel=log.WARNING)
 
-    def read_sourceconfiguration(self):
+    @staticmethod
+    def read_sourceconfiguration():
         config = ConfigParser.ConfigParser()
         config.read('sources.cfg') # [TODO]: should be softcoded eventually
         return config
 
-    def get_section(self, config, sourcename):
+    @staticmethod
+    def get_section(config, sourcename):
         section = dict()
         if config.has_section(sourcename):
             section = dict(config.items(sourcename))
