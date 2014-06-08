@@ -29,12 +29,12 @@ class TestConfigurator(unittest.TestCase):
 
     def test_read_sourceconfiguration(self):
         config = self.conf.read_sourceconfiguration()
-        self.assertIsInstance(config, ConfigParser)
+        self.assertIsInstance(config, ConfigParser.ConfigParser)
 
     def test_get_section(self):
         config = ConfigParser.ConfigParser()
         section = self.conf.get_section(config, 'test')
-        self.assertIn(section, 'reliability')
+        self.assertIn('reliability', section)
         self.assertEquals(section['reliability'], '')
 
         config.set('DEFAULT', 'reliability', 'Low')
