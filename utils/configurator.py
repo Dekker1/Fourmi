@@ -63,7 +63,8 @@ class Configurator:
     def get_section(config, sourcename):
         """
         This function reads a config section labeled in variable sourcename and
-        tests whether the reliability variable is set else set to empty string
+        tests whether the reliability variable is set else set to empty string.
+        Return the default section if the labeled config section does not exist
         :param config: a ConfigParser object
         :param sourcename: the name of the section to be read
         :return a dictionary of the section in the config labeled in sourcename
@@ -71,6 +72,8 @@ class Configurator:
         section = dict()
         if config.has_section(sourcename):
             section = dict(config.items(sourcename))
+        elif config.defaults():
+            section = config.defaults()
         if 'reliability' not in section:
             log.msg('Reliability not set for %s' % sourcename,
                     level=log.WARNING)
