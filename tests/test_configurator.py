@@ -1,7 +1,7 @@
 import unittest
 from utils.configurator import Configurator
 
-import ConfigReader
+import ConfigParser
 
 class TestConfigurator(unittest.TestCase):
 
@@ -29,10 +29,10 @@ class TestConfigurator(unittest.TestCase):
 
     def test_read_sourceconfiguration(self):
         config = self.conf.read_sourceconfiguration()
-        self.assertIsInstance(config, ConfigReader)
+        self.assertIsInstance(config, ConfigParser)
 
     def test_get_section(self):
-        config = ConfigReader.ConfigReader()
+        config = ConfigParser.ConfigParser()
         section = self.conf.get_section(config, 'test')
         self.assertIn(section, 'reliability')
         self.assertEquals(section['reliability'], '')
