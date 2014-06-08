@@ -30,7 +30,7 @@ from scrapy.utils.project import get_project_settings
 import docopt
 
 from FourmiCrawler.spider import FourmiSpider
-from sourceloader import SourceLoader
+from utils.sourceloader import SourceLoader
 
 
 def setup_crawler(compound, settings, source_loader, attributes):
