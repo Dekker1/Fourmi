@@ -201,11 +201,7 @@ class NIST(Source):
         """
         results = []
 
-        tr_unit = ''.join(table.xpath('tr[1]/th[1]/node()').extract())
-        m = re.search(r'\((.*)\)', tr_unit)
-        unit = '!'
-        if m:
-            unit = m.group(1)
+        unit = self.get_unit(table)
 
         for tr in table.xpath('tr[td]'):
             tds = tr.xpath('td/text()').extract()
@@ -230,11 +226,7 @@ class NIST(Source):
         """
         results = []
 
-        tr_unit = ''.join(table.xpath('tr[1]/th[1]/node()').extract())
-        m = re.search(r'\((.*)\)', tr_unit)
-        unit = '!'
-        if m:
-            unit = m.group(1)
+        unit = self.get_unit(table)
 
         for tr in table.xpath('tr[td]'):
             tds = tr.xpath('td/text()').extract()
@@ -286,11 +278,7 @@ class NIST(Source):
             name = m.group(1)
             condition = m.group(2)
 
-        tr_unit = ''.join(table.xpath('tr[1]/th[1]/node()').extract())
-        m = re.search(r'\((.*)\)', tr_unit)
-        unit = '!'
-        if m:
-            unit = m.group(1)
+        unit = self.get_unit(table)
 
         for tr in table.xpath('tr[td]'):
             tds = tr.xpath('td/text()').extract()
@@ -307,6 +295,16 @@ class NIST(Source):
             results.append(result)
 
         return results
+
+    @staticmethod
+    def get_unit(table):
+        tr_unit = ''.join(table.xpath('tr[1]/th[1]/node()').extract())
+        m = re.search(r'\((.*)\)', tr_unit)
+        unit = '!'
+        if m:
+            unit = m.group(1)
+
+        return unit
 
     def newresult(self, attribute, value, conditions=''):
         """
