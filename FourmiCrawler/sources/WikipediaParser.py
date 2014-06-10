@@ -50,34 +50,11 @@ class WikipediaParser(Source):
 
         items = []
 
-        # be sure to get chembox (wikipedia template)
-        tr_list = sel.xpath('.//table[@class="infobox bordered"]//td[not(@colspan)]'). \
-            xpath('normalize-space(string())')
-        prop_names = tr_list[::2]
-        prop_values = tr_list[1::2]
-        for i, prop_name in enumerate(prop_names):
-            item = self.newresult(
-                attribute=prop_name.extract().encode('utf-8'),
-                value=prop_values[i].extract().encode('utf-8')
-            )
-            items.append(item)
-            log.msg('Wiki prop: |%s| |%s| |%s|' % (item['attribute'], item['value'], item['source']), level=log.DEBUG)
+        # scrape the chembox (wikipedia template)
+        parse_chembox(sel,items)
 
         #scrape the drugbox (wikipedia template)
-        tr_list2 = sel.xpath('.//table[@class="infobox"]//tr')
-        log.msg('dit: %s' % tr_list2, level=log.DEBUG)
-        for tablerow in tr_list2:
-            log.msg('item: %s' % tablerow.xpath('./th').xpath('normalize-space(string())'), level=log.DEBUG)
-            if tablerow.xpath('./th').xpath('normalize-space(string())') and tablerow.xpath('./td').xpath(
-                    'normalize-space(string())'):
-                item = self.newresult(
-                    attribute=tablerow.xpath('./th').xpath('normalize-space(string())').extract()[0].encode('utf-8'),
-                    value=tablerow.xpath('./td').xpath('normalize-space(string())').extract()[0].encode('utf-8'),
-                )
-                items.append(item)
-                log.msg(
-                    'Wiki prop: |attribute: %s| |value: %s| |%s|' % (item['attribute'], item['value'], item['source']),
-                    level=log.DEBUG)
+        parse_drugbox(sel,items)
 
         items = filter(lambda a: a['value'] != '', items)  # remove items with an empty value
         item_list = self.clean_items(items)
@@ -100,6 +77,38 @@ class WikipediaParser(Source):
             item_list.append(request)
 
         return item_list
+
+    def parse_chembox(self, sel, items):
+        tr_list = sel.xpath('.//table[@class="infobox bordered"]//td[not(@colspan)]'). \
+            xpath('normalize-space(string())')
+        prop_names = tr_list[::2]
+        prop_values = tr_list[1::2]
+        for i, prop_name in enumerate(prop_names):
+            item = self.newresult(
+                attribute=prop_name.extract().encode('utf-8'),
+                value=prop_values[i].extract().encode('utf-8')
+            )
+            items.append(item)
+            log.msg('Wiki prop: |%s| |%s| |%s|' % (item['attribute'], item['value'], item['source']), level=log.DEBUG)
+        return items
+
+    def parse_drugbox(self, sel, items):
+        tr_list2 = sel.xpath('.//table[@class="infobox"]//tr')
+        log.msg('dit: %s' % tr_list2, level=log.DEBUG)
+        for tablerow in tr_list2:
+            log.msg('item: %s' % tablerow.xpath('./th').xpath('normalize-space(string())'), level=log.DEBUG)
+            if tablerow.xpath('./th').xpath('normalize-space(string())') and tablerow.xpath('./td').xpath(
+                    'normalize-space(string())'):
+                item = self.newresult(
+                    attribute=tablerow.xpath('./th').xpath('normalize-space(string())').extract()[0].encode('utf-8'),
+                    value=tablerow.xpath('./td').xpath('normalize-space(string())').extract()[0].encode('utf-8'),
+                )
+                items.append(item)
+                log.msg(
+                    'Wiki prop: |attribute: %s| |value: %s| |%s|' % (item['attribute'], item['value'], item['source']),
+                    level=log.DEBUG)
+        return items
+
 
     def new_compound_request(self, compound):
         return Request(url=self.website[:-1] + compound, callback=self.parse)
