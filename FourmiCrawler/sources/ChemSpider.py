@@ -67,28 +67,7 @@ class ChemSpider(Source):
         properties = []
 
         properties.extend(self.parse_acdlabstab(sel))
-
-        # Experimental Data Tab, Physico-chemical properties in particular
-        scraped_list = sel.xpath('.//li[span="Experimental Physico-chemical '
-                                 'Properties"]//li/table/tr/td')
-        if not scraped_list:
-            return properties
-        # Format is: property name followed by a list of values
-        property_name = scraped_list.pop(0).xpath(
-            'span/text()').extract()[0].rstrip()
-        for line in scraped_list:
-            if line.xpath('span/text()'):
-                property_name = line.xpath('span/text()').extract()[0].rstrip()
-            else:
-                new_prop = self.newresult(
-                    attribute=property_name[:-1],
-                    value=line.xpath('text()').extract()[0].rstrip(),
-                    source=line.xpath('strong/text()').extract()[0].rstrip(),
-                )
-                properties.append(new_prop)
-                log.msg('CS prop: |%s| |%s| |%s|' %
-                        (new_prop['attribute'], new_prop['value'],
-                         new_prop['source']), level=log.DEBUG)
+        properties.extend(self.parse_experimentaldatatab(sel))
 
         return properties
 
@@ -115,13 +94,11 @@ class ChemSpider(Source):
                 (prop_name == 'Polarizability' and prop_value == '10-24cm3')):
                 continue
 
-            # Match for condition in parentheses
             m = re.match(r'(.*) \((.*)\)', prop_name)
             if m:
                 prop_name = m.group(1)
                 prop_conditions = m.group(2)
 
-            # Match for condition in value seperated by an 'at'
             m = re.match(r'(.*) at (.*)', prop_value)
             if m:
                 prop_value = m.group(1)
@@ -134,10 +111,35 @@ class ChemSpider(Source):
                 conditions=prop_conditions
             )
             properties.append(new_prop)
-            log.msg('CS prop: |%s| |%s| |%s|' %
-                    (new_prop['attribute'], new_prop['value'], 
-                     new_prop['source']),
-                    level=log.DEBUG)
+
+        return properties
+
+    def parse_experimentaldatatab(self, sel):
+        """
+        This function scrapes Experimental Data tab, Physico-chemical 
+        properties in particular.
+        :param sel: a Selector object of the whole page
+        :return: a list of Result items
+        """
+        properties = []
+
+        scraped_list = sel.xpath('.//li[span="Experimental Physico-chemical '
+                         'Properties"]//li/table/tr/td')
+        if not scraped_list:
+            return properties
+        # Format is: property name followed by a list of values
+        property_name = scraped_list.pop(0).xpath(
+        'span/text()').extract()[0].rstrip()
+        for line in scraped_list:
+            if line.xpath('span/text()'):
+                property_name = line.xpath('span/text()').extract()[0].rstrip()
+            else:
+                new_prop = self.newresult(
+                    attribute=property_name[:-1],
+                    value=line.xpath('text()').extract()[0].rstrip(),
+                    source=line.xpath('strong/text()').extract()[0].rstrip(),
+                )
+        properties.append(new_prop)
 
         return properties
 
