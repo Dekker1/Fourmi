@@ -65,6 +65,21 @@ class NIST(Source):
             log.msg('NIST symbol: |%s|, name: |%s|' % (symbol, name),
                     level=log.DEBUG)
 
+        requests.extend(self.parse_tables(sel, symbol_table))
+
+        return requests
+
+    def parse_tables(self, sel, symbol_table):
+        """
+        This function identifies and distributes parsing of tables to other 
+        functions below.
+        :param sel: A Selector object of the whole page
+        :param symbol_table: a dictionary containing translations of raw HTML 
+        tags to human readable names
+        :return: a list of Result items and Requests
+        """
+        requests = []
+
         for table in sel.xpath('//table[@class="data"]'):
             summary = table.xpath('@summary').extract()[0]
             if summary == 'One dimensional data':
