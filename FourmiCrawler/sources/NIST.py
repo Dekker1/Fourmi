@@ -22,8 +22,6 @@ class NIST(Source):
 
     search = 'cgi/cbook.cgi?Name=%s&Units=SI&cTP=on'
 
-    cfg = {}
-
     def __init__(self, config={}):
         """
         Initialization of NIST scraper
