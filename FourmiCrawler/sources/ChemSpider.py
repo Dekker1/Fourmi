@@ -12,8 +12,8 @@ from FourmiCrawler.items import Result
 # [TODO] - Add checks at search request and extendedCompoundInfo on whether the token was valid or not
 
 class ChemSpider(Source):
-    """ChemSpider scraper for synonyms and properties
-
+    """
+    ChemSpider scraper for synonyms and properties
     This parser will manage searching for chemicals through the
     ChemsSpider API, and parsing the resulting ChemSpider page.
     The token required for the API should be in a configuration file
@@ -27,6 +27,11 @@ class ChemSpider(Source):
     extendedinfo = 'MassSpecAPI.asmx/GetExtendedCompoundInfo?csid=%s&token='
 
     def __init__(self, config={}):
+        """
+        Initialization of ChemSpider scraper
+        :param config: a dictionary of settings for this scraper, must contain 
+        'reliability' key
+        """
         Source.__init__(self, config)
         self.cfg = config
         self.ignore_list = []
@@ -37,8 +42,13 @@ class ChemSpider(Source):
         self.search += self.cfg['token']
         self.extendedinfo += self.cfg['token']
 
-
     def parse(self, response):
+        """
+        This function is called when a Response matching the variable 
+        'website' is available for parsing the Response object.
+        :param response: the Scrapy Response object to be parsed
+        :return: a list of Result items and Request objects
+        """
         sel = Selector(response)
         requests = []
         requests_synonyms = self.parse_synonyms(sel)
@@ -49,7 +59,11 @@ class ChemSpider(Source):
         return requests
 
     def parse_properties(self, sel):
-        """scrape Experimental Data and Predicted ACD/Labs tabs"""
+        """
+        This function scrapes the Experimental Data and Predicted ACD/Labs tabs
+        :param sel: a Selector object of the whole page
+        :return: a list of Result items
+        """
         properties = []
 
         # Predicted - ACD/Labs tab
@@ -115,7 +129,11 @@ class ChemSpider(Source):
         return properties
 
     def parse_synonyms(self, sel):
-        """Scrape list of Names and Identifiers"""
+        """
+        This function scrapes the list of Names and Identifiers
+        :param sel: a Selector object of the whole page
+        :return: a list of Requests
+        """
         requests = []
         synonyms = []
 
@@ -147,7 +165,13 @@ class ChemSpider(Source):
         return requests
 
     def new_synonym(self, sel, name, category):
-        """Scrape for a single synonym at a given HTML tag"""
+        """
+        This function scrapes for a single synonym at a given HTML tag
+        :param sel: a Selector object of the given HTML tag
+        :param name: the name of the synonym in the tag
+        :param category: the name of the category the synonym is labeled as
+        :return: a dictionary containing data on the synonym
+        """
         self.ignore_list.append(name)
         language = sel.xpath('span[@class="synonym_language"]/text()')
         if language:
@@ -183,7 +207,12 @@ class ChemSpider(Source):
         return synonym
 
     def parse_extendedinfo(self, response):
-        """Scrape data from the ChemSpider GetExtendedCompoundInfo API"""
+        """
+        This function scrapes data from the ChemSpider GetExtendedCompoundInfo 
+        API, if a token is present in the configuration settings
+        :param response: a Response object to be parsed
+        :return: a list of Result items
+        """
         sel = Selector(response)
         properties = []
         names = sel.xpath('*').xpath('name()').extract()
@@ -199,6 +228,15 @@ class ChemSpider(Source):
         return properties
 
     def newresult(self, attribute, value, conditions='', source='ChemSpider'):
+        """
+        This function abstracts from the Result item and provides default 
+        values.
+        :param attribute: the name of the attribute
+        :param value: the value of the attribute
+        :param conditions: optional conditions regarding the value
+        :param source: the name of the source if it is not ChemSpider
+        :return: A Result item
+        """
         return Result({
                 'attribute': attribute,
                 'value': value,
@@ -208,7 +246,13 @@ class ChemSpider(Source):
                 })
 
     def parse_searchrequest(self, response):
-        """Parse the initial response of the ChemSpider Search API """
+        """
+        This function parses the initial response of the ChemSpider Search API
+        Requires a valid token to function.
+        :param response: the Response object to be parsed
+        :return: A Request for the information page and a Request for the 
+        extendedinfo API call
+        """
         sel = Selector(response)
         log.msg('chemspider parse_searchrequest', level=log.DEBUG)
         sel.register_namespace('cs', 'http://www.chemspider.com/')
@@ -229,6 +273,11 @@ class ChemSpider(Source):
                         callback=self.parse_extendedinfo)]
 
     def new_compound_request(self, compound):
+        """
+        This function is called when a new synonym is returned to the spider 
+        to generate new requests
+        :param compound: the name of the compound to search for
+        """
         if compound in self.ignore_list or self.cfg['token'] == '':
             return None
         searchurl = self.website[:-1] + self.search % compound
