@@ -79,6 +79,13 @@ class WikipediaParser(Source):
         return item_list
 
     def parse_chembox(self, sel, items):
+        """
+        Scrape data from chembox infobox on wikipedia.
+
+        :param sel: The selector with the html-information of the page to parse
+        :param items: the list of items where the result have to be stored in
+        :return: items: the list of items with the new found and stored items
+        """
         tr_list = sel.xpath('.//table[@class="infobox bordered"]//td[not(@colspan)]'). \
             xpath('normalize-space(string())')
         prop_names = tr_list[::2]
@@ -93,6 +100,13 @@ class WikipediaParser(Source):
         return items
 
     def parse_drugbox(self, sel, items):
+        """
+        Scrape data from drugbox infobox on wikipedia.
+
+        :param sel: The selector with the html-information of the page to parse
+        :param items: the list of items where the result have to be stored in
+        :return: items: the list of items with the new found and stored items
+        """
         tr_list2 = sel.xpath('.//table[@class="infobox"]//tr')
         log.msg('dit: %s' % tr_list2, level=log.DEBUG)
         for tablerow in tr_list2:
