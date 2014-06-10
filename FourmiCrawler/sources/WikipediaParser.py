@@ -1,11 +1,9 @@
-import re
-
 from scrapy.http import Request
 from scrapy import log
-from scrapy.selector import Selector
-
 from source import Source
+from scrapy.selector import Selector
 from FourmiCrawler.items import Result
+import re
 
 
 class WikipediaParser(Source):
@@ -26,7 +24,11 @@ class WikipediaParser(Source):
         self.cfg = config
 
     def parse(self, response):
-        """ Distributes the above described behaviour """
+        """
+        Distributes the above described behaviour
+        :param response: The incoming search request
+        :return: Returns the found properties if response is unique or returns none if it's already known
+        """
         log.msg('A response from %s just arrived!' % response.url, level=log.DEBUG)
         sel = Selector(response)
         compound = sel.xpath('//h1[@id="firstHeading"]//span/text()').extract()[0]  # makes sure to use main page
@@ -38,7 +40,14 @@ class WikipediaParser(Source):
             return items
 
     def parse_infobox(self, sel):
-        """ scrape data from infobox on wikipedia. """
+        """
+        Scrape data from infobox on wikipedia.
+
+        Data from two types of infoboxes: class="infobox bordered" and class="infobox" is scraped and
+        :param sel: The selector with the html-information of the page to parse
+        :return: item_list: Returns a list of properties with their values, source, etc..
+        """
+
         items = []
 
         # be sure to get chembox (wikipedia template)
@@ -54,7 +63,7 @@ class WikipediaParser(Source):
             items.append(item)
             log.msg('Wiki prop: |%s| |%s| |%s|' % (item['attribute'], item['value'], item['source']), level=log.DEBUG)
 
-        #scrape the  drugbox (wikipedia template)
+        #scrape the drugbox (wikipedia template)
         tr_list2 = sel.xpath('.//table[@class="infobox"]//tr')
         log.msg('dit: %s' % tr_list2, level=log.DEBUG)
         for tablerow in tr_list2:
@@ -97,7 +106,15 @@ class WikipediaParser(Source):
 
     @staticmethod
     def clean_items(items):
-        """ clean up properties using regex, makes it possible to split the values from the units """
+
+        """
+        Clean up properties using regex, makes it possible to split the values from the units
+
+        Almost not in use, only cleans J/K/mol values and boiling/melting points.
+
+        :param items: List of properties with their values, source, etc..
+        :return: items: List of now cleaned up items
+        """
         for item in items:
             value = item['value']
             m = re.search('F;\s(\d+[\.,]?\d*)', value)  # clean up numerical Kelvin value (after F)
@@ -110,7 +127,12 @@ class WikipediaParser(Source):
 
     @staticmethod
     def get_identifiers(sel):
-        """ find external links, named 'Identifiers' to different sources. """
+        """
+        Find external links, named 'Identifiers' to different sources.
+
+        :param sel: The selector with the html-information of the page to parse
+        :return: links: New links which can be used to expand the crawlers search
+        """
         links = sel.xpath('//span[contains(concat(" ",normalize-space(@class)," "),"reflink")]/a'
                           '[contains(concat(" ",normalize-space(@class)," "),"external")]/@href').extract()
         return links
