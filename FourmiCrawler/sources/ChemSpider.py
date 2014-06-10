@@ -66,43 +66,7 @@ class ChemSpider(Source):
         """
         properties = []
 
-        # Predicted - ACD/Labs tab
-        td_list = sel.xpath('.//table[@id="acdlabs-table"]//td').xpath(
-            'normalize-space(string())')
-        prop_names = td_list[::2]
-        prop_values = td_list[1::2]
-        for (prop_name, prop_value) in zip(prop_names, prop_values):
-            # [:-1] is to remove the colon at the end, [TODO] - test for colon
-            prop_name = prop_name.extract().encode('utf-8')[:-1]
-            prop_value = prop_value.extract().encode('utf-8')
-            prop_conditions = ''
-
-            # Test for properties without values, with one hardcoded exception
-            if not re.match(r'^\d', prop_value) or (prop_name == 'Polarizability' and prop_value == '10-24cm3'):
-                continue
-
-            # Match for condition in parentheses
-            m = re.match(r'(.*) \((.*)\)', prop_name)
-            if m:
-                prop_name = m.group(1)
-                prop_conditions = m.group(2)
-
-            # Match for condition in value seperated by an 'at'
-            m = re.match(r'(.*) at (.*)', prop_value)
-            if m:
-                prop_value = m.group(1)
-                prop_conditions = m.group(2)
-
-            new_prop = self.newresult(
-                attribute=prop_name,
-                value=prop_value,
-                source='ChemSpider Predicted - ACD/Labs Tab',
-                conditions=prop_conditions
-            )
-            properties.append(new_prop)
-            log.msg('CS prop: |%s| |%s| |%s|' %
-                    (new_prop['attribute'], new_prop['value'], new_prop['source']),
-                    level=log.DEBUG)
+        properties.extend(self.parse_acdlabstab(sel))
 
         # Experimental Data Tab, Physico-chemical properties in particular
         scraped_list = sel.xpath('.//li[span="Experimental Physico-chemical '
@@ -125,6 +89,55 @@ class ChemSpider(Source):
                 log.msg('CS prop: |%s| |%s| |%s|' %
                         (new_prop['attribute'], new_prop['value'],
                          new_prop['source']), level=log.DEBUG)
+
+        return properties
+
+    def parse_acdlabstab(self, sel):
+        """
+        This function scrapes the 'Predicted ACD/Labs tab' under Properties
+        :param sel: a Selector object of the whole page
+        :return: a list of Request objects
+        """
+        properties = []
+
+        td_list = sel.xpath('.//table[@id="acdlabs-table"]//td').xpath(
+            'normalize-space(string())')
+        prop_names = td_list[::2]
+        prop_values = td_list[1::2]
+        for (prop_name, prop_value) in zip(prop_names, prop_values):
+            # [:-1] is to remove the colon at the end, [TODO] - test for colon
+            prop_name = prop_name.extract().encode('utf-8')[:-1]
+            prop_value = prop_value.extract().encode('utf-8')
+            prop_conditions = ''
+
+            # Test for properties without values, with one hardcoded exception
+            if (not re.match(r'^\d', prop_value) or
+                (prop_name == 'Polarizability' and prop_value == '10-24cm3')):
+                continue
+
+            # Match for condition in parentheses
+            m = re.match(r'(.*) \((.*)\)', prop_name)
+            if m:
+                prop_name = m.group(1)
+                prop_conditions = m.group(2)
+
+            # Match for condition in value seperated by an 'at'
+            m = re.match(r'(.*) at (.*)', prop_value)
+            if m:
+                prop_value = m.group(1)
+                prop_conditions = m.group(2)
+
+            new_prop = self.newresult(
+                attribute=prop_name,
+                value=prop_value,
+                source='ChemSpider Predicted - ACD/Labs Tab',
+                conditions=prop_conditions
+            )
+            properties.append(new_prop)
+            log.msg('CS prop: |%s| |%s| |%s|' %
+                    (new_prop['attribute'], new_prop['value'], 
+                     new_prop['source']),
+                    level=log.DEBUG)
 
         return properties
 
