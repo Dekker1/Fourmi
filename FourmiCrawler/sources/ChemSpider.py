@@ -1,5 +1,3 @@
-import re
-
 from scrapy import log
 from scrapy.http import Request
 from scrapy.selector import Selector
@@ -7,9 +5,9 @@ from scrapy.selector import Selector
 from source import Source
 from FourmiCrawler.items import Result
 
+import re
 
 # [TODO] - Maybe clean up usage of '.extract()[0]', because of possible IndexError exception.
-# [TODO] - Add checks at search request and extendedCompoundInfo on whether the token was valid or not
 
 class ChemSpider(Source):
     """
