@@ -51,10 +51,10 @@ class WikipediaParser(Source):
         items = []
 
         # scrape the chembox (wikipedia template)
-        parse_chembox(sel,items)
+        items = self.parse_chembox(sel, items)
 
         #scrape the drugbox (wikipedia template)
-        parse_drugbox(sel,items)
+        items = self.parse_drugbox(sel, items)
 
         items = filter(lambda a: a['value'] != '', items)  # remove items with an empty value
         item_list = self.clean_items(items)
