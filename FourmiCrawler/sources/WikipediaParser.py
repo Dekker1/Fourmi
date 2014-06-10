@@ -10,7 +10,7 @@ class WikipediaParser(Source):
     """ Wikipedia scraper for chemical properties
 
     This parser parses Wikipedia info boxes (also bordered) to obtain properties and their values.
-     It also returns requests with other external sources which contain information on parsed subject.
+    It also returns requests with other external sources which contain information on parsed subject.
     """
 
     website = "http://en.wikipedia.org/wiki/*"
