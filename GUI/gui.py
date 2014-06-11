@@ -2,7 +2,7 @@ from Tkinter import *
 import tkMessageBox
 
 from fourmi import search
-from sourceloader import SourceLoader
+from utils.sourceloader import SourceLoader
 
 
 class ConfigImporter():
@@ -33,6 +33,7 @@ class GUI():
         self.finish_with_search = False
         self.values = {}
         self.window, self.variables = self.generate_window(self.load_common_attributes(), self.load_output_types())
+        self.required_variables = ['']
 
     def load_common_attributes(self):
         """Calls the configuration parser for common attributes."""
@@ -130,8 +131,6 @@ class GUI():
 
     def prepare_search(self):
         """Saves the values from the window for later retrieval."""
-        self.finish_with_search = True
-
         variables = self.variables
         values = {}
 
@@ -149,7 +148,12 @@ class GUI():
                 print "No known class, {}, {}".format(name, var)
 
         self.values = values
-        self.window.destroy()
+        if all([i in values.keys() for i in self.required_variables]):
+            self.finish_with_search = True
+            self.window.destroy()
+        else:
+            self.finish_with_search = False
+            tkMessageBox.showinfo('Not all required information was entered!')
 
     def execute_search(self):
         """Calls the Fourmi crawler with the values from the GUI"""
@@ -185,5 +189,3 @@ class GUI():
             self.execute_search()
         else:
             tkMessageBox.showinfo("Notice", "No search was executed!")
-
-GUI().run()
