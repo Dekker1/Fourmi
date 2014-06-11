@@ -189,3 +189,5 @@ class GUI():
             self.execute_search()
         else:
             tkMessageBox.showinfo("Notice", "No search was executed!")
+
+GUI().run()
