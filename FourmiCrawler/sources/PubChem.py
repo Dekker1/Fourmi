@@ -12,12 +12,6 @@ class PubChem(Source):
         This parser parses the part on PubChem pages that gives Chemical and Physical properties of a substance.
     """
 
-    # TO DO: make url variable with help of PubChem identifier ID / cid
-
-    #website = "https://pubchem.ncbi.nlm.nih.gov/summary/summary.cgi?cid=297"            #contains name of compound but not all parsable data
-    # website = "https://pubchem.ncbi.nlm.nih.gov/toc/summary_toc.cgi?tocid=27&cid=297"  #contains properties to parse
-
-
     website = 'https://*.ncbi.nlm.nih.gov/*'
     website_www = 'https://www.ncbi.nlm.nih.gov/*'
     website_pubchem = 'https://pubchem.ncbi.nlm.nih.gov/*'
@@ -93,51 +87,5 @@ class PubChem(Source):
         return requests
 
 
-    # this (old) definition is only here to help myself
-    def parse_properties(self, sel):
-        """ scrape data from 'Chemical and Physical Properties' box on PubChem. """
-        items = []
-
-
-        prop_names = sel.xpath('.//div[@id="d27"//div/b').\
-            xpath('normalize-space(string())')
-        prop_values = sel.xpath('.//div[@id="d27"//div/a').\
-            xpath('normalize-space(string())')
-        prop_sources = sel.xpath('.//div[@id="d27"//div/a[@title]').\
-            xpath('normalize-space(string())')
-
-        for i, prop_name in enumerate(prop_names):
-            item = Result({
-                'attribute': prop_name.extract().encode('utf-8'),
-                'value': prop_values[i].extract().encode('utf-8'),
-                'source': "PubChem: " + prop_sources[i].extract().encode('utf-8'),
-                'reliability': "",
-                'conditions': ""
-            })
-            items.append(item)
-
-            print item
-
-            log.msg('PubChem prop: |%s| |%s| |%s|' % (item['attribute'], item['value'], item['source']), level=log.DEBUG)
-
-        items = filter(lambda a: a['value'] != '', items)  # remove items with an empty value
-        # item_list = self.clean_items(items)
-
-        return items
-
-
     def new_compound_request(self, compound):
         return Request(url=self.website_www[:-1] + self.search % compound, callback=self.parse)
-
-    # @staticmethod
-    # def clean_items(items):
-    #     """ clean up properties using regex, makes it possible to split the values from the units """
-    #     for item in items:
-    #         value = item['value']
-    #         m = re.search('F;\s(\d+[\.,]?\d*)', value)  # clean up numerical Kelvin value (after F)
-    #         if m:
-    #             item['value'] = m.group(1) + " K"
-    #         m = re.match('(\d+[\.,]?\d*)\sJ\sK.+mol', value)  # clean up J/K/mol values
-    #         if m:
-    #             item['value'] = m.group(1) + " J/K/mol"
-    #     return items
