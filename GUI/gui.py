@@ -4,7 +4,6 @@ import tkMessageBox
 from fourmi import search
 from utils.sourceloader import SourceLoader
 
-
 class ConfigImporter():
     def __init__(self, filename):
         """Read the filename into the parser."""
@@ -29,7 +28,7 @@ class ConfigImporter():
 class GUI():
     def __init__(self):
         """Boots the window, configuration."""
-        self.configurator = ConfigImporter('config.cfg')
+        self.configurator = ConfigImporter(['GUI/gui.cfg','gui.cfg'])
         self.finish_with_search = False
         self.values = {}
         self.window, self.variables = self.generate_window(self.load_common_attributes(), self.load_output_types())
