@@ -159,7 +159,7 @@ class GUI():
         print self.values
 
         if self.values.get('all_attributes'):
-            attributes = ""
+            attributes = ".*"
         else:
             attribute_types = ['attributes', 'Common attributes', 'Always attributes']
             attributes = ','.join([str(self.values.get(attribute)) for attribute in attribute_types])
@@ -171,13 +171,14 @@ class GUI():
                      '--format': self.values.get('output_type'),
                      '--help': False,
                      '--include': None,
-                     '--log': None,
-                     '--output': 'result.*format*',
-                     '--verbose': False,
+                     '--log': 'log.txt',
+                     '--output': 'results.*format*',
+                     '--verbose': True,
                      '--version': False,
                      '<compound>': self.values.get('substance'),
                      'list': False,
                      'search': True}
+
         source_loader = SourceLoader()
         search(arguments, source_loader)
 
