@@ -250,3 +250,79 @@
 {"attribute": "Experimental Boiling Point", "reliability": "Unknown", "conditions": "", "value": "-164 \u00b0C", "source": "Oxford University Chemical Safety Data (No longer updated)"}
 {"attribute": "Experimental Flash Point", "reliability": "Unknown", "conditions": "", "value": "-221 \u00b0C", "source": "Oxford University Chemical Safety Data (No longer updated)"}
 {"attribute": "Experimental Gravity", "reliability": "Unknown", "conditions": "", "value": "0.717 g/l (717 g/mL)", "source": "Alfa Aesar"}
+{"attribute": "CSID", "reliability": "Unknown", "conditions": "", "value": "1906", "source": "ChemSpider ExtendedCompoundInfo"}
+{"attribute": "MF", "reliability": "Unknown", "conditions": "", "value": "C_{8}H_{9}NO_{2}", "source": "ChemSpider ExtendedCompoundInfo"}
+{"attribute": "SMILES", "reliability": "Unknown", "conditions": "", "value": "CC(=O)NC1=CC=C(C=C1)O", "source": "ChemSpider ExtendedCompoundInfo"}
+{"attribute": "InChI", "reliability": "Unknown", "conditions": "", "value": "InChI=1/C8H9NO2/c1-6(10)9-7-2-4-8(11)5-3-7/h2-5,11H,1H3,(H,9,10)", "source": "ChemSpider ExtendedCompoundInfo"}
+{"attribute": "InChIKey", "reliability": "Unknown", "conditions": "", "value": "RZVAJINKPMORJF-UHFFFAOYAA", "source": "ChemSpider ExtendedCompoundInfo"}
+{"attribute": "AverageMass", "reliability": "Unknown", "conditions": "", "value": "151.1626", "source": "ChemSpider ExtendedCompoundInfo"}
+{"attribute": "MolecularWeight", "reliability": "Unknown", "conditions": "", "value": "151.16256", "source": "ChemSpider ExtendedCompoundInfo"}
+{"attribute": "MonoisotopicMass", "reliability": "Unknown", "conditions": "", "value": "151.063324", "source": "ChemSpider ExtendedCompoundInfo"}
+{"attribute": "NominalMass", "reliability": "Unknown", "conditions": "", "value": "151", "source": "ChemSpider ExtendedCompoundInfo"}
+{"attribute": "ALogP", "reliability": "Unknown", "conditions": "", "value": "0", "source": "ChemSpider ExtendedCompoundInfo"}
+{"attribute": "XLogP", "reliability": "Unknown", "conditions": "", "value": "0", "source": "ChemSpider ExtendedCompoundInfo"}
+{"attribute": "CommonName", "reliability": "Unknown", "conditions": "", "value": "Paracetamol", "source": "ChemSpider ExtendedCompoundInfo"}
+{"attribute": "Trade names", "reliability": "Unknown", "conditions": "", "value": "Tylenol (USA), Panadol (Australia) and many others", "source": "Wikipedia"}
+{"attribute": "AHFS/Drugs.com", "reliability": "Unknown", "conditions": "", "value": "monograph", "source": "Wikipedia"}
+{"attribute": "MedlinePlus", "reliability": "Unknown", "conditions": "", "value": "a681004", "source": "Wikipedia"}
+{"attribute": "Licence data", "reliability": "Unknown", "conditions": "", "value": "US\u00a0FDA:link", "source": "Wikipedia"}
+{"attribute": "Pregnancy cat.", "reliability": "Unknown", "conditions": "", "value": "A (AU) C (US) Not tested but seems to be safe", "source": "Wikipedia"}
+{"attribute": "Legal status", "reliability": "Unknown", "conditions": "", "value": "Unscheduled (AU) GSL (UK) OTC (US)", "source": "Wikipedia"}
+{"attribute": "Routes", "reliability": "Unknown", "conditions": "", "value": "Oral, rectal, intravenous", "source": "Wikipedia"}
+{"attribute": "Bioavailability", "reliability": "Unknown", "conditions": "", "value": "63-89%[1]:73", "source": "Wikipedia"}
+{"attribute": "Protein binding", "reliability": "Unknown", "conditions": "", "value": "10-25%[2]", "source": "Wikipedia"}
+{"attribute": "Metabolism", "reliability": "Unknown", "conditions": "", "value": "Predominantly in the liver[3]", "source": "Wikipedia"}
+{"attribute": "Half-life", "reliability": "Unknown", "conditions": "", "value": "1\u20134 hours[3]", "source": "Wikipedia"}
+{"attribute": "Excretion", "reliability": "Unknown", "conditions": "", "value": "Urine (85-90%)[3]", "source": "Wikipedia"}
+{"attribute": "CAS number", "reliability": "Unknown", "conditions": "", "value": "103-90-2\u00a0Y", "source": "Wikipedia"}
+{"attribute": "ATC code", "reliability": "Unknown", "conditions": "", "value": "N02BE01", "source": "Wikipedia"}
+{"attribute": "PubChem", "reliability": "Unknown", "conditions": "", "value": "CID 1983", "source": "Wikipedia"}
+{"attribute": "DrugBank", "reliability": "Unknown", "conditions": "", "value": "DB00316", "source": "Wikipedia"}
+{"attribute": "ChemSpider", "reliability": "Unknown", "conditions": "", "value": "1906\u00a0Y", "source": "Wikipedia"}
+{"attribute": "UNII", "reliability": "Unknown", "conditions": "", "value": "362O9ITL9D\u00a0Y", "source": "Wikipedia"}
+{"attribute": "KEGG", "reliability": "Unknown", "conditions": "", "value": "D00217\u00a0Y", "source": "Wikipedia"}
+{"attribute": "ChEBI", "reliability": "Unknown", "conditions": "", "value": "CHEBI:46195\u00a0Y", "source": "Wikipedia"}
+{"attribute": "ChEMBL", "reliability": "Unknown", "conditions": "", "value": "CHEMBL112\u00a0Y", "source": "Wikipedia"}
+{"attribute": "PDB ligand ID", "reliability": "Unknown", "conditions": "", "value": "TYL (PDBe, RCSB PDB)", "source": "Wikipedia"}
+{"attribute": "Formula", "reliability": "Unknown", "conditions": "", "value": "C8H9NO2\u00a0", "source": "Wikipedia"}
+{"attribute": "Mol. mass", "reliability": "Unknown", "conditions": "", "value": "151.163 g/mol", "source": "Wikipedia"}
+{"attribute": "Density", "reliability": "Unknown", "conditions": "", "value": "1.263\u00a0g/cm\u00b3", "source": "Wikipedia"}
+{"attribute": "Melt. point", "reliability": "Unknown", "conditions": "", "value": "169\u00a0\u00b0C (336\u00a0\u00b0F) [5][6]", "source": "Wikipedia"}
+{"attribute": "Solubility in water", "reliability": "Unknown", "conditions": "", "value": "12.78[4]\u00a0mg/mL (20\u00a0\u00b0C)", "source": "Wikipedia"}
+{"attribute": "IUPAC Standard InChI", "reliability": "Unknown", "conditions": "", "value": "InChI=1S/C8H9NO2/c1-6(10)9-7-2-4-8(11)5-3-7/h2-5,11H,1H3,(H,9,10)", "source": "NIST"}
+{"attribute": "CAS Registry Number", "reliability": "Unknown", "conditions": "", "value": "103-90-2", "source": "NIST"}
+{"attribute": "Molecular weight", "reliability": "Unknown", "conditions": "", "value": "151.1626", "source": "NIST"}
+{"attribute": "Chemical formula", "reliability": "Unknown", "conditions": "", "value": "C8H9NO2", "source": "NIST"}
+{"attribute": "IUPAC Standard InChIKey", "reliability": "Unknown", "conditions": "", "value": "RZVAJINKPMORJF-UHFFFAOYSA-N", "source": "NIST"}
+{"attribute": "Fusion (melting) point", "reliability": "Unknown", "conditions": "", "value": "441.2 K", "source": "NIST"}
+{"attribute": "Fusion (melting) point", "reliability": "Unknown", "conditions": "", "value": "441. K", "source": "NIST"}
+{"attribute": "ACD/LogP", "reliability": "Unknown", "conditions": "", "value": "0.34\u00b10.21", "source": "ChemSpider Predicted - ACD/Labs Tab"}
+{"attribute": "# of Rule of 5 Violations", "reliability": "Unknown", "conditions": "", "value": "0", "source": "ChemSpider Predicted - ACD/Labs Tab"}
+{"attribute": "ACD/LogD", "reliability": "Unknown", "conditions": "pH 5.5", "value": "0.34", "source": "ChemSpider Predicted - ACD/Labs Tab"}
+{"attribute": "ACD/LogD", "reliability": "Unknown", "conditions": "pH 7.4", "value": "0.34", "source": "ChemSpider Predicted - ACD/Labs Tab"}
+{"attribute": "ACD/BCF", "reliability": "Unknown", "conditions": "pH 5.5", "value": "1.07", "source": "ChemSpider Predicted - ACD/Labs Tab"}
+{"attribute": "ACD/BCF", "reliability": "Unknown", "conditions": "pH 7.4", "value": "1.06", "source": "ChemSpider Predicted - ACD/Labs Tab"}
+{"attribute": "ACD/KOC", "reliability": "Unknown", "conditions": "pH 5.5", "value": "36.41", "source": "ChemSpider Predicted - ACD/Labs Tab"}
+{"attribute": "ACD/KOC", "reliability": "Unknown", "conditions": "pH 7.4", "value": "36.29", "source": "ChemSpider Predicted - ACD/Labs Tab"}
+{"attribute": "#H bond acceptors", "reliability": "Unknown", "conditions": "", "value": "3", "source": "ChemSpider Predicted - ACD/Labs Tab"}
+{"attribute": "#H bond donors", "reliability": "Unknown", "conditions": "", "value": "2", "source": "ChemSpider Predicted - ACD/Labs Tab"}
+{"attribute": "#Freely Rotating Bonds", "reliability": "Unknown", "conditions": "", "value": "2", "source": "ChemSpider Predicted - ACD/Labs Tab"}
+{"attribute": "Polar Surface Area", "reliability": "Unknown", "conditions": "", "value": "49.33 \u212b2", "source": "ChemSpider Predicted - ACD/Labs Tab"}
+{"attribute": "Index of Refraction", "reliability": "Unknown", "conditions": "", "value": "1.619", "source": "ChemSpider Predicted - ACD/Labs Tab"}
+{"attribute": "Molar Refractivity", "reliability": "Unknown", "conditions": "", "value": "42.4\u00b10.3 cm3", "source": "ChemSpider Predicted - ACD/Labs Tab"}
+{"attribute": "Molar Volume", "reliability": "Unknown", "conditions": "", "value": "120.9\u00b13.0 cm3", "source": "ChemSpider Predicted - ACD/Labs Tab"}
+{"attribute": "Polarizability", "reliability": "Unknown", "conditions": "", "value": "16.8\u00b10.5 10-24cm3", "source": "ChemSpider Predicted - ACD/Labs Tab"}
+{"attribute": "Surface Tension", "reliability": "Unknown", "conditions": "", "value": "52.8\u00b13.0 dyne/cm", "source": "ChemSpider Predicted - ACD/Labs Tab"}
+{"attribute": "Density", "reliability": "Unknown", "conditions": "", "value": "1.3\u00b10.1 g/cm3", "source": "ChemSpider Predicted - ACD/Labs Tab"}
+{"attribute": "Flash Point", "reliability": "Unknown", "conditions": "", "value": "188.4\u00b123.2 \u00b0C", "source": "ChemSpider Predicted - ACD/Labs Tab"}
+{"attribute": "Enthalpy of Vaporization", "reliability": "Unknown", "conditions": "", "value": "66.2\u00b13.0 kJ/mol", "source": "ChemSpider Predicted - ACD/Labs Tab"}
+{"attribute": "Boiling Point", "reliability": "Unknown", "conditions": "760 mmHg", "value": "387.8\u00b125.0 \u00b0C", "source": "ChemSpider Predicted - ACD/Labs Tab"}
+{"attribute": "Vapour Pressure", "reliability": "Unknown", "conditions": "25\u00b0C", "value": "0.0\u00b10.9 mmHg", "source": "ChemSpider Predicted - ACD/Labs Tab"}
+{"attribute": "Experimental Melting Point", "reliability": "Unknown", "conditions": "", "value": "168-172 \u00b0C", "source": "SynQuest"}
+{"attribute": "Experimental Melting Point", "reliability": "Unknown", "conditions": "", "value": "169 \u00b0C", "source": "TCI"}
+{"attribute": "Experimental Melting Point", "reliability": "Unknown", "conditions": "", "value": "169-172 \u00b0C", "source": "Oxford University Chemical Safety Data (No longer updated)"}
+{"attribute": "Experimental LogP", "reliability": "Unknown", "conditions": "", "value": "0.339", "source": "Vitas-M"}
+{"attribute": "Experimental Gravity", "reliability": "Unknown", "conditions": "", "value": "1.293 g/mL", "source": "Alfa Aesar"}
+{"attribute": "Experimental Gravity", "reliability": "Unknown", "conditions": "", "value": "1.293 g/l", "source": "SynQuest"}
+{"attribute": "Experimental Solubility", "reliability": "Unknown", "conditions": "", "value": "-1.03", "source": "Egon Willighagen"}
+{"attribute": "Experimental Solubility", "reliability": "Unknown", "conditions": "", "value": "Soluble to 100 mM in ethanol and to 100 mM in DMSO", "source": "Tocris Bioscience"}

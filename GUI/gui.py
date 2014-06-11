@@ -9,7 +9,7 @@ class ConfigImporter():
     def __init__(self, filename):
         """Read the filename into the parser."""
         import ConfigParser
-        self.filename = filename
+        self.filename = "GUI/" + filename
         self.parser = ConfigParser.ConfigParser()
         self.parser.read(self.filename)
 

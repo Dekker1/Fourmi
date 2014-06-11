@@ -1,1 +1,2 @@
-__author__ = 'Harmen'
+import FourmiCrawler, GUI, fourmi
+
