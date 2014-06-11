@@ -6,10 +6,14 @@ python: 2.7
 # command to install dependencies, e.g. pip install -r requirements.txt --use-mirrors
 install:
   - pip install Scrapy docopt
+  - pip install coveralls
 
 # command to run tests, e.g. python setup.py test
 script:
-  - nosetests tests
+  - nosetests --with-coverage --cover-package=FourmiCrawler,utils tests
 
 notifications:
   slack: descartes2:6sgCzx3PvrO9IIMwKxj12dDM
+
+after_success:
+  coveralls --verbose

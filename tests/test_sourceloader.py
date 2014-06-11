@@ -1,6 +1,6 @@
 import unittest
 
-from sourceloader import SourceLoader
+from utils.sourceloader import SourceLoader
 
 
 class TestSourceloader(unittest.TestCase):

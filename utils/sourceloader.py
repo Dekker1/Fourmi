@@ -3,26 +3,31 @@ import os
 import re
 
 from FourmiCrawler.sources.source import Source
-
+from utils.configurator import Configurator
 
 class SourceLoader:
     sources = []
 
-    def __init__(self, rel_dir="FourmiCrawler/sources"):
+    def __init__(self, rel_dir="../FourmiCrawler/sources"):
         """
         The initiation of a SourceLoader, selects and indexes a directory for usable sources.
+        Also loads a configuration file for Sources and passes the arguments in
+        the named section to the source
         :param rel_dir: A relative path to a directory.
         """
         path = os.path.dirname(os.path.abspath(__file__))
         path += "/" + rel_dir
         known_parser = set()
 
+        config = Configurator.read_sourceconfiguration()
+
         for py in [f[:-3] for f in os.listdir(path) if f.endswith('.py') and f != '__init__.py']:
-            mod = __import__('.'.join([rel_dir.replace("/", "."), py]), fromlist=[py])
+            mod = __import__('.'.join([rel_dir.replace("../", "").replace("/", "."), py]), fromlist=[py])
             classes = [getattr(mod, x) for x in dir(mod) if inspect.isclass(getattr(mod, x))]
             for cls in classes:
                 if issubclass(cls, Source) and cls not in known_parser:
-                    self.sources.append(cls())  # [review] - Would we ever need arguments for the parsers?
+                    sourcecfg = Configurator.get_section(config, cls.__name__)
+                    self.sources.append(cls(sourcecfg))
                     known_parser.add(cls)
 
     def include(self, source_names):
