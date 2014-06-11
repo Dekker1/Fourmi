@@ -1,9 +1,12 @@
-from source import Source
+import re
+
 from scrapy import log
 from scrapy.http import Request
 from scrapy.selector import Selector
+
+from source import Source
 from FourmiCrawler.items import Result
-import re
+
 
 # [TODO] - Maybe clean up usage of '.extract()[0]', because of possible IndexError exception.
 
@@ -58,9 +61,7 @@ class ChemSpider(Source):
             prop_conditions = ''
 
             # Test for properties without values, with one hardcoded exception
-            if (not re.match(r'^\d', prop_value) or
-                    (prop_name == 'Polarizability' and
-                    prop_value == '10-24cm3')):
+            if not re.match(r'^\d', prop_value) or (prop_name == 'Polarizability' and prop_value == '10-24cm3'):
                 continue
 
             # Match for condition in parentheses
