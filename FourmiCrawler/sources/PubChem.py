@@ -21,8 +21,9 @@ class PubChem(Source):
     __spider = None
     searched_compounds = set()
 
-    def __init__(self):
-        Source.__init__(self)
+    def __init__(self, config):
+        Source.__init__(self, config)
+        self.cfg = config
 
     def parse(self, response):
         """ Distributes the above described behaviour """
