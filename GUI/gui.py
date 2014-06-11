@@ -9,7 +9,7 @@ class ConfigImporter():
     def __init__(self, filename):
         """Read the filename into the parser."""
         import ConfigParser
-        self.filename = "GUI/" + filename
+        self.filename = filename
         self.parser = ConfigParser.ConfigParser()
         self.parser.read(self.filename)
 
@@ -33,7 +33,7 @@ class GUI():
         self.finish_with_search = False
         self.values = {}
         self.window, self.variables = self.generate_window(self.load_common_attributes(), self.load_output_types())
-        self.required_variables = ['']
+        self.required_variables = ['substance']
 
     def load_common_attributes(self):
         """Calls the configuration parser for common attributes."""
