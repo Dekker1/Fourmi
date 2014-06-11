@@ -9,8 +9,6 @@ class FourmiSpider(Spider):
     A spider writen for the Fourmi Project which calls upon all available sources to request and scrape data.
     """
     name = "FourmiSpider"
-    _sources = []
-    synonyms = set()
 
     def __init__(self, compound=None, selected_attributes=[".*"], *args, **kwargs):
         """
@@ -18,6 +16,8 @@ class FourmiSpider(Spider):
         :param compound: compound that will be searched.
         :param selected_attributes: A list of regular expressions that the attributes should match.
         """
+        self._sources = []
+        self.synonyms = set()
         super(FourmiSpider, self).__init__(*args, **kwargs)
         self.synonyms.add(compound)
         self.selected_attributes = selected_attributes
@@ -35,14 +35,14 @@ class FourmiSpider(Spider):
                 return source.parse(response)
         return None
 
-    def get_synonym_requests(self, compound):
+    def get_synonym_requests(self, compound, force=False):
         """
         A function that generates new Scrapy Request for each source given a new synonym of a compound.
         :param compound: A compound name
         :return: A list of Scrapy Request objects
         """
         requests = []
-        if compound not in self.synonyms:
+        if force or compound not in self.synonyms:
             self.synonyms.add(compound)
             for parser in self._sources:
                 parser_requests = parser.new_compound_request(compound)
@@ -57,7 +57,7 @@ class FourmiSpider(Spider):
         """
         requests = []
         for synonym in self.synonyms:
-            requests.extend(self.get_synonym_requests(synonym))
+            requests.extend(self.get_synonym_requests(synonym, force=True))
         return requests
 
     def add_sources(self, sources):

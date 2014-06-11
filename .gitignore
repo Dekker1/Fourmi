@@ -4,6 +4,9 @@
 #Python Specific ignores
 *.pyc
 
+#may contain authentication information
+sources.cfg
+
 #THINGS WE WOULD NEVER EVER WANT!
 #ignore thumbnails created by windows
 Thumbs.db

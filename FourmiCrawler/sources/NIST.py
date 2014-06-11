@@ -22,10 +22,12 @@ class NIST(Source):
 
     search = 'cgi/cbook.cgi?Name=%s&Units=SI&cTP=on'
 
-    ignore_list = set()
+    cfg = {}
 
-    def __init__(self):
-        Source.__init__(self)
+    def __init__(self, config={}):
+        Source.__init__(self, config)
+        self.ignore_list = set()
+        self.cfg = config
 
     def parse(self, response):
         sel = Selector(response)
@@ -114,13 +116,10 @@ class NIST(Source):
 
         requests = []
         for key, value in data.iteritems():
-            result = Result({
-                'attribute': key,
-                'value': value,
-                'source': 'NIST',
-                'reliability': 'Unknown',
-                'conditions': ''
-            })
+            result = self.newresult(
+                attribute=key,
+                value=value
+            )
             requests.append(result)
 
         return requests
@@ -150,19 +149,16 @@ class NIST(Source):
                 name = m.group(1)
                 condition = m.group(2)
 
-            result = Result({
-                'attribute': name,
-                'value': data[1] + ' ' + data[2],
-                'source': 'NIST',
-                'reliability': 'Unknown',
-                'conditions': condition
-            })
+            result = self.newresult(
+                attribute=name,
+                value=data[1] + ' ' + data[2],
+                conditions=condition
+            )
             log.msg('NIST: |%s|' % data, level=log.DEBUG)
             results.append(result)
         return results
 
-    @staticmethod
-    def parse_transition_data(table, summary):
+    def parse_transition_data(self, table, summary):
         """Parses the table containing properties regarding phase changes"""
         results = []
 
@@ -174,19 +170,16 @@ class NIST(Source):
 
         for tr in table.xpath('tr[td]'):
             tds = tr.xpath('td/text()').extract()
-            result = Result({
-                'attribute': summary,
-                'value': tds[0] + ' ' + unit,
-                'source': 'NIST',
-                'reliability': 'Unknown',
-                'conditions': '%s K, (%s -> %s)' % (tds[1], tds[2], tds[3])
-            })
+            result = self.newresult(
+                attribute=summary,
+                value=tds[0] + ' ' + unit,
+                conditions='%s K, (%s -> %s)' % (tds[1], tds[2], tds[3])
+            )
             results.append(result)
 
         return results
 
-    @staticmethod
-    def parse_generic_data(table, summary):
+    def parse_generic_data(self, table, summary):
         """Parses the common tables of 4 and 5 rows. Assumes they are of the
         form:
         Symbol (unit)|Temperature (K)|Method|Reference|Comment
@@ -202,36 +195,30 @@ class NIST(Source):
 
         for tr in table.xpath('tr[td]'):
             tds = tr.xpath('td/text()').extract()
-            result = Result({
-                'attribute': summary,
-                'value': tds[0] + ' ' + unit,
-                'source': 'NIST',
-                'reliability': 'Unknown',
-                'conditions': '%s K' % tds[1]
-            })
+            result = self.newresult(
+                attribute=summary,
+                value=tds[0] + ' ' + unit,
+                conditions='%s K' % tds[1]
+            )
             results.append(result)
         return results
 
-    @staticmethod
-    def parse_antoine_data(table, summary):
+    def parse_antoine_data(self, table, summary):
         """Parse table containing parameters for the Antione equation"""
         results = []
 
         for tr in table.xpath('tr[td]'):
             tds = tr.xpath('td/text()').extract()
-            result = Result({
-                'attribute': summary,
-                'value': 'A=%s, B=%s, C=%s' % (tds[1], tds[2], tds[3]),
-                'source': 'NIST',
-                'reliability': 'Unknown',
-                'conditions': '%s K' % tds[0]
-            })
+            result = self.newresult(
+                attribute=summary,
+                value='A=%s, B=%s, C=%s' % (tds[1], tds[2], tds[3]),
+                conditions='%s K' % tds[0]
+            )
             results.append(result)
 
         return results
 
-    @staticmethod
-    def parse_individual_datapoints(response):
+    def parse_individual_datapoints(self, response):
         """Parses the page linked from aggregate data"""
         sel = Selector(response)
         table = sel.xpath('//table[@class="data"]')[0]
@@ -258,16 +245,23 @@ class NIST(Source):
             if m:
                 uncertainty = '+- %s ' % m.group(1)
                 # [TODO]: get the plusminus sign working in here
-            result = Result({
-                'attribute': name,
-                'value': '%s %s%s' % (tds[0], uncertainty, unit),
-                'source': 'NIST',
-                'reliability': 'Unknown',
-                'conditions': condition
-            })
+            result = self.newresult(
+                attribute=name,
+                value='%s %s%s' % (tds[0], uncertainty, unit),
+                conditions=condition
+            )
             results.append(result)
 
         return results
+
+    def newresult(self, attribute, value, conditions=''):
+        return Result({
+            'attribute': attribute,
+            'value': value,
+            'source': 'NIST',
+            'reliability': self.cfg['reliability'],
+            'conditions': conditions
+            })
 
     def new_compound_request(self, compound):
         if compound not in self.ignore_list:
