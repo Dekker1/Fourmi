@@ -11,28 +11,37 @@ class ConfigImporter():
         self.parser = ConfigParser.ConfigParser()
         self.parser.read(self.filename)
 
+
     def load_common_attributes(self):
         """Loads common attributes from the initialized file."""
-        return self.parser.get('GUI_Options', 'CommonParameters')
+        try:
+            return self.parser.get('GUI_Options', 'CommonParameters')
+        except:
+            return 'One, Two, Three'
 
     def load_output_types(self):
         """Loads output types from the initialized file."""
-        return self.parser.get('GUI_Options', 'OutputTypes')
+        try:
+            return self.parser.get('GUI_Options', 'OutputTypes')
+        except:
+            return 'csv'
 
     def load_always_attributes(self):
         """Loads attributes that are always searched for from the initialized file."""
-        return self.parser.get('GUI_Options', 'AlwaysParameters')
-
+        try:
+            return self.parser.get('GUI_Options', 'AlwaysParameters')
+        except:
+            return 'Name, Weight'
 
 class GUI():
-    def __init__(self, search):
+    def __init__(self, search, config_file='GUI/gui.cfg'):
         """Boots the window, configuration."""
-        self.configurator = ConfigImporter('GUI/gui.cfg')
+        self.configurator = ConfigImporter(config_file)
         self.finish_with_search = False
         self.values = {}
         self.required_variables = ['substance']
         self.search = search
-
+        self.window, self.variables = self.generate_window(self.load_common_attributes(), self.load_output_types())
 
     def load_common_attributes(self):
         """Calls the configuration parser for common attributes."""
@@ -147,12 +156,12 @@ class GUI():
                 print "No known class, {}, {}".format(name, var)
 
         self.values = values
-        if all([i in values.keys() for i in self.required_variables]):
+        if all([values.get(i)!='' for i in self.required_variables]):
             self.finish_with_search = True
             self.window.destroy()
         else:
             self.finish_with_search = False
-            tkMessageBox.showinfo('Not all required information was entered!')
+            #tkMessageBox.showinfo('Not all required information was entered!')
 
     def execute_search(self):
         """Calls the Fourmi crawler with the values from the GUI"""
@@ -184,9 +193,7 @@ class GUI():
 
     def run(self):
         """Starts the window and the search."""
-        self.window, self.variables = self.generate_window(self.load_common_attributes(), self.load_output_types())
         self.window.mainloop()
+        print self.finish_with_search
         if self.finish_with_search:
             self.execute_search()
-        else:
-            tkMessageBox.showinfo("Notice", "No search was executed!")
