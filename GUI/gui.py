@@ -1,7 +1,4 @@
 from Tkinter import *
-import tkMessageBox
-
-from utils.sourceloader import SourceLoader
 
 class ConfigImporter():
     def __init__(self, filename):
@@ -34,9 +31,10 @@ class ConfigImporter():
             return 'Name, Weight'
 
 class GUI():
-    def __init__(self, search, config_file='GUI/gui.cfg'):
+    def __init__(self, search, config_file='GUI/gui.cfg', sourceloader = None):
         """Boots the window, configuration."""
         self.configurator = ConfigImporter(config_file)
+        self.sourceloader = sourceloader
         self.finish_with_search = False
         self.values = {}
         self.required_variables = ['substance']
@@ -188,8 +186,7 @@ class GUI():
                      'list': False,
                      'search': True}
 
-        source_loader = SourceLoader()
-        self.search(arguments, source_loader)
+        self.search(arguments, self.sourceloader)
 
     def run(self):
         """Starts the window and the search."""

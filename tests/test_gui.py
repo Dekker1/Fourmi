@@ -6,7 +6,6 @@ class TestGUI(unittest.TestCase):
     def setUp(self):
         pass
 
-
     def test_empty_attributes(self):
         self.test_gui = gui.GUI(None, '../GUI/gui.cfg')
         self.test_gui.window.after(9, self.test_gui.prepare_search)
