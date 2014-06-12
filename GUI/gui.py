@@ -30,7 +30,6 @@ class GUI():
         self.configurator = ConfigImporter('GUI/gui.cfg')
         self.finish_with_search = False
         self.values = {}
-        self.window, self.variables = self.generate_window(self.load_common_attributes(), self.load_output_types())
         self.required_variables = ['substance']
         self.search = search
 
@@ -185,6 +184,7 @@ class GUI():
 
     def run(self):
         """Starts the window and the search."""
+        self.window, self.variables = self.generate_window(self.load_common_attributes(), self.load_output_types())
         self.window.mainloop()
         if self.finish_with_search:
             self.execute_search()
