@@ -1,7 +1,6 @@
 from Tkinter import *
 import tkMessageBox
 
-from fourmi import search
 from utils.sourceloader import SourceLoader
 
 class ConfigImporter():
@@ -26,13 +25,15 @@ class ConfigImporter():
 
 
 class GUI():
-    def __init__(self):
+    def __init__(self, search):
         """Boots the window, configuration."""
         self.configurator = ConfigImporter('GUI/gui.cfg')
         self.finish_with_search = False
         self.values = {}
         self.window, self.variables = self.generate_window(self.load_common_attributes(), self.load_output_types())
         self.required_variables = ['substance']
+        self.search = search
+
 
     def load_common_attributes(self):
         """Calls the configuration parser for common attributes."""
@@ -180,7 +181,7 @@ class GUI():
                      'search': True}
 
         source_loader = SourceLoader()
-        search(arguments, source_loader)
+        self.search(arguments, source_loader)
 
     def run(self):
         """Starts the window and the search."""
