@@ -1,7 +1,8 @@
 import unittest
+import ConfigParser
+
 from utils.configurator import Configurator
 
-import ConfigParser
 
 class TestConfigurator(unittest.TestCase):
 
@@ -21,11 +22,9 @@ class TestConfigurator(unittest.TestCase):
         self.assertEqual(self.conf.scrapy_settings["FEED_URI"], "results.csv")
         self.assertEqual(self.conf.scrapy_settings["FEED_FORMAT"], "csv")
 
-    # def test_start_log(self):
-    #     self.conf.start_log("test.log", True)
-    #     self.conf.start_log("test.log", False)
-    #     self.conf.start_log(None, True)
-    #     self.conf.start_log(None, False)
+    def test_start_log(self):
+        for i in range(0 ,3):
+            self.conf.set_logging()
 
     def test_read_sourceconfiguration(self):
         config = self.conf.read_sourceconfiguration()

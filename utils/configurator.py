@@ -32,7 +32,7 @@ class Configurator:
             self.scrapy_settings.overrides["FEED_FORMAT"] = fileformat
 
 
-    def start_log(self, logfile, verbose):
+    def set_logging(self, logfile, verbose):
         """
         This function changes the default settings of Scapy's logging functionality
         using the settings given by the CLI.
