@@ -1,6 +1,5 @@
 import ConfigParser
 
-from scrapy import log
 from scrapy.utils.project import get_project_settings
 
 
@@ -90,7 +89,6 @@ class Configurator:
         elif config.defaults():
             section = config.defaults()
         if 'reliability' not in section:
-            log.msg('Reliability not set for %s' % sourcename,
-                    level=log.WARNING)
+            print 'Reliability not set for %s' % sourcename
             section['reliability'] = ''
         return section
