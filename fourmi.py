@@ -58,7 +58,7 @@ def search(docopt_arguments, source_loader):
     :param source_loader: An initiated SourceLoader object pointed at the directory with the sources.
     """
     conf = Configurator()
-    conf.start_log(docopt_arguments["--log"], docopt_arguments["-v"])
+    conf.set_logging(docopt_arguments["--log"], docopt_arguments["-v"])
     conf.set_output(docopt_arguments["--output"], docopt_arguments["--format"])
     setup_crawler(docopt_arguments["<compound>"], conf.scrapy_settings, source_loader, docopt_arguments["--attributes"].split(','))
     log.start(conf.scrapy_settings.get("LOG_FILE"), conf.scrapy_settings.get("LOG_LEVEL"), conf.scrapy_settings.get("LOG_STDOUT"))
