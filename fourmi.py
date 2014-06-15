@@ -58,7 +58,7 @@ def search(docopt_arguments, source_loader):
     :param source_loader: An initiated SourceLoader object pointed at the directory with the sources.
     """
     conf = Configurator()
-    conf.start_log(docopt_arguments["--log"], docopt_arguments["--verbose"])
+    conf.start_log(docopt_arguments["--log"], docopt_arguments["-v"])
     conf.set_output(docopt_arguments["--output"], docopt_arguments["--format"])
     setup_crawler(docopt_arguments["<compound>"], conf.scrapy_settings, source_loader, docopt_arguments["--attributes"].split(','))
     reactor.run()
@@ -68,8 +68,6 @@ def search(docopt_arguments, source_loader):
 if __name__ == '__main__':
     arguments = docopt.docopt(__doc__, version='Fourmi - V0.5.0')
     loader = SourceLoader()
-
-    print arguments["-v"]
 
     if arguments["--include"]:
         loader.include(arguments["--include"].split(','))
