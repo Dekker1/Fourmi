@@ -23,8 +23,27 @@ class TestConfigurator(unittest.TestCase):
         self.assertEqual(self.conf.scrapy_settings["FEED_FORMAT"], "csv")
 
     def test_start_log(self):
-        for i in range(0 ,3):
-            self.conf.set_logging()
+        for i in range(0, 3):
+            self.conf.set_logging("TEST", i)
+            self.assertEqual(self.conf.scrapy_settings.get("LOG_FILE"), "TEST")
+            if i > 0:
+                self.assertEqual(self.conf.scrapy_settings.get("LOG_ENABLED"), True)
+                if i > 1:
+                    self.assertEqual(self.conf.scrapy_settings.get("LOG_STDOUT"), False)
+                else:
+                    self.assertEqual(self.conf.scrapy_settings.get("LOG_STDOUT"), True)
+            else:
+                self.assertEqual(self.conf.scrapy_settings.get("LOG_ENABLED"), False)
+                self.assertEqual(self.conf.scrapy_settings.get("LOG_STDOUT"), True)
+            if i == 1:
+                self.assertEqual(self.conf.scrapy_settings.get("LOG_LEVEL"), "WARNING")
+            elif i == 2:
+                self.assertEqual(self.conf.scrapy_settings.get("LOG_LEVEL"), "INFO")
+            elif i == 3:
+                self.assertEqual(self.conf.scrapy_settings.get("LOG_LEVEL"), "DEBUG")
+
+            self.conf.set_logging(verbose=i)
+            self.assertEqual(self.conf.scrapy_settings.get("LOG_FILE"), None)
 
     def test_read_sourceconfiguration(self):
         config = self.conf.read_sourceconfiguration()
