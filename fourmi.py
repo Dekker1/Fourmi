@@ -5,6 +5,7 @@ Fourmi, a web scraper build to search specific information for a given compound 
 Usage:
     fourmi search <compound>
     fourmi [options] search <compound>
+    fourmi [-v | -vv | -vvv] [options] search <compound>
     fourmi [options] [--include=<sourcename> | --exclude=<sourcename>] search <compound>
     fourmi list
     fourmi [--include=<sourcename> | --exclude=<sourcename>] list
@@ -15,7 +16,7 @@ Options:
     --attributes=<regex>            Include only that match these regular expressions split by a comma. [default: .*]
     -h --help                       Show this screen.
     --version                       Show version.
-    --verbose                       Verbose logging output.
+    -v                              Verbose logging output. (Multiple occurrences increase logging level)
     --log=<file>                    Save log to an file.
     -o <file> --output=<file>       Output file [default: results.*format*]
     -f <format> --format=<format>   Output formats (supported: csv, json, jsonlines, xml) [default: csv]
@@ -25,8 +26,7 @@ Options:
 
 from twisted.internet import reactor
 from scrapy.crawler import Crawler
-from scrapy import log, signals
-from scrapy.utils.project import get_project_settings
+from scrapy import signals
 import docopt
 
 from FourmiCrawler.spider import FourmiSpider
@@ -68,6 +68,8 @@ def search(docopt_arguments, source_loader):
 if __name__ == '__main__':
     arguments = docopt.docopt(__doc__, version='Fourmi - V0.5.0')
     loader = SourceLoader()
+
+    print arguments["-v"]
 
     if arguments["--include"]:
         loader.include(arguments["--include"].split(','))
