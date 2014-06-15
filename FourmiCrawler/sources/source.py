@@ -10,6 +10,9 @@ class Source:
         """
         Initiation of a new Source
         """
+        self.cfg = {}
+        if config is not None:
+            self.cfg = config
         pass
 
     def parse(self, response):

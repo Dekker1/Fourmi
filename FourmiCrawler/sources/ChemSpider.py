@@ -28,10 +28,6 @@ class ChemSpider(Source):
 
     def __init__(self, config=None):
         Source.__init__(self, config)
-        if self.cfg is None:
-            self.cfg = {}
-        else:
-            self.cfg = config
         self.ignore_list = []
         if 'token' not in self.cfg or self.cfg['token'] == '':
             log.msg('ChemSpider token not set or empty, search/MassSpec API '

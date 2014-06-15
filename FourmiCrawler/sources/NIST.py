@@ -25,10 +25,6 @@ class NIST(Source):
     def __init__(self, config=None):
         Source.__init__(self, config)
         self.ignore_list = set()
-        if config is None:
-            self.cfg = {}
-        else:
-            self.cfg = config
 
     def parse(self, response):
         sel = Selector(response)

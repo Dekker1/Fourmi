@@ -21,10 +21,6 @@ class WikipediaParser(Source):
 
     def __init__(self, config=None):
         Source.__init__(self, config)
-        if config is None:
-            self.cfg = {}
-        else:
-            self.cfg = config
 
     def parse(self, response):
         """
