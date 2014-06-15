@@ -22,12 +22,13 @@ class NIST(Source):
 
     search = 'cgi/cbook.cgi?Name=%s&Units=SI&cTP=on'
 
-    cfg = {}
-
-    def __init__(self, config={}):
+    def __init__(self, config=None):
         Source.__init__(self, config)
         self.ignore_list = set()
-        self.cfg = config
+        if config is None:
+            self.cfg = {}
+        else:
+            self.cfg = config
 
     def parse(self, response):
         sel = Selector(response)

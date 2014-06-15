@@ -1,9 +1,11 @@
+import re
+
 from scrapy.http import Request
 from scrapy import log
-from source import Source
 from scrapy.selector import Selector
+
+from source import Source
 from FourmiCrawler.items import Result
-import re
 
 
 class WikipediaParser(Source):
@@ -17,11 +19,13 @@ class WikipediaParser(Source):
     __spider = None
     searched_compounds = []
 
-    cfg = {}
 
-    def __init__(self, config={}):
+    def __init__(self, config=None):
         Source.__init__(self, config)
-        self.cfg = config
+        if config is None:
+            self.cfg = {}
+        else:
+            self.cfg = config
 
     def parse(self, response):
         """

@@ -26,9 +26,12 @@ class ChemSpider(Source):
     structure = 'Chemical-Structure.%s.html'
     extendedinfo = 'MassSpecAPI.asmx/GetExtendedCompoundInfo?csid=%s&token='
 
-    def __init__(self, config={}):
+    def __init__(self, config=None):
         Source.__init__(self, config)
-        self.cfg = config
+        if self.cfg is None:
+            self.cfg = {}
+        else:
+            self.cfg = config
         self.ignore_list = []
         if 'token' not in self.cfg or self.cfg['token'] == '':
             log.msg('ChemSpider token not set or empty, search/MassSpec API '

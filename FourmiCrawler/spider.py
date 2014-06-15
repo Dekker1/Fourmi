@@ -10,7 +10,7 @@ class FourmiSpider(Spider):
     """
     name = "FourmiSpider"
 
-    def __init__(self, compound=None, selected_attributes=[".*"], *args, **kwargs):
+    def __init__(self, compound=None, selected_attributes=None, *args, **kwargs):
         """
         Initiation of the Spider
         :param compound: compound that will be searched.
@@ -20,7 +20,10 @@ class FourmiSpider(Spider):
         self.synonyms = set()
         super(FourmiSpider, self).__init__(*args, **kwargs)
         self.synonyms.add(compound)
-        self.selected_attributes = selected_attributes
+        if selected_attributes is None:
+           self.selected_attributes = [".*"]
+        else:
+            self.selected_attributes = selected_attributes
 
     def parse(self, response):
         """

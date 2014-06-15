@@ -6,7 +6,7 @@ class Source:
     website = "http://something/*"  # Regex of URI's the source is able to parse
     _spider = None
 
-    def __init__(self, config={}):
+    def __init__(self, config=None):
         """
         Initiation of a new Source
         """
