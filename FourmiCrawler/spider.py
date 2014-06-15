@@ -21,7 +21,7 @@ class FourmiSpider(Spider):
         super(FourmiSpider, self).__init__(*args, **kwargs)
         self.synonyms.add(compound)
         if selected_attributes is None:
-           self.selected_attributes = [".*"]
+            self.selected_attributes = [".*"]
         else:
             self.selected_attributes = selected_attributes
 

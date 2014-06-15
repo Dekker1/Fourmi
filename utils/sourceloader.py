@@ -5,6 +5,7 @@ import re
 from FourmiCrawler.sources.source import Source
 from utils.configurator import Configurator
 
+
 class SourceLoader:
     sources = []
 

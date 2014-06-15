@@ -12,7 +12,6 @@ class Configurator:
     def __init__(self):
         self.scrapy_settings = get_project_settings()
 
-
     def set_output(self, filename, fileformat):
         """
         This function manipulates the Scrapy output file settings that normally would be set in the settings file.
@@ -30,7 +29,6 @@ class Configurator:
 
         if fileformat is not None:
             self.scrapy_settings.overrides["FEED_FORMAT"] = fileformat
-
 
     def set_logging(self, logfile=None, verbose=0):
         """
@@ -61,7 +59,6 @@ class Configurator:
         else:
             self.scrapy_settings.overrides["LOG_FILE"] = None
 
-
     @staticmethod
     def read_sourceconfiguration():
         """
@@ -70,7 +67,7 @@ class Configurator:
         :return a ConfigParser object of sources.cfg
         """
         config = ConfigParser.ConfigParser()
-        config.read('sources.cfg') # [TODO]: should be softcoded eventually
+        config.read('sources.cfg')  # [TODO]: should be softcoded eventually
         return config
 
     @staticmethod
