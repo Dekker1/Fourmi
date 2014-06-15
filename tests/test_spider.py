@@ -47,7 +47,6 @@ class TestFoumiSpider(unittest.TestCase):
         self.assertGreater(len(requests), 0)
         self.assertIsInstance(requests[0], Request)
 
-
     def test_synonym_requests(self):
         # A test for the synonym request function
         self.spi._sources = []

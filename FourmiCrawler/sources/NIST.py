@@ -22,12 +22,9 @@ class NIST(Source):
 
     search = 'cgi/cbook.cgi?Name=%s&Units=SI&cTP=on'
 
-    cfg = {}
-
-    def __init__(self, config={}):
+    def __init__(self, config=None):
         Source.__init__(self, config)
         self.ignore_list = set()
-        self.cfg = config
 
     def parse(self, response):
         sel = Selector(response)
@@ -88,7 +85,6 @@ class NIST(Source):
         InChiKey, CAS number
         """
         ul = sel.xpath('body/ul[li/strong="IUPAC Standard InChI:"]')
-        li = ul.xpath('li')
 
         raw_synonyms = ul.xpath('li[strong="Other names:"]/text()').extract()
         for synonym in raw_synonyms[0].strip().split(';\n'):
@@ -255,12 +251,13 @@ class NIST(Source):
         return results
 
     def newresult(self, attribute, value, conditions=''):
-        return Result({
-            'attribute': attribute,
-            'value': value,
-            'source': 'NIST',
-            'reliability': self.cfg['reliability'],
-            'conditions': conditions
+        return Result(
+            {
+                'attribute': attribute,
+                'value': value,
+                'source': 'NIST',
+                'reliability': self.cfg['reliability'],
+                'conditions': conditions
             })
 
     def new_compound_request(self, compound):

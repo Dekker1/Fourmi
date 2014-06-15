@@ -1,9 +1,11 @@
+import re
+
 from scrapy.http import Request
 from scrapy import log
-from source import Source
 from scrapy.selector import Selector
+
+from source import Source
 from FourmiCrawler.items import Result
-import re
 
 
 class WikipediaParser(Source):
@@ -17,11 +19,8 @@ class WikipediaParser(Source):
     __spider = None
     searched_compounds = []
 
-    cfg = {}
-
-    def __init__(self, config={}):
+    def __init__(self, config=None):
         Source.__init__(self, config)
-        self.cfg = config
 
     def parse(self, response):
         """
@@ -53,7 +52,7 @@ class WikipediaParser(Source):
         # scrape the chembox (wikipedia template)
         items = self.parse_chembox(sel, items)
 
-        #scrape the drugbox (wikipedia template)
+        # scrape the drugbox (wikipedia template)
         items = self.parse_drugbox(sel, items)
 
         items = filter(lambda a: a['value'] != '', items)  # remove items with an empty value
@@ -123,7 +122,6 @@ class WikipediaParser(Source):
                     level=log.DEBUG)
         return items
 
-
     def new_compound_request(self, compound):
         return Request(url=self.website[:-1] + compound, callback=self.parse)
 
@@ -161,10 +159,11 @@ class WikipediaParser(Source):
         return links
 
     def newresult(self, attribute, value):
-        return Result({
-            'attribute': attribute,
-            'value': value,
-            'source': 'Wikipedia',
-            'reliability': self.cfg['reliability'],
-            'conditions': ''
+        return Result(
+            {
+                'attribute': attribute,
+                'value': value,
+                'source': 'Wikipedia',
+                'reliability': self.cfg['reliability'],
+                'conditions': ''
             })

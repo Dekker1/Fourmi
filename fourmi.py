@@ -5,6 +5,7 @@ Fourmi, a web scraper build to search specific information for a given compound 
 Usage:
     fourmi search <compound>
     fourmi [options] search <compound>
+    fourmi [-v | -vv | -vvv] [options] search <compound>
     fourmi [options] [--include=<sourcename> | --exclude=<sourcename>] search <compound>
     fourmi list
     fourmi [--include=<sourcename> | --exclude=<sourcename>] list
@@ -15,7 +16,7 @@ Options:
     --attributes=<regex>            Include only that match these regular expressions split by a comma. [default: .*]
     -h --help                       Show this screen.
     --version                       Show version.
-    --verbose                       Verbose logging output.
+    -v                              Verbose logging output. (Multiple occurrences increase logging level)
     --log=<file>                    Save log to an file.
     -o <file> --output=<file>       Output file [default: results.*format*]
     -f <format> --format=<format>   Output formats (supported: csv, json, jsonlines, xml) [default: csv]
@@ -25,8 +26,7 @@ Options:
 
 from twisted.internet import reactor
 from scrapy.crawler import Crawler
-from scrapy import log, signals
-from scrapy.utils.project import get_project_settings
+from scrapy import signals, log
 import docopt
 
 from FourmiCrawler.spider import FourmiSpider
@@ -58,9 +58,12 @@ def search(docopt_arguments, source_loader):
     :param source_loader: An initiated SourceLoader object pointed at the directory with the sources.
     """
     conf = Configurator()
-    conf.start_log(docopt_arguments["--log"], docopt_arguments["--verbose"])
+    conf.set_logging(docopt_arguments["--log"], docopt_arguments["-v"])
     conf.set_output(docopt_arguments["--output"], docopt_arguments["--format"])
-    setup_crawler(docopt_arguments["<compound>"], conf.scrapy_settings, source_loader, docopt_arguments["--attributes"].split(','))
+    setup_crawler(docopt_arguments["<compound>"], conf.scrapy_settings,
+                  source_loader, docopt_arguments["--attributes"].split(','))
+    log.start(conf.scrapy_settings.get("LOG_FILE"),
+              conf.scrapy_settings.get("LOG_LEVEL"), conf.scrapy_settings.get("LOG_STDOUT"))
     reactor.run()
 
 
