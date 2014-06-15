@@ -89,6 +89,6 @@ class Configurator:
         elif config.defaults():
             section = config.defaults()
         if 'reliability' not in section:
-            print 'Reliability not set for %s' % sourcename
+            print 'WARNING: Reliability not set for %s' % sourcename
             section['reliability'] = ''
         return section
