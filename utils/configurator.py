@@ -1,6 +1,7 @@
-from scrapy import log
-from scrapy.utils.project import get_project_settings
 import ConfigParser
+
+from scrapy.utils.project import get_project_settings
+
 
 class Configurator:
     """
@@ -10,7 +11,6 @@ class Configurator:
 
     def __init__(self):
         self.scrapy_settings = get_project_settings()
-
 
     def set_output(self, filename, fileformat):
         """
@@ -30,23 +30,34 @@ class Configurator:
         if fileformat is not None:
             self.scrapy_settings.overrides["FEED_FORMAT"] = fileformat
 
-
-    def start_log(self, logfile, verbose):
+    def set_logging(self, logfile=None, verbose=0):
         """
-        This function starts the logging functionality of Scrapy using the settings given by the CLI.
+        This function changes the default settings of Scapy's logging functionality
+        using the settings given by the CLI.
         :param logfile: The location where the logfile will be saved.
-        :param verbose: A boolean value to switch between loglevels.
+        :param verbose: A integer value to switch between loglevels.
         """
-        if logfile is not None:
-            if verbose:
-                log.start(logfile=logfile, logstdout=False, loglevel=log.DEBUG)
-            else:
-                log.start(logfile=logfile, logstdout=True, loglevel=log.WARNING)
+        if verbose != 0:
+            self.scrapy_settings.overrides["LOG_ENABLED"] = True
         else:
-            if verbose:
-                log.start(logstdout=False, loglevel=log.DEBUG)
-            else:
-                log.start(logstdout=True, loglevel=log.WARNING)
+            self.scrapy_settings.overrides["LOG_ENABLED"] = False
+
+        if verbose == 1:
+            self.scrapy_settings.overrides["LOG_LEVEL"] = "WARNING"
+        elif verbose == 2:
+            self.scrapy_settings.overrides["LOG_LEVEL"] = "INFO"
+        else:
+            self.scrapy_settings.overrides["LOG_LEVEL"] = "DEBUG"
+
+        if verbose > 1:
+            self.scrapy_settings.overrides["LOG_STDOUT"] = False
+        else:
+            self.scrapy_settings.overrides["LOG_STDOUT"] = True
+
+        if logfile is not None:
+            self.scrapy_settings.overrides["LOG_FILE"] = logfile
+        else:
+            self.scrapy_settings.overrides["LOG_FILE"] = None
 
     @staticmethod
     def read_sourceconfiguration():
@@ -56,7 +67,7 @@ class Configurator:
         :return a ConfigParser object of sources.cfg
         """
         config = ConfigParser.ConfigParser()
-        config.read('sources.cfg') # [TODO]: should be softcoded eventually
+        config.read('sources.cfg')  # [TODO]: should be softcoded eventually
         return config
 
     @staticmethod
@@ -75,7 +86,6 @@ class Configurator:
         elif config.defaults():
             section = config.defaults()
         if 'reliability' not in section:
-            log.msg('Reliability not set for %s' % sourcename,
-                    level=log.WARNING)
+            print 'WARNING: Reliability not set for %s' % sourcename
             section['reliability'] = ''
         return section

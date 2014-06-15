@@ -23,21 +23,21 @@ documentation](http://doc.scrapy.org/en/latest/index.html).
 
 ### Installing 
 
-If you're installing Fourmi, please take a look at our [installation guide](...)
-on our wiki. When you've installed the application, make sure to check our
-[usage guide](...).
+If you're installing Fourmi, please take a look at our installation guides
+on our [wiki](https://github.com/jjdekker/Fourmi/wiki). When you've installed the application, make sure to check our
+usage guide on the [Command Line Interface](https://github.com/jjdekker/Fourmi/wiki/CLI) and on the [Graphical User Interface](https://github.com/jjdekker/Fourmi/wiki/GUI).
 
 ### Using the Source
 
 To use the Fourmi source code multiple dependencies are required. Take a look at
-the [wiki page](...) on using the application source code for a step by step
+our [wiki pages](https://github.com/jjdekker/Fourmi/wiki) on using the application source code in our a step by step
 installation guide.
 
 When developing for the Fourmi project keep in mind that code readability is a
 must. To maintain the readability, code should be conform with the
 [PEP-8](http://legacy.python.org/dev/peps/pep-0008/) style guide for Python
 code. More information about the different structures and principles of the
-Fourmi application can be found on our [wiki](...).
+Fourmi application can be found on our [wiki](https://github.com/jjdekker/Fourmi/wiki).
 
 ### To Do
 
@@ -45,13 +45,9 @@ The Fourmi project has the following goals for the nearby future:
 
 __Main goals:__
 
-- Improve our documentation and guides. (Assignee: Dekker)
 - Build an graphical user interface(GUI) as alternative for the command line
 interface(CLI). (Assignee: Harmen)
 - Compiling the source into an windows executable. (Assignee: Bas)
-- Create an configuration file to hold logins and API keys.
-- Determine reliability of our data point.
-- Create an module to gather data from NIST. (Assignee: Rob)
 - Create an module to gather data from PubChem. (Assignee: Nout)
 
 __Side goals:__
