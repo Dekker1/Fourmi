@@ -9,9 +9,11 @@ import re
 class PubChem(Source):
     """ PubChem scraper for chemical properties
 
-        This parser parses the part on PubChem pages that gives Chemical and Physical properties of a substance.
+        This parser parses the part on PubChem pages that gives Chemical and Physical properties of a substance,
+        including sources of the values of properties.
     """
 
+    #PubChem has its data on compound name, properties and their values on different html pages, so different URLs used
     website = 'https://*.ncbi.nlm.nih.gov/*'
     website_www = 'https://www.ncbi.nlm.nih.gov/*'
     website_pubchem = 'https://pubchem.ncbi.nlm.nih.gov/*'
@@ -26,7 +28,11 @@ class PubChem(Source):
         self.cfg = config
 
     def parse(self, response):
-        """ Distributes the above described behaviour """
+        """
+        Distributes the above described behaviour
+        :param response: The incoming search request
+        :return Returns the found properties if response is unique or returns none if it's already known
+        """
         requests = []
         log.msg('A response from %s just arrived!' % response.url, level=log.DEBUG)
 
@@ -46,12 +52,19 @@ class PubChem(Source):
         n = re.search(r'cid=(\d+)',response.url)
         if n:
             cid = n.group(1)
-        log.msg('cid: %s' % cid, level=log.DEBUG)
-        requests.append(Request(url=self.website_pubchem[:-1] + self.data_url % cid, callback=self.parse_data))
+        log.msg('cid: %s' % cid, level=log.DEBUG)   #getting the right id of the compound with which it can reach
+                                                # the seperate html page which contains the properties and their values
 
+        #using this cid to get the right url and scrape it
+        requests.append(Request(url=self.website_pubchem[:-1] + self.data_url % cid, callback=self.parse_data))
         return requests
 
     def parse_data(self, response):
+        """
+        Parse data found in 'Chemical and Physical properties' part of a substance page.
+        :param response: The response with the page to parse
+        :return: requests: Returns a list of properties with their values, source, etc.
+        """
         log.msg('parsing data', level=log.DEBUG)
         requests = []
 
@@ -59,8 +72,8 @@ class PubChem(Source):
         props = sel.xpath('//div')
 
         for prop in props:
-            prop_name = ''.join(prop.xpath('b/text()').extract())
-            if prop.xpath('a'):
+            prop_name = ''.join(prop.xpath('b/text()').extract()) # name of property that it is parsing
+            if prop.xpath('a'):     # parsing for single value in property
                 prop_source = ''.join(prop.xpath('a/@title').extract())
                 prop_value = ''.join(prop.xpath('a/text()').extract())
                 new_prop = Result({
@@ -70,8 +83,11 @@ class PubChem(Source):
                     'reliability': 'Unknown',
                     'conditions': ''
                 })
+                log.msg('PubChem prop: |%s| |%s| |%s|' %
+                        (new_prop['attribute'], new_prop['value'],
+                         new_prop['source']), level=log.DEBUG)
                 requests.append(new_prop)
-            elif prop.xpath('ul'):
+            elif prop.xpath('ul'):    # parsing for multiple values (list) in property
                 prop_values = prop.xpath('ul//li')
                 for prop_li in prop_values:
                     prop_value = ''.join(prop_li.xpath('a/text()').extract())
@@ -83,6 +99,9 @@ class PubChem(Source):
                         'reliability': 'Unknown',
                         'conditions': ''
                     })
+                    log.msg('PubChem prop: |%s| |%s| |%s|' %
+                        (new_prop['attribute'], new_prop['value'],
+                         new_prop['source']), level=log.DEBUG)
                     requests.append(new_prop)
 
         return requests
