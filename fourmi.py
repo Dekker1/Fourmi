@@ -5,8 +5,7 @@ Fourmi, a web scraper build to search specific information for a given compound 
 Usage:
     fourmi search <compound>
     fourmi [options] search <compound>
-    fourmi [-v | -vv | -vvv] [options] search <compound>
-    fourmi [options] [--include=<sourcename> | --exclude=<sourcename>] search <compound>
+    fourmi [options] [-v | -vv | -vvv] [--include=<sourcename> | --exclude=<sourcename>] search <compound>
     fourmi list
     fourmi [--include=<sourcename> | --exclude=<sourcename>] list
     fourmi -h | --help
@@ -62,14 +61,15 @@ def search(docopt_arguments, source_loader):
     conf.set_output(docopt_arguments["--output"], docopt_arguments["--format"])
     setup_crawler(docopt_arguments["<compound>"], conf.scrapy_settings,
                   source_loader, docopt_arguments["--attributes"].split(','))
-    log.start(conf.scrapy_settings.get("LOG_FILE"),
+    if conf.scrapy_settings.getbool("LOG_ENABLED"):
+        log.start(conf.scrapy_settings.get("LOG_FILE"),
               conf.scrapy_settings.get("LOG_LEVEL"), conf.scrapy_settings.get("LOG_STDOUT"))
     reactor.run()
 
 
 # The start for the Fourmi Command Line interface.
 if __name__ == '__main__':
-    arguments = docopt.docopt(__doc__, version='Fourmi - V0.5.2')
+    arguments = docopt.docopt(__doc__, version='Fourmi - V0.5.3')
     loader = SourceLoader()
 
     if arguments["--include"]:

@@ -18,8 +18,10 @@ ITEM_PIPELINES = {
 FEED_URI = 'results.json'
 FEED_FORMAT = 'jsonlines'
 
-
 # Crawl responsibly by identifying yourself (and your website) on the
 # user-agent
 
+# [todo] - Check for repercussions on spoofing the user agent
+
 # USER_AGENT = 'FourmiCrawler (+http://www.yourdomain.com)'
+USER_AGENT = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/34.0.1847.137 Safari/537.36'
