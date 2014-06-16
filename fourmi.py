@@ -5,8 +5,7 @@ Fourmi, a web scraper build to search specific information for a given compound 
 Usage:
     fourmi search <compound>
     fourmi [options] search <compound>
-    fourmi [-v | -vv | -vvv] [options] search <compound>
-    fourmi [options] [--include=<sourcename> | --exclude=<sourcename>] search <compound>
+    fourmi [options] [-v | -vv | -vvv] [--include=<sourcename> | --exclude=<sourcename>] search <compound>
     fourmi list
     fourmi [--include=<sourcename> | --exclude=<sourcename>] list
     fourmi -h | --help
