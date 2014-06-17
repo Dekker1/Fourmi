@@ -31,8 +31,11 @@ class ConfigImporter():
             return 'Name, Weight'
 
 class GUI():
-    def __init__(self, search, config_file='GUI/gui.cfg', sourceloader = None):
+    def __init__(self, search, config_file='GUI/gui.cfg', sourceloader = None, in_source=True):
         """Boots the window, configuration."""
+        if in_source:
+            current_dir = os.path.dirname(os.path.abspath(__file__))
+            config_file = current_dir + '/' + config_file
         self.configurator = ConfigImporter(config_file)
         self.sourceloader = sourceloader
         self.finish_with_search = False
