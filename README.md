@@ -48,7 +48,6 @@ __Main goals:__
 - Build an graphical user interface(GUI) as alternative for the command line
 interface(CLI). (Assignee: Harmen)
 - Compiling the source into an windows executable. (Assignee: Bas)
-- Create an module to gather data from PubChem. (Assignee: Nout)
 
 __Side goals:__
 
