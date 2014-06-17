@@ -1,0 +1,19 @@
+[DEFAULT]
+reliability = Unknown
+
+#For each source listed in FourmiCrawler/sources there should be a section
+#named exactly as the filename in here. If not present, the DEFAULT value is 
+#used for reliability of that source.
+
+[ChemSpider]
+reliability = High
+#token=Paste ChemSpider API token here and remove the hashtag
+
+[NIST]
+reliability = High
+
+[WikipediaParser]
+reliability = Medium
+
+[PubChem]
+reliability = High
