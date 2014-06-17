@@ -3,6 +3,7 @@
 Fourmi, a web scraper build to search specific information for a given compound (and it's pseudonyms).
 
 Usage:
+    fourmi
     fourmi search <compound>
     fourmi [options] search <compound>
     fourmi [options] [--include=<sourcename> | --exclude=<sourcename>] search <compound>
@@ -24,14 +25,15 @@ Options:
 """
 
 from twisted.internet import reactor
+
 from scrapy.crawler import Crawler
-from scrapy import log, signals
-from scrapy.utils.project import get_project_settings
+from scrapy import signals
 import docopt
 
 from FourmiCrawler.spider import FourmiSpider
 from utils.configurator import Configurator
 from utils.sourceloader import SourceLoader
+from GUI import gui
 
 
 def setup_crawler(compound, settings, source_loader, attributes):
@@ -79,3 +81,6 @@ if __name__ == '__main__':
     elif arguments["list"]:
         print "-== Available Sources ==-"
         print str(loader)
+    else:
+        gui_window = gui.GUI(search, sourceloader=SourceLoader())
+        gui_window.run()
