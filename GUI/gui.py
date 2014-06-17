@@ -108,6 +108,16 @@ class GUI():
 
         frame_all_attributes.pack()
 
+        frame_output_name = Frame(window)
+        output_name = StringVar()
+        output_name.set("results")
+        variables.update({'output_name': output_name})
+        label_output_name = Label(frame_output_name, text="Output name:")
+        input_output_name = Entry(frame_output_name, font=("Helvetica", 12), width=25, textvariable=output_name)
+        frame_output_name.pack()
+        label_output_name.pack()
+        input_output_name.pack()
+
         if output_types and len(output_types) == 1:
             output_type = StringVar()
             output_type.set(output_types[0])
@@ -117,7 +127,7 @@ class GUI():
             output_type.set(output_types[0] if output_types and len(output_types) != 0 else "json")
             variables.update({"output_type": output_type})
             frame_output_type = Frame(window)
-            label_output_type = Label(frame_output_type, text="Output: ")
+            label_output_type = Label(frame_output_type, text="Extension: ")
             if output_types and len(output_types) > 0:
                 input_output_type = OptionMenu(frame_output_type, output_type, *output_types)
             else:
