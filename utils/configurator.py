@@ -1,7 +1,7 @@
 import ConfigParser
 
 from scrapy.utils.project import get_project_settings
-
+import os
 
 class Configurator:
     """
@@ -66,8 +66,11 @@ class Configurator:
         variables for sources
         :return a ConfigParser object of sources.cfg
         """
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        config_path = current_dir + '\..\sources.cfg'
+        # [TODO]: location of sources.cfg should be softcoded eventually
         config = ConfigParser.ConfigParser()
-        config.read('sources.cfg')  # [TODO]: should be softcoded eventually
+        config.read(config_path)
         return config
 
     @staticmethod
