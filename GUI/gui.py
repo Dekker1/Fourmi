@@ -1,38 +1,11 @@
 from Tkinter import *
 import os
 
-class ConfigImporter():
-    def __init__(self, filename):
-        """Read the filename into the parser."""
-        import ConfigParser
-        self.filename = filename
-        self.parser = ConfigParser.ConfigParser()
-        self.parser.read(self.filename)
+from configImporter import *
 
-
-    def load_common_attributes(self):
-        """Loads common attributes from the initialized file."""
-        try:
-            return self.parser.get('GUI_Options', 'CommonParameters')
-        except:
-            return 'One, Two, Three'
-
-    def load_output_types(self):
-        """Loads output types from the initialized file."""
-        try:
-            return self.parser.get('GUI_Options', 'OutputTypes')
-        except:
-            return 'csv'
-
-    def load_always_attributes(self):
-        """Loads attributes that are always searched for from the initialized file."""
-        try:
-            return self.parser.get('GUI_Options', 'AlwaysParameters')
-        except:
-            return 'Name, Weight'
 
 class GUI():
-    def __init__(self, search, config_file='GUI/gui.cfg', sourceloader = None, in_source=True):
+    def __init__(self, search, config_file='GUI/gui.cfg', sourceloader=None, in_source=True):
         """Boots the window, configuration."""
         if in_source:
             current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -168,7 +141,7 @@ class GUI():
                 print "No known class, {}, {}".format(name, var)
 
         self.values = values
-        if all([values.get(i)!='' for i in self.required_variables]):
+        if all([values.get(i) != '' for i in self.required_variables]):
             self.finish_with_search = True
             self.window.destroy()
         else:
