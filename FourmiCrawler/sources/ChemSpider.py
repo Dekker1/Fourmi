@@ -240,10 +240,6 @@ class ChemSpider(Source):
         return properties
 
     def newresult(self, attribute, value, conditions='', source='ChemSpider'):
-<<<<<<< HEAD
-        return Result(
-            {
-=======
         """
         This function abstracts from the Result item and provides default 
         values.
@@ -254,7 +250,6 @@ class ChemSpider(Source):
         :return: A Result item
         """
         return Result({
->>>>>>> feature/ChemSpider-cleanup
                 'attribute': attribute,
                 'value': value,
                 'source': source,

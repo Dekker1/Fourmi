@@ -13,8 +13,8 @@ from FourmiCrawler.items import Result
 # Result item, but should be included eventually.
 
 class NIST(Source):
-    """NIST Scraper plugin
-
+    """
+    NIST Scraper plugin
     This plugin manages searching for a chemical on the NIST website
     and parsing the resulting page if the chemical exists on NIST.
     """
@@ -23,10 +23,21 @@ class NIST(Source):
     search = 'cgi/cbook.cgi?Name=%s&Units=SI&cTP=on'
 
     def __init__(self, config=None):
+        """
+        Initialization of NIST scraper
+        :param config: configuration variables for this scraper, must contain 
+        'reliability' key.
+        """
         Source.__init__(self, config)
         self.ignore_list = set()
 
     def parse(self, response):
+        """
+        This function is called when a Response matching the variable 
+        'website' is available for parsing the Response object.
+        :param response: The Scrapy Response object to be parsed
+        :return: a list of Result items and Request objects
+        """
         sel = Selector(response)
 
         title = sel.xpath('head/title/text()').extract()[0]
@@ -50,6 +61,21 @@ class NIST(Source):
             symbol_table[symbol] = name
             log.msg('NIST symbol: |%s|, name: |%s|' % (symbol, name),
                     level=log.DEBUG)
+
+        requests.extend(self.parse_tables(sel, symbol_table))
+
+        return requests
+
+    def parse_tables(self, sel, symbol_table):
+        """
+        This function identifies and distributes parsing of tables to other 
+        functions below.
+        :param sel: A Selector object of the whole page
+        :param symbol_table: a dictionary containing translations of raw HTML 
+        tags to human readable names
+        :return: a list of Result items and Requests
+        """
+        requests = []
 
         for table in sel.xpath('//table[@class="data"]'):
             summary = table.xpath('@summary').extract()[0]
@@ -81,8 +107,12 @@ class NIST(Source):
         return requests
 
     def parse_generic_info(self, sel):
-        """Parses: synonyms, chemical formula, molecular weight, InChI,
-        InChiKey, CAS number
+        """
+        This function parses: synonyms, chemical formula, molecular weight, 
+        InChI, InChiKey, CAS number
+        :param sel: A Selector object of the entire page in the original 
+        response
+        :return: a list of Result items
         """
         ul = sel.xpath('body/ul[li/strong="IUPAC Standard InChI:"]')
 
@@ -121,8 +151,13 @@ class NIST(Source):
         return requests
 
     def parse_aggregate_data(self, table, symbol_table):
-        """Parses the table(s) which contain possible links to individual
-        data points
+        """
+        This function parses the table(s) which contain possible links to 
+        individual data points
+        :param table: a Selector object of the table to be parsed
+        :param symbol_table: a dictionary containing translations of raw HTML 
+        tags to human readable names
+        :return: a list of Result items and Request objects
         """
         results = []
         for tr in table.xpath('tr[td]'):
@@ -155,14 +190,16 @@ class NIST(Source):
         return results
 
     def parse_transition_data(self, table, summary):
-        """Parses the table containing properties regarding phase changes"""
+        """
+        This function parses the table containing properties regarding phase 
+        changes
+        :param table: a Selector object of the table to be parsed
+        :param summary: the name of the property
+        :return: a list of Result items
+        """
         results = []
 
-        tr_unit = ''.join(table.xpath('tr[1]/th[1]/node()').extract())
-        m = re.search(r'\((.*)\)', tr_unit)
-        unit = '!'
-        if m:
-            unit = m.group(1)
+        unit = self.get_unit(table)
 
         for tr in table.xpath('tr[td]'):
             tds = tr.xpath('td/text()').extract()
@@ -176,18 +213,18 @@ class NIST(Source):
         return results
 
     def parse_generic_data(self, table, summary):
-        """Parses the common tables of 4 and 5 rows. Assumes they are of the
+        """
+        Parses the common tables of 4 and 5 rows. Assumes they are of the
         form:
         Symbol (unit)|Temperature (K)|Method|Reference|Comment
         Symbol (unit)|Temperature (K)|Reference|Comment
+        :param table: a Selector object of the table to be parsed
+        :param summary: the name of the property
+        :return: a list of Result items
         """
         results = []
 
-        tr_unit = ''.join(table.xpath('tr[1]/th[1]/node()').extract())
-        m = re.search(r'\((.*)\)', tr_unit)
-        unit = '!'
-        if m:
-            unit = m.group(1)
+        unit = self.get_unit(table)
 
         for tr in table.xpath('tr[td]'):
             tds = tr.xpath('td/text()').extract()
@@ -200,7 +237,13 @@ class NIST(Source):
         return results
 
     def parse_antoine_data(self, table, summary):
-        """Parse table containing parameters for the Antione equation"""
+        """
+        This function parses the table containing parameters for the Antione 
+        equation
+        :param table: a Selector object of the table to be parsed
+        :param summary: the name of the property
+        :return: a list of Result items
+        """
         results = []
 
         for tr in table.xpath('tr[td]'):
@@ -215,7 +258,12 @@ class NIST(Source):
         return results
 
     def parse_individual_datapoints(self, response):
-        """Parses the page linked from aggregate data"""
+        """
+        This function parses the 'individual data points' page linked from 
+        the aggregate data table(s)
+        :param response: the Scrapy Response object to be parsed
+        :return: a list of Result items
+        """
         sel = Selector(response)
         table = sel.xpath('//table[@class="data"]')[0]
 
@@ -228,11 +276,7 @@ class NIST(Source):
             name = m.group(1)
             condition = m.group(2)
 
-        tr_unit = ''.join(table.xpath('tr[1]/th[1]/node()').extract())
-        m = re.search(r'\((.*)\)', tr_unit)
-        unit = '!'
-        if m:
-            unit = m.group(1)
+        unit = self.get_unit(table)
 
         for tr in table.xpath('tr[td]'):
             tds = tr.xpath('td/text()').extract()
@@ -250,17 +294,39 @@ class NIST(Source):
 
         return results
 
+    @staticmethod
+    def get_unit(table):
+        tr_unit = ''.join(table.xpath('tr[1]/th[1]/node()').extract())
+        m = re.search(r'\((.*)\)', tr_unit)
+        unit = '!'
+        if m:
+            unit = m.group(1)
+
+        return unit
+
     def newresult(self, attribute, value, conditions=''):
-        return Result(
-            {
-                'attribute': attribute,
-                'value': value,
-                'source': 'NIST',
-                'reliability': self.cfg['reliability'],
-                'conditions': conditions
+        """
+        This function abstracts from the Result item and provides default 
+        values
+        :param attribute: the name of the attribute
+        :param value: the value of the attribute
+        :param conditions: optional conditions regarding the value
+        :return: A Result item
+        """
+        return Result({
+            'attribute': attribute,
+            'value': value,
+            'source': 'NIST',
+            'reliability': self.cfg['reliability'],
+            'conditions': conditions
             })
 
     def new_compound_request(self, compound):
+        """
+        This function is called when a new synonym is returned to the spider 
+        to generate new requests
+        :param compound: the name of the compound to search for
+        """
         if compound not in self.ignore_list:
             self.ignore_list.update(compound)
             return Request(url=self.website[:-1] + self.search % compound,
