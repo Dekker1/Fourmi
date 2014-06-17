@@ -13,6 +13,7 @@ class TestPipelines(unittest.TestCase):
     def test_none_pipeline(self):
         # Testing the pipeline that replaces the None values in items.
         self.testItem["value"] = "abc"
+        self.testItem["source"] = None
         pipe = pipelines.RemoveNonePipeline()
         processed = pipe.process_item(self.testItem, spider.FourmiSpider())
 
