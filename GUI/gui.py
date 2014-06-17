@@ -189,7 +189,7 @@ class GUI():
                      '--help': False,
                      '--include': None,
                      '--log': 'log.txt',
-                     '--output': 'results.*format*',
+                     '--output': '{}.{}'.format(self.values.get('output_name'), self.values.get('output_type')),
                      '--verbose': True,
                      '--version': False,
                      '<compound>': self.values.get('substance'),
