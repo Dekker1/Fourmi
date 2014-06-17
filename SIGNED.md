@@ -3,19 +3,19 @@
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1.4.11 (GNU/Linux)
 
-iQIcBAABAgAGBQJTnfIhAAoJEJrQ9RIUCT6/SbIQANKLzmkxwH11vM84kkRbmgHE
-d3jLYYNEDQArCTOObYxvyrvE0BK2fhzbdBfccO9rLqu19FnBhcN3WLbkb/WM+2af
-G8GkC7yFsWPs1lkrBbouvObPmqwVChGhRETd7xNU6D1NRGKLDT9lXv1FkjU2qt6P
-CQwF129aTRzCZ9XGoVKG9wnKuaPm2EYkYHKlG3eck+eeKklTlmJcGi5ON7iGsUpE
-hNVrSg8WwN4SzpOEgXlyBn9Zzci81XeZqy3Fnp7u1CEq5tOuWITXa1i5wQ9Jq/2n
-5HP0XLbY5grW6Cpqh5jDUiX/XnNtCwpPWRnz4lCLswwMIDLCpq5tJubIay7GMvsx
-fV1+UUGAR1EcWNWI0R6XJNbb2EHzidDJcLWlVo1InJDxevECq3CNnh7fRC9bixiG
-EV0C/Abig/rvyX5cc9ozmwO3e0gzmtwwyywxOWLzJgVns3jfuA9MhaGDczIC1kuR
-Tig9ciByErhT6v8SjgS3gyhWc+tRSx5R3M1Y78CungW3c61VA3Jo/fWHY6Db0JwH
-9lVnGU4Ql4mbQQQAv7e/6r6ZhYwoBsAkOKdqT4Dn8aLaItZ8+oB2FXEl/P6V55hN
-ambDSt476mwJcyDyIIwxTLyqcop2zYBdaUATe8lwo+0OoXuCLfjnThkHzy2dA0CP
-xqHuzkM3Pdb6qOU3cUK7
-=PVt+
+iQIcBAABAgAGBQJTn3GgAAoJEJrQ9RIUCT6/CI4P/RSAQrd6JugGZoQu/gNdW6eB
+MYCybqYGZiieVhUaGOnFNVlp68YpXH+sP/Uc6hXEX30UQEsDmhMeT5NA7ZMS+zJ9
+MNHGQdJq22lGb3+VoVBV4RTMdkQXOXvx6p5biskjIEtM3tfTxP529GvAX2TFUNnt
+gGWk28EDr30M95XwDxwWo+57Xv8VtSb3VSvXEbrdwGYf8EoQo9oPtzYQ0YcdupcC
+ET8bukYVcwpAjoTnPlEy89TiHHohwmimr2ASXeQ64Ks5wfjzcF7NENCAmaAfR+KI
+VLLuGqdWMBx1ewVuAXTCZ0Mga/kBoRUaO0PC13UmL8LhhZY9Z3cwD4UnPU35/RQi
+IbLfQcZHf/gEvyMeiTYCsyWpm+/xxn1+EfHol4/Q9VSXzZgRBX05Ik6tqeCvjdgG
+4PyHBaJTTm/HfMNdg3mr1mbyjTv5UxglEyPv+Y4NdfoVfepkXsXbzvNSyVffZ3Bw
+UaFp7KzIC4Jugdpv63FleiAdDY0+iZ5shH86wD1+HJ0/a87kn5Ao1yESby7J7U+f
+poZQYeMFeuC0T5hY/3iYoyvZ68oH918ESESiucSulp5BvfwuqGL2+xo5uJIwGYXE
+3IDQC7xbA14JHX86IVJlSHAD33iWyiC+5yjw4/bRRVl37KPsLdHiXH3YIRnF5I2I
+ZbM/uDYyJdZbBe4UoCoF
+=AMhi
 -----END PGP SIGNATURE-----
 
 ```
@@ -31,22 +31,23 @@ size  exec  file                      contents
             ./                                                                                        
 375           .gitignore              d2e475a6a4fa51422cac0a07495914e776858fb9ab9c8937a4d491a3e042d6b1
 464           .travis.yml             3063ba078607b8d16bd6467afc15fbbaa4b26c1e30be5ce7cef453cfccbaa95c
-208           Changelog.md            370ecb699890e839e73e22822286b2b2ee7e7ec6c485908e10b8c30e7f9acd47
+428           Changelog.md            c7791d1914ddca9ff1549d90468a79787a7feafe94cecd756e3d7cbd4bcbc7df
               FourmiCrawler/                                                                          
 0               __init__.py           e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
 304             items.py              b00d49a3d53fa13306c7f8b023adb93ab88423c4fce46600689814f6b02bb806
 2178            pipelines.py          f9b7b84938060751e15e45de5133dffe50c798bff2a20019206fe7c9d677ad49
-716             settings.py           37a8f63e123bccc77076d574617a522b30c1d7c5e893ec3d78cc40e1563dd8a6
+914             settings.py           0be2eaf8e83e85ed27754c896421180fc80cb5ce44449aa9f1048e465d1a96f2
                 sources/                                                                              
 9991              ChemSpider.py       847013e34c5c3683ec66a337837287512b4bab9fbea2ece12e4130ab0dbf264d
 9898              NIST.py             97abc84fce85c47b789822715a1945ab84cc052a32340c861141c1af66bab644
+4754              PubChem.py          58ed4c92519e385f2768cf8034b006b18f8a21632cb1c5a0849b1a329a8c6ffb
 6907              WikipediaParser.py  5d6de911c773129a34b76c40a9b547aafc67644a15f39cd0be6afc7a16fb0f97
 0                 __init__.py         e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
 1262              source.py           16c4cdfca849b7dc2bc89d7a6f7ad021f4aa1d04234394312f1d0edf0fd9c5a4
 3026            spider.py             1ffba2512988b7a6b535a4a31a4ef688ece4f8c595c3d50355c34ef46b23e44a
 1081          LICENSE                 36951e5f1910bad3e008ab7228f35ad8933192e52d3c3ae6a5e875765e27192c
 3965          README.md               d21236d6a175be28ef8e2fee8a256e95b6a513163e3f1071c26c62e9093db7f3
-3659  x       fourmi.py               7b4202ecfc8726fcc3f211c459aada7f5610fa4c4c0a7b916e44fc12d71010a1
+3676  x       fourmi.py               2ff89f97fd2a49d08417d9ab6cf08e88944d0c45f54ec84550b530be48676c23
 261           scrapy.cfg              624c068fd06303daa65b8e0d0d3ef88ac1f123be2694ef5b4f3f9a9dcd983f85
               tests/                                                                                  
 1               __init__.py           01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b
