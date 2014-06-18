@@ -113,7 +113,7 @@ class GUI():
         frame_checkboxes = Frame(window)
         frame_checkbox_attributes = Frame(frame_checkboxes)
         variable_all_attributes = BooleanVar()
-        variable_all_attributes.set(False)
+        variable_all_attributes.set(True)
         input_all_attributes = Checkbutton(frame_checkbox_attributes, text="Search ALL parameters",
                                            variable=variable_all_attributes)
         variables.update({"all_attributes": variable_all_attributes})
@@ -122,9 +122,8 @@ class GUI():
 
         frame_logging = Frame(frame_checkboxes)
         variable_logging = BooleanVar()
-        variable_logging.set(True)
-        input_logging = Checkbutton(frame_logging, text="Verbose logging",
-                                    variable=variable_logging, onvalue=False, offvalue=True)
+        variable_logging.set(False)
+        input_logging = Checkbutton(frame_logging, text="Verbose logging", variable=variable_logging)
         variables.update({'logging':variable_logging})
         frame_logging.pack(side=RIGHT)
         frame_checkboxes.pack(side=BOTTOM)
@@ -174,7 +173,7 @@ class GUI():
                      '--include': None,
                      '--log': 'log.txt',
                      '--output': '{}.{}'.format(self.values.get('output_name'), self.values.get('output_type')),
-                     '-v': self.values.get('logging'),
+                     '-v': 0 if self.values.get('logging') else 3,
                      '--version': False,
                      '<compound>': self.values.get('substance'),
                      'list': False,
