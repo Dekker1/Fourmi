@@ -122,8 +122,9 @@ class GUI():
 
         frame_logging = Frame(frame_checkboxes)
         variable_logging = BooleanVar()
-        variable_logging.set(False)
-        input_logging = Checkbutton(frame_logging, text="Verbose logging", variable=variable_logging)
+        variable_logging.set(True)
+        input_logging = Checkbutton(frame_logging, text="Verbose logging",
+                                    variable=variable_logging, onvalue=False, offvalue=True)
         variables.update({'logging':variable_logging})
         frame_logging.pack(side=RIGHT)
         frame_checkboxes.pack(side=BOTTOM)
@@ -160,15 +161,11 @@ class GUI():
 
     def execute_search(self):
         """Calls the Fourmi crawler with the values from the GUI"""
-        print self.values
-
         if self.values.get('all_attributes'):
             attributes = ".*"
         else:
             attribute_types = ['attributes', 'Common attributes', 'Always attributes']
             attributes = ','.join([str(self.values.get(attribute)) for attribute in attribute_types])
-
-        print attributes
 
         arguments = {'--attributes': attributes,
                      '--exclude': None,
@@ -188,6 +185,5 @@ class GUI():
     def run(self):
         """Starts the window and the search."""
         self.window.mainloop()
-        print self.finish_with_search
         if self.finish_with_search:
             self.execute_search()
