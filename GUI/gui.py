@@ -1,4 +1,5 @@
 from Tkinter import *
+import os
 
 class ConfigImporter():
     def __init__(self, filename):
