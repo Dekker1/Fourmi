@@ -177,7 +177,7 @@ class GUI():
                      '--include': None,
                      '--log': 'log.txt',
                      '--output': '{}.{}'.format(self.values.get('output_name'), self.values.get('output_type')),
-                     '--verbose': True,
+                     '-v': self.values.get('logging'),
                      '--version': False,
                      '<compound>': self.values.get('substance'),
                      'list': False,
