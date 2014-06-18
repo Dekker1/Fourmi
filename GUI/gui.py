@@ -5,7 +5,7 @@ from configImporter import *
 
 
 class GUI():
-    def __init__(self, search, config_file='GUI/gui.cfg', sourceloader=None, in_source=True):
+    def __init__(self, search, config_file='configuration.cfg', sourceloader=None, in_source=True):
         """Boots the window, configuration."""
         if in_source:
             current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -49,7 +49,6 @@ class GUI():
 
         frame_all_attributes = Frame(window)
         frame_selecting_attributes = Frame(frame_all_attributes)
-
         frame_new_attributes = Frame(frame_selecting_attributes)
         label_new_attributes = Label(frame_new_attributes, text="Parameters: ")
         input_new_attributes = Text(frame_new_attributes, font=("Helvetica", 8), width=25, height=7, padx=5, pady=5)
@@ -71,27 +70,23 @@ class GUI():
         label_common_attributes.pack(side=TOP)
         input_common_attributes.pack(side=LEFT)
         scrollbar_common_attributes.pack(side=RIGHT, fill=Y)
-
         frame_selecting_attributes.pack()
 
-        frame_checkbox_attributes = Frame(frame_all_attributes)
-        variable_all_attributes = BooleanVar()
-        variable_all_attributes.set(False)
-        input_all_attributes = Checkbutton(frame_checkbox_attributes, text="Search ALL parameters",
-                                           variable=variable_all_attributes)
-        variables.update({"all_attributes": variable_all_attributes})
-        frame_checkbox_attributes.pack(side=BOTTOM)
-        input_all_attributes.pack()
+        frame_last = Frame(window)
+        search_button = Button(frame_last, text="Start search", command=self.prepare_search)
+        cancel_button = Button(frame_last, text="Cancel", command=window.destroy)
+        frame_last.pack(side=BOTTOM)
+        search_button.pack(side=LEFT)
+        cancel_button.pack(side=RIGHT)
 
-        frame_all_attributes.pack()
-
-        frame_output_name = Frame(window)
+        frame_name = Frame(window)
+        frame_output_name = Frame(frame_name)
         output_name = StringVar()
         output_name.set("results")
         variables.update({'output_name': output_name})
         label_output_name = Label(frame_output_name, text="Output name:")
         input_output_name = Entry(frame_output_name, font=("Helvetica", 12), width=25, textvariable=output_name)
-        frame_output_name.pack()
+        frame_output_name.pack(side=LEFT)
         label_output_name.pack()
         input_output_name.pack()
 
@@ -101,24 +96,39 @@ class GUI():
             variables.update({"output_type": output_type})
         else:
             output_type = StringVar()
-            output_type.set(output_types[0] if output_types and len(output_types) != 0 else "json")
+            output_type.set(output_types[0] if output_types and len(output_types) != 0 else "csv")
             variables.update({"output_type": output_type})
-            frame_output_type = Frame(window)
+            frame_output_type = Frame(frame_name)
             label_output_type = Label(frame_output_type, text="Extension: ")
             if output_types and len(output_types) > 0:
                 input_output_type = OptionMenu(frame_output_type, output_type, *output_types)
             else:
-                input_output_type = Label(frame_output_type, text="No output types in config file\nSelecting json")
-            frame_output_type.pack()
+                input_output_type = Label(frame_output_type, text="No output types in config file\nSelecting csv")
+            frame_output_type.pack(side=RIGHT)
             label_output_type.pack()
             input_output_type.pack()
+        frame_name.pack(side=BOTTOM)
 
-        frame_last = Frame(window)
-        search_button = Button(frame_last, text="Start search", command=self.prepare_search)
-        cancel_button = Button(frame_last, text="Cancel", command=window.destroy)
-        frame_last.pack(side=BOTTOM)
-        search_button.pack(side=LEFT)
-        cancel_button.pack(side=RIGHT)
+
+        frame_checkboxes = Frame(window)
+        frame_checkbox_attributes = Frame(frame_checkboxes)
+        variable_all_attributes = BooleanVar()
+        variable_all_attributes.set(False)
+        input_all_attributes = Checkbutton(frame_checkbox_attributes, text="Search ALL parameters",
+                                           variable=variable_all_attributes)
+        variables.update({"all_attributes": variable_all_attributes})
+        frame_checkbox_attributes.pack(side=LEFT)
+        input_all_attributes.pack()
+
+        frame_logging = Frame(frame_checkboxes)
+        variable_logging = BooleanVar()
+        variable_logging.set(False)
+        input_logging = Checkbutton(frame_logging, text="Verbose logging", variable=variable_logging)
+        variables.update({'logging':variable_logging})
+        frame_logging.pack(side=RIGHT)
+        frame_checkboxes.pack(side=BOTTOM)
+        input_logging.pack()
+        frame_all_attributes.pack()
 
         return window, variables
 
