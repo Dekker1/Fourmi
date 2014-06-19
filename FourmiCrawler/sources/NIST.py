@@ -18,7 +18,7 @@ class NIST(Source):
     This plugin manages searching for a chemical on the NIST website
     and parsing the resulting page if the chemical exists on NIST.
     """
-    website = "http://webbook.nist.gov/*"
+    website = "http://webbook\\.nist\\.gov/.*"
 
     search = 'cgi/cbook.cgi?Name=%s&Units=SI&cTP=on'
 
@@ -164,7 +164,7 @@ class NIST(Source):
             extra_data_url = tr.xpath('td[last()][a="Individual data points"]'
                                       '/a/@href').extract()
             if extra_data_url:
-                request = Request(url=self.website[:-1] + extra_data_url[0],
+                request = Request(url=self.website[:-2].replace("\\", "") + extra_data_url[0],
                                   callback=self.parse_individual_datapoints)
                 results.append(request)
                 continue
@@ -329,5 +329,5 @@ class NIST(Source):
         """
         if compound not in self.ignore_list:
             self.ignore_list.update(compound)
-            return Request(url=self.website[:-1] + self.search % compound,
+            return Request(url=self.website[:-2].replace("\\", "") + self.search % compound,
                            callback=self.parse)
