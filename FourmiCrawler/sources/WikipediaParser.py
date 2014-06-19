@@ -15,7 +15,7 @@ class WikipediaParser(Source):
     It also returns requests with other external sources which contain information on parsed subject.
     """
 
-    website = "http://en.wikipedia.org/wiki/*"
+    website = "http://en\.wikipedia\.org/wiki/.*"
     __spider = None
     searched_compounds = []
 
@@ -123,7 +123,7 @@ class WikipediaParser(Source):
         return items
 
     def new_compound_request(self, compound):
-        return Request(url=self.website[:-1] + compound, callback=self.parse)
+        return Request(url=self.website[:-2] + compound, callback=self.parse)
 
     @staticmethod
     def clean_items(items):

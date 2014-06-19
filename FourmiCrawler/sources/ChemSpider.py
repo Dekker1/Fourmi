@@ -1,3 +1,5 @@
+import re
+
 from scrapy import log
 from scrapy.http import Request
 from scrapy.selector import Selector
@@ -5,7 +7,6 @@ from scrapy.selector import Selector
 from source import Source
 from FourmiCrawler.items import Result
 
-import re
 
 # [TODO] - Maybe clean up usage of '.extract()[0]', because of possible IndexError exception.
 
@@ -18,7 +19,7 @@ class ChemSpider(Source):
     somewhere.
     """
 
-    website = 'http://www.chemspider.com/*'
+    website = 'http://www\.chemspider\.com/.*'
 
     search = 'Search.asmx/SimpleSearch?query=%s&token='
     structure = 'Chemical-Structure.%s.html'
@@ -292,6 +293,6 @@ class ChemSpider(Source):
         """
         if compound in self.ignore_list or self.cfg['token'] == '':
             return None
-        searchurl = self.website[:-1] + self.search % compound
+        searchurl = self.website[:-2] + self.search % compound
         log.msg('chemspider compound', level=log.DEBUG)
         return Request(url=searchurl, callback=self.parse_searchrequest)

@@ -3,7 +3,7 @@ from scrapy import log
 
 
 class Source:
-    website = "http://something/*"  # Regex of URI's the source is able to parse
+    website = "http://something/.*"  # Regex of URI's the source is able to parse
     _spider = None
 
     def __init__(self, config=None):
@@ -30,7 +30,7 @@ class Source:
         :param compound: A compound name.
         :return: A new Scrapy Request
         """
-        # return Request(url=self.website[:-1] + compound, callback=self.parse)
+        # return Request(url=self.website[:-2] + compound, callback=self.parse)
         pass
 
     def set_spider(self, spider):
