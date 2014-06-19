@@ -106,6 +106,41 @@ class PubChem(Source):
 
         return requests
 
+    def parse_searchrequest(self, response):
+        """
+        This function parses the response to the new_compound_request Request
+        :param response: the Response object to be parsed
+        :return: A Request for the compound page or what self.parse returns in
+                 case the search request forwarded to the compound page
+        """
+
+        #check if pubchem forwarded straight to compound page
+        m = re.match(self.website_pubchem, response.url)
+        if m:
+            log.msg('PubChem search forwarded to compound page',
+                    level=log.DEBUG)
+            return self.parse(response)
+
+        sel = Selector(response)
+
+        results = sel.xpath('//div[@class="rsltcont"]')
+        if results:
+            url = results[0].xpath('div/p/a[1]/@href')
+        else:
+            log.msg('PubChem search found nothing or xpath failed',
+                    level=log.DEBUG)
+            return None
+
+        if url:
+            url = 'http:' + ''.join(url[0].extract())
+            log.msg('PubChem compound page: %s' % url, level=log.DEBUG)
+        else:
+            log.msg('PubChem search found results, but no url in first result',
+                    level=log.DEBUG)
+            return None
+
+        return Request(url=url, callback=self.parse)
 
     def new_compound_request(self, compound):
-        return Request(url=self.website_www[:-1] + self.search % compound, callback=self.parse)
+        return Request(url=self.website_www[:-1] + self.search % compound,
+                       callback=self.parse_searchrequest)
