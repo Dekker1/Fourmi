@@ -164,7 +164,7 @@ class NIST(Source):
             extra_data_url = tr.xpath('td[last()][a="Individual data points"]'
                                       '/a/@href').extract()
             if extra_data_url:
-                request = Request(url=self.website[:-1] + extra_data_url[0],
+                request = Request(url=self.website[:-2].replace("\\", "") + extra_data_url[0],
                                   callback=self.parse_individual_datapoints)
                 results.append(request)
                 continue

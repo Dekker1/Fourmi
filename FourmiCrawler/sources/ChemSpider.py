@@ -277,8 +277,8 @@ class ChemSpider(Source):
             log.msg('ChemSpider found multiple substances, taking first '
                     'element', level=log.DEBUG)
         csid = csids[0]
-        structure_url = self.website[:-1] + self.structure % csid
-        extendedinfo_url = self.website[:-1] + self.extendedinfo % csid
+        structure_url = self.website[:-2].replace("\\", "") + self.structure % csid
+        extendedinfo_url = self.website[:-2].replace("\\", "") + self.extendedinfo % csid
         log.msg('chemspider URL: %s' % structure_url, level=log.DEBUG)
         return [Request(url=structure_url,
                         callback=self.parse),

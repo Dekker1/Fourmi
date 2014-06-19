@@ -51,7 +51,7 @@ class PubChem(Source):
             self._spider.get_synonym_requests(synonym)
         log.msg('Raw synonyms found: %s' % raw_synonyms, level=log.DEBUG)
 
-        n = re.search(r'cid=(\d+)',response.url)
+        n = re.search(r'cid=(\d+)', response.url)
         if n:
             cid = n.group(1)
         log.msg('cid: %s' % cid, level=log.DEBUG)   #getting the right id of the compound with which it can reach
