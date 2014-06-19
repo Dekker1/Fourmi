@@ -16,8 +16,8 @@ class PubChem(Source):
     """
 
     #PubChem has its data on compound name, properties and their values on different html pages, so different URLs used
-    website = 'https://.*\.ncbi\.nlm\.nih\.gov/.*'
-    website_www = 'https://www.ncbi.nlm.nih.gov/.*'
+    website = 'https://.*\\.ncbi\\.nlm\\.nih\\.gov/.*'
+    website_www = 'https://www.ncbi.nlm.nih.gov/*'
     website_pubchem = 'https://pubchem.ncbi.nlm.nih.gov/.*'
     search = 'pccompound?term=%s'
     data_url = 'toc/summary_toc.cgi?tocid=27&cid=%s'

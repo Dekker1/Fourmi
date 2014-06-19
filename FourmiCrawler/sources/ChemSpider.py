@@ -19,7 +19,7 @@ class ChemSpider(Source):
     somewhere.
     """
 
-    website = 'http://www\.chemspider\.com/.*'
+    website = 'http://www\\.chemspider\\.com/.*'
 
     search = 'Search.asmx/SimpleSearch?query=%s&token='
     structure = 'Chemical-Structure.%s.html'
@@ -293,6 +293,6 @@ class ChemSpider(Source):
         """
         if compound in self.ignore_list or self.cfg['token'] == '':
             return None
-        searchurl = self.website[:-2] + self.search % compound
+        searchurl = self.website[:-2].replace("\\", "") + self.search % compound
         log.msg('chemspider compound', level=log.DEBUG)
         return Request(url=searchurl, callback=self.parse_searchrequest)

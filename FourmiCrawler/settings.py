@@ -23,5 +23,5 @@ FEED_FORMAT = 'jsonlines'
 
 # [todo] - Check for repercussions on spoofing the user agent
 
-# USER_AGENT = 'FourmiCrawler (+http://www.yourdomain.com)'
-USER_AGENT = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/34.0.1847.137 Safari/537.36'
+USER_AGENT = 'Fourmi'
+# USER_AGENT = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/34.0.1847.137 Safari/537.36'

@@ -30,7 +30,7 @@ class Source:
         :param compound: A compound name.
         :return: A new Scrapy Request
         """
-        # return Request(url=self.website[:-2] + compound, callback=self.parse)
+        # return Request(url=self.website[:-2].replace("\\", "") + compound, callback=self.parse)
         pass
 
     def set_spider(self, spider):
