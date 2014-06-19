@@ -58,7 +58,7 @@ class PubChem(Source):
                                                 # the seperate html page which contains the properties and their values
 
         #using this cid to get the right url and scrape it
-        requests.append(Request(url=self.website_pubchem[:-1] + self.data_url % cid, callback=self.parse_data))
+        requests.append(Request(url=self.website_pubchem[:-2].replace("\\","") + self.data_url % cid, callback=self.parse_data))
         return requests
 
     def parse_data(self, response):
