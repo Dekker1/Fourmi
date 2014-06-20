@@ -3,6 +3,7 @@ import os
 
 from scrapy.utils.project import get_project_settings
 
+
 class Configurator:
     """
     A helper class in the fourmi class. This class is used to process the settings as set
@@ -12,7 +13,7 @@ class Configurator:
     def __init__(self):
         self.scrapy_settings = get_project_settings()
 
-    def set_output(self, filename, fileformat):
+    def set_output(self, filename, fileformat, compound):
         """
         This function manipulates the Scrapy output file settings that normally would be set in the settings file.
         In the Fourmi project these are command line arguments.
@@ -20,12 +21,12 @@ class Configurator:
         :param fileformat: The format in which the output will be.
         """
 
-        if filename != 'results.*format*':
+        if filename != '<compound>.*format*':
             self.scrapy_settings.overrides["FEED_URI"] = filename
         elif fileformat == "jsonlines":
-            self.scrapy_settings.overrides["FEED_URI"] = "results.json"
+            self.scrapy_settings.overrides["FEED_URI"] = compound + ".json"
         elif fileformat is not None:
-            self.scrapy_settings.overrides["FEED_URI"] = "results." + fileformat
+            self.scrapy_settings.overrides["FEED_URI"] = compound + "." + fileformat
 
         if fileformat is not None:
             self.scrapy_settings.overrides["FEED_FORMAT"] = fileformat
