@@ -89,7 +89,7 @@ class ChemSpider(Source):
 
             # Test for properties without values, with one hardcoded exception
             if (not re.match(r'^\d', prop_value) or
-                (prop_name == 'Polarizability' and prop_value == '10-24cm3')):
+                    (prop_name == 'Polarizability' and prop_value == '10-24cm3')):
                 continue
 
             m = re.match(r'(.*) \((.*)\)', prop_name)
@@ -122,12 +122,12 @@ class ChemSpider(Source):
         properties = []
 
         scraped_list = sel.xpath('.//li[span="Experimental Physico-chemical '
-                         'Properties"]//li/table/tr/td')
+                                 'Properties"]//li/table/tr/td')
         if not scraped_list:
             return properties
         # Format is: property name followed by a list of values
         property_name = scraped_list.pop(0).xpath(
-        'span/text()').extract()[0].rstrip()
+            'span/text()').extract()[0].rstrip()
         for line in scraped_list:
             if line.xpath('span/text()'):
                 property_name = line.xpath('span/text()').extract()[0].rstrip()
@@ -251,12 +251,12 @@ class ChemSpider(Source):
         :return: A Result item
         """
         return Result({
-                'attribute': attribute,
-                'value': value,
-                'source': source,
-                'reliability': self.cfg['reliability'],
-                'conditions': conditions
-            })
+            'attribute': attribute,
+            'value': value,
+            'source': source,
+            'reliability': self.cfg['reliability'],
+            'conditions': conditions
+        })
 
     def parse_searchrequest(self, response):
         """
