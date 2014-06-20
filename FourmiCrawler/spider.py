@@ -34,8 +34,9 @@ class FourmiSpider(Spider):
         """
         for source in self._sources:
             if re.match(source.website, response.url):
-                log.msg("Url: " + response.url + " -> Source: " + source.website, level=log.DEBUG)
+                log.msg("URL: " + response.url + " -> Source: " + source.website, level=log.DEBUG)
                 return source.parse(response)
+        log.msg("URL: " + response.url + " -> No compatible source", level=log.INFO)
         return None
 
     def get_synonym_requests(self, compound, force=False):

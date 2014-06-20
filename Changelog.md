@@ -1,3 +1,7 @@
+### v0.6.0
+- FIX: Using absolute path for configuration files
+- DEV: General Code cleanup in documentation
+
 ### v0.5.3
 - FIX: It is now again possible to use both verbose and the source inclusion/exclusion options
 - FIX: Logging is now "actually" disabled if not using the verbose option.
