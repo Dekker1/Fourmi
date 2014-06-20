@@ -2,7 +2,7 @@ from Tkinter import *
 import os
 
 from configImporter import *
-
+from tkFileDialog import asksaveasfilename
 
 class GUI():
     def __init__(self, search, config_file='configuration.cfg', sourceloader=None, in_source=True):
@@ -29,6 +29,10 @@ class GUI():
     def load_always_attributes(self):
         """Calls the configuration parser for attributes that are always used."""
         return ','.join([x.strip() for x in self.configurator.load_always_attributes().split(',')])
+
+    def set_output(self):
+        self.variable_output_name.set(asksaveasfilename())
+        self.button_output_name.config(text=self.variable_output_name.get())
 
     def generate_window(self, common_attributes, output_types):
         """Creates all widgets and variables in the window."""
@@ -81,32 +85,14 @@ class GUI():
 
         frame_name = Frame(window)
         frame_output_name = Frame(frame_name)
-        output_name = StringVar()
-        output_name.set("results")
-        variables.update({'output_name': output_name})
-        label_output_name = Label(frame_output_name, text="Output name:")
-        input_output_name = Entry(frame_output_name, font=("Helvetica", 12), width=25, textvariable=output_name)
+        label_output_name = Label(frame_output_name, text='Output file:')
+        self.variable_output_name = StringVar()
+        self.variable_output_name.set('results.csv')
+        variables.update({'output_name':self.variable_output_name})
+        self.button_output_name = Button(frame_output_name, command=self.set_output, text="Select file")
         frame_output_name.pack(side=LEFT)
         label_output_name.pack()
-        input_output_name.pack()
-
-        if output_types and len(output_types) == 1:
-            output_type = StringVar()
-            output_type.set(output_types[0])
-            variables.update({"output_type": output_type})
-        else:
-            output_type = StringVar()
-            output_type.set(output_types[0] if output_types and len(output_types) != 0 else "csv")
-            variables.update({"output_type": output_type})
-            frame_output_type = Frame(frame_name)
-            label_output_type = Label(frame_output_type, text="Extension: ")
-            if output_types and len(output_types) > 0:
-                input_output_type = OptionMenu(frame_output_type, output_type, *output_types)
-            else:
-                input_output_type = Label(frame_output_type, text="No output types in config file\nSelecting csv")
-            frame_output_type.pack(side=RIGHT)
-            label_output_type.pack()
-            input_output_type.pack()
+        self.button_output_name.pack()
         frame_name.pack(side=BOTTOM)
 
 
@@ -150,6 +136,9 @@ class GUI():
             else:
                 print "No known class, {}, {}".format(name, var)
 
+        values.update({'output_name':self.variable_output_name.get()})
+        values.update({'output_type':self.check_output_type(values.get('output_name'))})
+
         self.values = values
         if all([values.get(i) != '' for i in self.required_variables]):
             self.finish_with_search = True
@@ -165,6 +154,7 @@ class GUI():
         else:
             attribute_types = ['attributes', 'Common attributes', 'Always attributes']
             attributes = ','.join([str(self.values.get(attribute)) for attribute in attribute_types])
+        output_file = "file://" + str(self.values.get('output_name')) #Dealing with absolute paths
 
         arguments = {'--attributes': attributes,
                      '--exclude': None,
@@ -172,7 +162,7 @@ class GUI():
                      '--help': False,
                      '--include': None,
                      '--log': 'log.txt',
-                     '--output': '{}.{}'.format(self.values.get('output_name'), self.values.get('output_type')),
+                     '--output': output_file,
                      '-v': 0 if self.values.get('logging') else 3,
                      '--version': False,
                      '<compound>': self.values.get('substance'),
@@ -186,3 +176,13 @@ class GUI():
         self.window.mainloop()
         if self.finish_with_search:
             self.execute_search()
+
+    def check_output_type(self, filename):
+        parts = str(filename).split('.')
+        output_types = self.load_output_types()
+        extension = parts[-1]
+
+        for type in output_types:
+            if extension==type:
+                return extension
+        return output_types[0]
