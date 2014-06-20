@@ -1,5 +1,6 @@
 import ConfigParser
 import os
+import shutil
 
 from scrapy.utils.project import get_project_settings
 
@@ -70,6 +71,11 @@ class Configurator:
         current_dir = os.path.dirname(os.path.abspath(__file__))
         config_path = current_dir + '/../sources.cfg'
         # [TODO]: location of sources.cfg should be softcoded eventually
+        if not os.path.isfile(config_path):
+            try:
+                shutil.copyfile(os.path.dirname(os.path.abspath(__file__)) + "/../sources.cfg.sample", config_path)
+            except IOError:
+                print "WARNING: Source configuration couldn't be found and couldn't be created."
         config = ConfigParser.ConfigParser()
         config.read(config_path)
         return config
