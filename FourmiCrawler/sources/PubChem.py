@@ -84,7 +84,7 @@ class PubChem(Source):
                     'attribute': prop_name,
                     'value': prop_value,
                     'source': prop_source,
-                    'reliability': 'Unknown',
+                    'reliability': self.cfg['reliability'],
                     'conditions': ''
                 })
                 log.msg('PubChem prop: |%s| |%s| |%s|' %
@@ -100,7 +100,7 @@ class PubChem(Source):
                         'attribute': prop_name,
                         'value': prop_value,
                         'source': prop_source,
-                        'reliability': 'Unknown',
+                        'reliability': self.cfg['reliability'],
                         'conditions': ''
                     })
                     log.msg('PubChem prop: |%s| |%s| |%s|' %
