@@ -63,7 +63,7 @@ def search(docopt_arguments, source_loader):
                   source_loader, docopt_arguments["--attributes"].split(','))
     if conf.scrapy_settings.getbool("LOG_ENABLED"):
         log.start(conf.scrapy_settings.get("LOG_FILE"),
-              conf.scrapy_settings.get("LOG_LEVEL"), conf.scrapy_settings.get("LOG_STDOUT"))
+                  conf.scrapy_settings.get("LOG_LEVEL"), conf.scrapy_settings.get("LOG_STDOUT"))
     reactor.run()
 
 

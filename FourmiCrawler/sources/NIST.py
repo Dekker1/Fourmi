@@ -313,12 +313,13 @@ class NIST(Source):
         :param conditions: optional conditions regarding the value
         :return: A Result item
         """
-        return Result({
-            'attribute': attribute,
-            'value': value,
-            'source': 'NIST',
-            'reliability': self.cfg['reliability'],
-            'conditions': conditions
+        return Result(
+            {
+                'attribute': attribute,
+                'value': value,
+                'source': 'NIST',
+                'reliability': self.cfg['reliability'],
+                'conditions': conditions
             })
 
     def new_compound_request(self, compound):
