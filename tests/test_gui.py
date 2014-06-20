@@ -16,7 +16,7 @@ class TestGUI(unittest.TestCase):
 
         self.assertEqual(self.test_gui.values.get('substance'), '')
         self.assertEqual(self.test_gui.values.get('output_type'), output_type)
-        self.assertEqual(self.test_gui.values.get('output_name'), 'results')
+        self.assertEqual(self.test_gui.values.get('output_name'), 'results.csv')
 
 
     def test_no_configurations(self):
@@ -29,4 +29,4 @@ class TestGUI(unittest.TestCase):
 
         self.assertEqual(self.test_gui.values.get('substance'), '')
         self.assertEqual(self.test_gui.values.get('output_type'), 'csv')
-        self.assertEqual(self.test_gui.values.get('output_name'), 'results')
+        self.assertEqual(self.test_gui.values.get('output_name'), 'results.csv')
