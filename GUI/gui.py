@@ -1,5 +1,6 @@
 from Tkinter import *
 import os
+import shutil
 from tkFileDialog import asksaveasfilename
 
 from configImporter import *
@@ -11,6 +12,12 @@ class GUI():
         if not in_source:
             current_dir = os.path.dirname(os.path.abspath(__file__))
             config_file = current_dir + '../' + config_file
+        if not os.path.isfile(config_file):
+            try:
+                shutil.copyfile(os.path.dirname(os.path.abspath(__file__)) + "/../GUI.cfg.sample", config_file)
+            except IOError:
+                print "GUI configuration couldn't be found and couldn't be created."
+                sys.exit()
         self.configurator = ConfigImporter(config_file)
         self.sourceloader = sourceloader
         self.finish_with_search = False
