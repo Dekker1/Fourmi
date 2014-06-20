@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 """
-Fourmi, a web scraper build to search specific information for a given compound (and it's pseudonyms).
+Fourmi, a web scraper build to search specific information for a given compound (and its pseudonyms).
 
 Usage:
+    fourmi
     fourmi search <compound>
     fourmi [options] search <compound>
     fourmi [options] [-v | -vv | -vvv] [--include=<sourcename> | --exclude=<sourcename>] search <compound>
@@ -17,7 +18,7 @@ Options:
     --version                       Show version.
     -v                              Verbose logging output. (Multiple occurrences increase logging level)
     --log=<file>                    Save log to an file.
-    -o <file> --output=<file>       Output file [default: results.*format*]
+    -o <file> --output=<file>       Output file [default: <compound>.*format*]
     -f <format> --format=<format>   Output formats (supported: csv, json, jsonlines, xml) [default: csv]
     --include=<regex>               Include only sources that match these regular expressions split by a comma.
     --exclude=<regex>               Exclude the sources that match these regular expressions split by a comma.
@@ -31,6 +32,7 @@ import docopt
 from FourmiCrawler.spider import FourmiSpider
 from utils.configurator import Configurator
 from utils.sourceloader import SourceLoader
+from GUI import gui
 
 
 def setup_crawler(compound, settings, source_loader, attributes):
@@ -58,18 +60,18 @@ def search(docopt_arguments, source_loader):
     """
     conf = Configurator()
     conf.set_logging(docopt_arguments["--log"], docopt_arguments["-v"])
-    conf.set_output(docopt_arguments["--output"], docopt_arguments["--format"])
+    conf.set_output(docopt_arguments["--output"], docopt_arguments["--format"], docopt_arguments["<compound>"])
     setup_crawler(docopt_arguments["<compound>"], conf.scrapy_settings,
                   source_loader, docopt_arguments["--attributes"].split(','))
     if conf.scrapy_settings.getbool("LOG_ENABLED"):
         log.start(conf.scrapy_settings.get("LOG_FILE"),
-              conf.scrapy_settings.get("LOG_LEVEL"), conf.scrapy_settings.get("LOG_STDOUT"))
+                  conf.scrapy_settings.get("LOG_LEVEL"), conf.scrapy_settings.get("LOG_STDOUT"))
     reactor.run()
 
 
 # The start for the Fourmi Command Line interface.
 if __name__ == '__main__':
-    arguments = docopt.docopt(__doc__, version='Fourmi - V0.5.3')
+    arguments = docopt.docopt(__doc__, version='Fourmi - V0.6.0')
     loader = SourceLoader()
 
     if arguments["--include"]:
@@ -82,3 +84,6 @@ if __name__ == '__main__':
     elif arguments["list"]:
         print "-== Available Sources ==-"
         print str(loader)
+    else:
+        gui_window = gui.GUI(search, sourceloader=SourceLoader())
+        gui_window.run()

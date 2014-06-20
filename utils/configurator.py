@@ -1,4 +1,6 @@
 import ConfigParser
+import os
+import shutil
 
 from scrapy.utils.project import get_project_settings
 
@@ -12,7 +14,7 @@ class Configurator:
     def __init__(self):
         self.scrapy_settings = get_project_settings()
 
-    def set_output(self, filename, fileformat):
+    def set_output(self, filename, fileformat, compound):
         """
         This function manipulates the Scrapy output file settings that normally would be set in the settings file.
         In the Fourmi project these are command line arguments.
@@ -20,12 +22,12 @@ class Configurator:
         :param fileformat: The format in which the output will be.
         """
 
-        if filename != 'results.*format*':
+        if filename != '<compound>.*format*':
             self.scrapy_settings.overrides["FEED_URI"] = filename
         elif fileformat == "jsonlines":
-            self.scrapy_settings.overrides["FEED_URI"] = "results.json"
+            self.scrapy_settings.overrides["FEED_URI"] = compound + ".json"
         elif fileformat is not None:
-            self.scrapy_settings.overrides["FEED_URI"] = "results." + fileformat
+            self.scrapy_settings.overrides["FEED_URI"] = compound + "." + fileformat
 
         if fileformat is not None:
             self.scrapy_settings.overrides["FEED_FORMAT"] = fileformat
@@ -66,8 +68,16 @@ class Configurator:
         variables for sources
         :return a ConfigParser object of sources.cfg
         """
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        config_path = current_dir + '/../sources.cfg'
+        # [TODO]: location of sources.cfg should be softcoded eventually
+        if not os.path.isfile(config_path):
+            try:
+                shutil.copyfile(os.path.dirname(os.path.abspath(__file__)) + "/../sources.cfg.sample", config_path)
+            except IOError:
+                print "WARNING: Source configuration couldn't be found and couldn't be created."
         config = ConfigParser.ConfigParser()
-        config.read('sources.cfg')  # [TODO]: should be softcoded eventually
+        config.read(config_path)
         return config
 
     @staticmethod
