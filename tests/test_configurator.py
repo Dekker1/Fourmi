@@ -18,7 +18,7 @@ class TestConfigurator(unittest.TestCase):
         self.assertEqual(self.conf.scrapy_settings["FEED_URI"], "test.json")
         self.assertEqual(self.conf.scrapy_settings["FEED_FORMAT"], "jsonlines")
 
-        self.conf.set_output("results.*format*", "csv", "test")
+        self.conf.set_output("<compound>.*format*", "csv", "test")
         self.assertEqual(self.conf.scrapy_settings["FEED_URI"], "test.csv")
         self.assertEqual(self.conf.scrapy_settings["FEED_FORMAT"], "csv")
 
