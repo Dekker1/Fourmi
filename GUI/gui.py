@@ -1,11 +1,12 @@
 from Tkinter import *
 import os
-
-from configImporter import *
 from tkFileDialog import asksaveasfilename
 
+from configImporter import *
+
+
 class GUI():
-    def __init__(self, search, config_file='configuration.cfg', sourceloader=None, in_source=True):
+    def __init__(self, search, config_file='GUI.cfg', sourceloader=None, in_source=True):
         """Boots the window, configuration."""
         if not in_source:
             current_dir = os.path.dirname(os.path.abspath(__file__))
