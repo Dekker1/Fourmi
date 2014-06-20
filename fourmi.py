@@ -25,7 +25,6 @@ Options:
 """
 
 from twisted.internet import reactor
-
 from scrapy.crawler import Crawler
 from scrapy import signals, log
 import docopt
@@ -72,7 +71,7 @@ def search(docopt_arguments, source_loader):
 
 # The start for the Fourmi Command Line interface.
 if __name__ == '__main__':
-    arguments = docopt.docopt(__doc__, version='Fourmi - V0.5.3')
+    arguments = docopt.docopt(__doc__, version='Fourmi - V0.6.0')
     loader = SourceLoader()
 
     if arguments["--include"]:
