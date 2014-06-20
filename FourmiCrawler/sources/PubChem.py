@@ -62,8 +62,7 @@ class PubChem(Source):
             Request(url=self.website_pubchem[:-2].replace("\\", "") + self.data_url % cid, callback=self.parse_data))
         return requests
 
-    @staticmethod
-    def parse_data(response):
+    def parse_data(self, response):
         """
         Parse data found in 'Chemical and Physical properties' part of a substance page.
         :param response: The response with the page to parse

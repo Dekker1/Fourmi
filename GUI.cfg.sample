@@ -1,0 +1,10 @@
+[GUI]
+# Personalize options in your User Interface
+
+# Commonly used parameters are listed in the GUI for easy selection
+CommonParameters = Weight, Polarity, Viscosity, Solubility, Name
+
+# Parameters that are always used in the search
+AlwaysParameters = Name
+
+OutputTypes = csv, json, jsonlines, xml
