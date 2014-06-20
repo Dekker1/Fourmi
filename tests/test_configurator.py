@@ -10,16 +10,16 @@ class TestConfigurator(unittest.TestCase):
         self.conf = Configurator()
 
     def test_set_output(self):
-        self.conf.set_output(filename="test.txt", fileformat="csv")
+        self.conf.set_output(filename="test.txt", fileformat="csv", compound="test")
         self.assertEqual(self.conf.scrapy_settings["FEED_URI"], "test.txt")
         self.assertEqual(self.conf.scrapy_settings["FEED_FORMAT"], "csv")
 
-        self.conf.set_output("results.*format*", "jsonlines")
-        self.assertEqual(self.conf.scrapy_settings["FEED_URI"], "results.json")
+        self.conf.set_output("<compound>.*format*", "jsonlines", "test")
+        self.assertEqual(self.conf.scrapy_settings["FEED_URI"], "test.json")
         self.assertEqual(self.conf.scrapy_settings["FEED_FORMAT"], "jsonlines")
 
-        self.conf.set_output("results.*format*", "csv")
-        self.assertEqual(self.conf.scrapy_settings["FEED_URI"], "results.csv")
+        self.conf.set_output("results.*format*", "csv", "test")
+        self.assertEqual(self.conf.scrapy_settings["FEED_URI"], "test.csv")
         self.assertEqual(self.conf.scrapy_settings["FEED_FORMAT"], "csv")
 
     def test_start_log(self):
