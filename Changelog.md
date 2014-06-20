@@ -1,4 +1,8 @@
 ### v0.6.0
+- Feature: Added a Graphical User interface
+- Feature: Automatic config file createion from config samples
+- FIX: The default name of the output files will now consist of the compound name and the file format when using the CLI
+- FIX: A lot of bugfixes of the PubChem plugin, as is wasn't working as it should
 - FIX: Using absolute path for configuration files
 - DEV: General Code cleanup in documentation
 

@@ -1,2 +1,6 @@
-import test_configurator, test_gui, test_pipeline, test_sourceloader, test_spider
+import test_configurator
+import test_gui
+import test_pipeline
+import test_sourceloader
+import test_spider
 
